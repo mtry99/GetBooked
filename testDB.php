@@ -5,8 +5,8 @@
 
 <?php
 $servername = "localhost:3306";
-$username = "root";
-$password = "mysqlpassword";//"mysqlpassword";	// ** replace as needed **
+$username = "genericperson";
+$password = "genericpassword";
 $dbname = "testDB";
 
 

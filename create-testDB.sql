@@ -9,6 +9,6 @@ INSERT INTO student VALUES(2, 'yi', 0.4);
 SELECT * FROM student;
 
 -- user setup --------------------------------------------------
--- CREATE USER '[replace_with_user]'@'localhost' IDENTIFIED BY 'mysqluser';
--- GRANT ALL ON testDB.* TO '[replace_with_user]'@'localhost';
--- ALTER USER '[replace_with_user]'@'localhost' IDENTIFIED WITH mysql_native_password by 'mysqluser';
+CREATE USER 'genericperson'@'localhost' IDENTIFIED BY 'genericpassword';
+GRANT ALL ON testDB.* TO 'genericperson'@'localhost';
+ALTER USER 'genericperson'@'localhost' IDENTIFIED WITH mysql_native_password by 'genericpassword';
