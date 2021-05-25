@@ -6,6 +6,7 @@ USE testDB;
 CREATE TABLE student(uid DECIMAL(3, 0) NOT NULL PRIMARY KEY, name VARCHAR(30), score DECIMAL(3, 2));
 INSERT INTO student VALUES(1, 'xi', 0.1);
 INSERT INTO student VALUES(2, 'yi', 0.4);
+INSERT INTO student VALUES(3, 'alex', 9.99);
 SELECT * FROM student;
 
 -- user setup --------------------------------------------------
