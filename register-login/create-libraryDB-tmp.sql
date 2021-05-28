@@ -15,23 +15,6 @@ CREATE TABLE user(
 );
 
 
--- set up author table --------------------------------------------------
-
-CREATE TABLE author(
-	author_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL 
-);
-
-
--- set up book table --------------------------------------------------
-
-CREATE TABLE book(
-	book_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255) NOT NULL,
-	current_copies_count INT NOT NULL
-);
-
-
 -- user setup --------------------------------------------------
 
 CREATE USER 'genericperson'@'localhost' IDENTIFIED BY 'genericpassword'; -- may have already created this user
@@ -62,19 +45,11 @@ DELIMITER ;
 
 -- insert some basic values --------------------------------------------------
 
-INSERT INTO author(name) VALUES('Neil Gaiman');
-INSERT INTO author(name) VALUES('Brandon Sanderson');
-
-INSERT INTO book(title, current_copies_count) VALUES('Good Omens', 2);
-INSERT INTO book(title, current_copies_count) VALUES('Mistborn: The Final Empire', 1);
-INSERT INTO book(title, current_copies_count) VALUES('The Well of Ascension', 1);
-
 INSERT INTO user(username, password, name, is_admin) VALUES
 	('account1', 'password1', 'user1', FALSE);
 INSERT INTO user(username, password, name, is_admin) VALUES
 	('account2', 'password2', 'user2', TRUE);
 
-SELECT * FROM author;
-SELECT * FROM book;
+
 SELECT * FROM user;
 
