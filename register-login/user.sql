@@ -43,6 +43,20 @@ DELIMITER ;
 
 
 
+DELIMITER //
+
+CREATE PROCEDURE REGISTER(
+    in u_username VARCHAR(255),
+    in u_password VARCHAR(255),
+    in u_name VARCHAR(255))
+BEGIN
+    INSERT INTO user(username, password, name, is_admin) VALUES
+	    (u_username, u_password, u_name, FALSE);
+END//
+
+DELIMITER ;
+
+
 -- insert some basic values --------------------------------------------------
 
 INSERT INTO user(username, password, name, is_admin) VALUES

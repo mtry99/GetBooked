@@ -1,4 +1,4 @@
-<?php include_once("connect-to-db.php") ?>
+<?php include_once("config.php") ?>
 
 <!DOCTYPE html>
 <html>
@@ -22,6 +22,7 @@ Password: <input type="text" name="password" value="<?php echo $upassword;?>">
 <input type="submit" name="submit" value="Login">
 </form>
 <br><br>
+<a href="register.php"> New User? </a>
 
 <?php
 if($_SERVER["REQUEST_METHOD"] == "POST") {
