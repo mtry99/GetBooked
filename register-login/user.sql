@@ -26,25 +26,18 @@ ALTER USER 'genericperson'@'localhost' IDENTIFIED WITH mysql_native_password by 
 
 DELIMITER //
 
+-- get user's ID, username, and admin status when logging in
 CREATE PROCEDURE VALIDATE_LOGIN(
 	in username VARCHAR(255),
     in password VARCHAR(255))
 BEGIN
-    declare uid int;
-     set uid = (SELECT user.user_id FROM user WHERE user.username = username AND user.password = password);
-     if (uid is not null) then
-		select 'TRUE' AS is_valid, uid AS user_id;
-	else
-		select 'FALSE' AS is_valid, null AS user_id;
-	end if;
+    SELECT user.user_id, user.username, user.is_admin
+        FROM user 
+        WHERE user.username = username AND 
+            user.password = password;
 END//
 
-DELIMITER ;
-
-
-
-DELIMITER //
-
+-- register user
 CREATE PROCEDURE REGISTER(
     in u_username VARCHAR(255),
     in u_password VARCHAR(255),

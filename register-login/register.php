@@ -28,8 +28,8 @@ Confirm Password: <input type="text" name="confirm-password" value="<?php echo $
 
 <?php
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-	$name = $_POST["name"];
-    $uname = $_POST["username"];
+	$name = trim($_POST["name"]);
+    $uname = trim($_POST["username"]);
 	$upassword = $_POST["password"];
     $cpassword = $_POST["confirm-password"];
 
@@ -42,12 +42,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Passwords don't match";
         exit();
     }
-	
-	$name = "'" . $name . "'";
-    $uname = "'" . $uname . "'";
-	$upassword = "'" . $upassword . "'";
-    $cpassword = "'" . $cpassword . "'";
-	$sql = "CALL REGISTER({$uname},{$upassword},{$name});";
+
+    $sql = "CALL REGISTER('" . addslashes($uname) . "', '" . addslashes($upassword) .
+        "', '" . addslashes($name) . "');";
 	echo $sql;
 	$result = $conn->query($sql);
 
