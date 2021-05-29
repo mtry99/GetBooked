@@ -37,6 +37,8 @@ BEGIN
             user.password = password;
 END//
 
+
+
 -- register user
 CREATE PROCEDURE REGISTER(
     in u_username VARCHAR(255),
