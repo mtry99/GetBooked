@@ -30,21 +30,42 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Admin Page</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body{ font: 14px sans-serif; }
-        .wrapper{ width: 360px; padding: 20px; }
-    </style>
+    <link rel="stylesheet" href="admin.css">
+    
 </head>
-<body>
-	<div class="wrapper">
-        <h2>Admin Page</h2>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Logout">
-            </div>
-        </form>
-    </div>
+<body>  
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Logout">
+        </div>
+    </form>
 
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div class="container">
+  <div class="row searchFilter" >
+     <div class="col-sm-12" >
+      <div class="input-group" >
+       <input id="table_filter" type="text" class="form-control" placeholder="Search the Library System ..." >
+       <div class="input-group-btn" >
+        <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><span class="label-icon" >Category</span> <span class="caret" >&nbsp;</span></button>
+        <div class="dropdown-menu dropdown-menu-right" >
+           <ul class="category_filters" >
+                <li > <input type="checkbox" id="All"><label>All</label> </li>
+                <li > <input type="checkbox" id="Book Title"><label>Book Title</label></li>
+                <li > <input type="checkbox" id="Author"><label>Author</label> </li>
+                <li > <input type="checkbox" id="Genre"><label>Genre</label> </li>
+                <li > <input type="checkbox" id="Publisher"><label>Publisher</label></li>
+                <li > <input type="checkbox" id="Published Year"><label>Published Year</label></li>
+           </ul>
+        </div>
+        <button id="searchBtn" type="button" class="btn btn-secondary btn-search" ><span class="glyphicon glyphicon-search" >&nbsp;</span> <span class="label-icon" >Search</span></button>
+       </div>
+      </div>
+     </div>
+  </div>
+</div>
 </body>
 </html>
