@@ -31,20 +31,27 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Admin Page</title>
     <link rel="stylesheet" href="admin.css">
-    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>  
+
+
+<div class="container">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <div class="form-group">
             <input type="submit" class="btn btn-primary" value="Logout">
         </div>
     </form>
 
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <div class="form-group">
+            <input type="submit" class="btn btn-danger" value="New Book">
+        </div>
+    </form>
 
-<div class="container">
+
   <div class="row searchFilter" >
      <div class="col-sm-12" >
       <div class="input-group" >
