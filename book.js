@@ -5,16 +5,29 @@ $(document).ready(function () {
         $(this).toggleClass('active');
     });
 
-    $( "#slider-range" ).slider({
+    $("#pages-range-slider").slider({
         range: true,
         min: 0,
-        max: 500,
-        values: [ 75, 300 ],
-        slide: function( event, ui ) {
-          $( "#amount1" ).val( "" + ui.values[ 0 ] );
-          $( "#amount2" ).val( "" + ui.values[ 1 ] );
+        max: 1500,
+        values: [500, 1200],
+        slide: function (event, ui) {
+            $("#pages-amount1").val("" + ui.values[0]);
+            $("#pages-amount2").val("" + ui.values[1]);
         }
-      });
-      $( "#amount1" ).val( $( "#slider-range" ).slider( "values", 0 ) );
-      $( "#amount2" ).val( $( "#slider-range" ).slider( "values", 1 ) );
+    });
+    $("#pages-amount1").val($("#pages-range-slider").slider("values", 0));
+    $("#pages-amount2").val($("#pages-range-slider").slider("values", 1));
+
+    $("#year-range-slider").slider({
+        range: true,
+        min: 1500,
+        max: 2100,
+        values: [1900, 2021],
+        slide: function (event, ui) {
+            $("#year-amount1").val("" + ui.values[0]);
+            $("#year-amount2").val("" + ui.values[1]);
+        }
+    });
+    $("#year-amount1").val($("#year-range-slider").slider("values", 0));
+    $("#year-amount2").val($("#year-range-slider").slider("values", 1));
 });

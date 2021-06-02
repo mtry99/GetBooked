@@ -13,7 +13,7 @@
     <title>Book Search</title>
 
     <!-- Bootstrap CSS CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -21,10 +21,11 @@
     
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
@@ -43,25 +44,51 @@
                 <h3>Book Filter</h3>
             </div>
 
-            <ul class="list-unstyled components">
+            <ul class="list-unstyled components px-3">
+                <div class="custom-control custom-switch pb-0">
+                    <input type="checkbox" class="custom-control-input" id="switch-pages" data-toggle="collapse" data-target="#collapse-pages">
+                    <label class="custom-control-label" for="switch-pages">Filter Pages</label>
+                </div>
+                <div id="collapse-pages" class="collapse">
+                <div class="row mt-2">
+                    <div class="col-sm-3">
+                    <input type="text" pattern="\d*" id="pages-amount1" class="form-control text-right" placeholder="Enter amount1" name="pages-amount1">
+                    </div>
+                    <div class="col-sm-6 text-center form-control-plaintext text-light">
+                    Pages
+                    </div>
+                    <div class="col-sm-3">
+                    <input type="text" pattern="\d*" id="pages-amount2" class="form-control" placeholder="Enter amount2" name="pages-amount2">
+                    </div>
+                </div>
+                <div id="pages-range-slider" class="mt-2 range-slider"></div>
+                </div>
+            </ul>
 
-                <li>
-                    <p>
-                        <label for="amount1">Price range 1:</label>
-                        <input type="text" id="amount1" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                    </p>
-                    <p>
-                        <label for="amount2">Price range 2:</label>
-                        <input type="text" id="amount2" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                    </p>
-                    <div id="slider-range"></div>
-                </li>
-
+            <ul class="list-unstyled components px-3 pt-0">
+                <div class="custom-control custom-switch pb-0">
+                    <input type="checkbox" class="custom-control-input" id="switch-year" data-toggle="collapse" data-target="#collapse-year">
+                    <label class="custom-control-label" for="switch-year">Filter Year</label>
+                </div>
+                <div id="collapse-year" class="collapse">
+                <div class="row mt-2">
+                    <div class="col-sm-3">
+                    <input type="text" pattern="\d*" id="year-amount1" class="form-control text-right" placeholder="Enter amount1" name="year-amount1">
+                    </div>
+                    <div class="col-sm-6 text-center form-control-plaintext text-light">
+                    Publish Year
+                    </div>
+                    <div class="col-sm-3">
+                    <input type="text" pattern="\d*" id="year-amount2" class="form-control" placeholder="Enter amount2" name="year-amount2">
+                    </div>
+                </div>
+                <div id="year-range-slider" class="mt-2 range-slider"></div>
+                </div>
             </ul>
 
             <ul class="list-unstyled CTAs">
                 <li>
-                    <a href="#" class="apply-filter">Apply Filter</a>
+                    <a href="#" class="apply-filter ">Apply Filter</a>
                 </li>
             </ul>
         </nav>

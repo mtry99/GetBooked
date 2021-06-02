@@ -60,7 +60,7 @@ a, a:hover, a:focus {
 #sidebar {
     min-width: 400px;
     max-width: 400px;
-    background: #7386D5;
+    background: #f0b9b5;
     color: #fff;
     transition: all 0.6s cubic-bezier(0.945, 0.020, 0.270, 0.665);
     transform-origin: bottom left;
@@ -73,12 +73,12 @@ a, a:hover, a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #6d7fcc;
+    background: #f88680;
 }
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #47748b;
+    border-bottom: 1px solid #8b8147;
 }
 
 #sidebar ul p {
@@ -92,13 +92,13 @@ a, a:hover, a:focus {
     display: block;
 }
 #sidebar ul li a:hover {
-    color: #7386D5;
+    color: #f0b9b5;
     background: #fff;
 }
 
 #sidebar ul li.active > a, a[aria-expanded="true"] {
     color: #fff;
-    background: #6d7fcc;
+    background: #f0b9b5;
 }
 
 
@@ -117,7 +117,7 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #6d7fcc;
+    background: #f0b9b5;
 }
 
 ul.CTAs {
@@ -133,8 +133,8 @@ ul.CTAs a {
 }
 
 a.apply-filter {
-    background: #fff;
-    color: #7386D5;
+    background: #e6891e;
+    color: #fff;
 }
 
 
@@ -218,6 +218,87 @@ a.apply-filter {
 
 }
 
-#slider-range div {
-    background-color: #f6931f;
+.range-slider div {
+    background-color: #e6891e;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    border: 1px solid #ffc690;
+    background: #ff9b59;
+}
+
+.custom-switch {
+    padding-left: 2.25rem;
+    padding-bottom: 1rem;
+}
+  
+.custom-control-label {
+    padding-top: 0.2rem;
+    padding-left: 1rem;
+    padding-bottom: 0.1rem;
+}
+  
+.custom-switch .custom-control-label::before {
+    left: -2.25rem;
+    height: 1.4rem;
+    width: 2.5rem;  
+    pointer-events: all;
+    border-radius: 1rem;
+}
+
+.custom-switch .custom-control-label::after {
+    top: calc(0.25rem + 2px);
+    left: calc(-2.25rergb(10, 255, 243));
+    width: calc(1.4rem - 4px);  
+    height: calc(1.4rem - 4px);  
+    background-color: #adb5bd;
+    border-radius: 2rem; 
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-transform 0.15s ease-in-out;
+    transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-transform 0.15s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+    .custom-switch .custom-control-label::after {
+      transition: none;
+    }
+}
+  
+.custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+    background-color: #fff;
+    -webkit-transform: translateX(1.05rem);
+    transform: translateX(1.05rem); 
+}
+
+.custom-control-input:focus ~ 
+.custom-control-label::before {
+    /* when the button is toggled off 
+    it is still in focus and a violet border will appear */
+    border-color: #e6891e !important;
+    /* box shadow is blue by default
+    but we do not want any shadow hence we have set 
+    all the values as 0 */
+    box-shadow:
+        0 0 0 0rem rgba(0, 0, 0, 0) !important;
+}
+
+/*sets the background color of
+switch to violet when it is checked*/
+.custom-control-input:checked ~ 
+.custom-control-label::before {
+    border-color: #e6891e !important;
+    background-color: #e6891e !important;
+}
+
+/*sets the background color of
+switch to violet when it is active*/
+.custom-control-input:active ~ 
+.custom-control-label::before {
+    background-color: #e6891e !important;
+    border-color: #e6891e !important;
+}
+
+/*sets the border color of switch
+to violet when it is not checked*/
+.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+    border-color: #e6891e !important;
 }
