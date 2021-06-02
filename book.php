@@ -37,6 +37,9 @@
 
 </head>
 <body>
+
+    <?php require "header.php"; ?>
+
 	<div class="wrapper">
         <!-- Sidebar Holder -->
         <nav id="sidebar">
@@ -86,19 +89,21 @@
                 </div>
             </ul>
 
+            <!--
             <ul class="list-unstyled CTAs">
                 <li>
                     <a href="#" class="apply-filter ">Apply Filter</a>
                 </li>
             </ul>
+            -->
         </nav>
 
         <!-- Page Content Holder -->
         <div id="content">
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex p-3 mb-2">
 
+                <div class="flex-shrink pr-3">
                     <button type="button" id="sidebarCollapse" class="navbar-btn">
                         <span></span>
                         <span></span>
@@ -107,8 +112,44 @@
                     <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <i class="fas fa-align-justify"></i>
                     </button>
-
                 </div>
+
+                <div class="flex-fill">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                        <label for="input-title">Title</label>
+                        <input type="text" placeholder="Any title" class="form-control" id="input-title">
+                        </div>
+                        <div class="form-group col-md-3">
+                        <label for="input-author">Author</label>
+                        <input type="text" placeholder="Any author" class="form-control" id="input-author">
+                        </div>
+                        <div class="form-group col-md-3">
+                        <label for="input-publisher">Publisher</label>
+                        <input type="text" placeholder="Any publisher" class="form-control" id="input-publisher">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                    <label for="input-genre">Genre (enter comma separated list)</label>
+                    <input type="text" placeholder="Any genre" class="form-control" id="input-genre">
+                    </div>
+                    <div class="form-group">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink pr-5">
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="in-stock-check">
+                                <label class="form-check-label" for="in-stock-check">
+                                    Display only in stock books
+                                </label>
+                                </div>
+                            </div>
+                            <div class="flex-fill">
+                                <a href="#" class="btn apply-filter" onclick='return apply_filter()'>Apply Filter</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </nav>
             
             <h2>Collapsible Sidebar Using Bootstrap 4</h2>

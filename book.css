@@ -24,11 +24,9 @@ a, a:hover, a:focus {
 }
 
 .navbar {
-    padding: 15px 10px;
     background: #fff;
     border: none;
     border-radius: 0;
-    margin-bottom: 40px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -36,6 +34,7 @@ a, a:hover, a:focus {
     box-shadow: none;
     outline: none !important;
     border: none;
+    min-width: 2rem;
 }
 
 .line {
@@ -133,8 +132,29 @@ ul.CTAs a {
 }
 
 a.apply-filter {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+    border-color: #e6891e;
     background: #e6891e;
     color: #fff;
+}
+
+a.apply-filter:hover {
+    color: #f0b9b5;
+    background: #fff;
+    border-color: #f0b9b5;
+}
+
+a.apply-filter:active  {
+    background: #f0b9b5;
+    color: #fff;
+    border-color: #f0b9b5;
+}
+
+input:focus, textarea:focus, select:focus, a:focus { 
+    box-shadow: 0px 0px 4px 4px #f0b9b550 !important;
+    outline: none !important;
 }
 
 
@@ -144,7 +164,7 @@ a.apply-filter {
 ----------------------------------------------------- */
 #content {
     width: 100%;
-    padding: 20px;
+    padding: 0.5rem 1rem;
     min-height: 100vh;
     transition: all 0.3s;
 }
@@ -175,7 +195,6 @@ a.apply-filter {
 #sidebarCollapse span:last-of-type {
     transform: rotate(-45deg) translate(1px, -1px);
 }
-
 
 #sidebarCollapse.active span {
     transform: none;
@@ -301,4 +320,8 @@ switch to violet when it is active*/
 to violet when it is not checked*/
 .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
     border-color: #e6891e !important;
+}
+
+#navbar {
+    background-color: #e6891e !important;
 }

@@ -21,7 +21,7 @@ $(document).ready(function () {
     $("#year-range-slider").slider({
         range: true,
         min: 1500,
-        max: 2100,
+        max: 2021,
         values: [1900, 2021],
         slide: function (event, ui) {
             $("#year-amount1").val("" + ui.values[0]);
@@ -31,3 +31,10 @@ $(document).ready(function () {
     $("#year-amount1").val($("#year-range-slider").slider("values", 0));
     $("#year-amount2").val($("#year-range-slider").slider("values", 1));
 });
+
+function apply_filter() {
+
+    console.log("gere");
+
+    return false;
+}
