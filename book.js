@@ -30,7 +30,7 @@ $(document).ready(function () {
 
     $("#year-range-slider").slider({
         range: true,
-        min: 1500,
+        min: 1700,
         max: 2021,
         values: [book_filter["year_min"], book_filter["year_max"]],
         slide: function (event, ui) {

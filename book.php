@@ -239,7 +239,7 @@ $result = $conn->query($sql);
         <!-- Sidebar Holder -->
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3>Book Filter</h3>
+                <h3>Advanced Filter</h3>
             </div>
 
             <ul class="list-unstyled components px-3">
