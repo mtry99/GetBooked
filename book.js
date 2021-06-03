@@ -77,6 +77,9 @@ $(document).ready(function () {
 
 function apply_filter() {
 
+    $("#apply-filter-text").css( "display", "none" );
+    $("#apply-filter-spinner").css( "display", "inline-block" );
+
     let filter_obj = {
         page_on: $("#switch-pages").is(":checked"),
     

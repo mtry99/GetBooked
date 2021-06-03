@@ -127,8 +127,15 @@ if($book_filter["author"] !== "") {
     $first = false;
 }
 if($book_filter["genre"] !== "") {
-    $query_genre = ($first?' WHERE ':' AND ').'UPPER(d.genre) LIKE UPPER("%'.$book_filter["genre"].'%") ';
-    $first = false;
+
+    $pieces = explode(",", $book_filter["genre"]);
+    $pieces = array_map("trim", $pieces);
+    
+    foreach($pieces as $i => $piece) {
+
+        $query_genre = $query_genre.($first?' WHERE ':' AND ').'UPPER(d.genre) LIKE UPPER("%'.$piece.'%") ';
+        $first = false;
+    }
 }
 
 $sql = sprintf('
@@ -277,13 +284,6 @@ $result = $conn->query($sql);
                 </div>
             </ul>
 
-            <!--
-            <ul class="list-unstyled CTAs">
-                <li>
-                    <a href="#" class="apply-filter ">Apply Filter</a>
-                </li>
-            </ul>
-            -->
         </nav>
 
         <!-- Page Content Holder -->
@@ -332,7 +332,14 @@ $result = $conn->query($sql);
                                 </div>
                             </div>
                             <div class="flex-fill">
-                                <a href="#" class="btn apply-filter" onclick='return apply_filter()'>Apply Filter</a>
+                                <a href="#" class="btn apply-filter" onclick='return apply_filter()'>
+                                    <div id="apply-filter-text">
+                                        Apply Filter
+                                    </div>
+                                    <div id="apply-filter-spinner" style="display: none;" class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -362,11 +369,11 @@ $result = $conn->query($sql);
                         echo '</th><td><img id="cover-';
                         echo $row["original_key"];
                         echo '" class="cover-image" src="no_cover.jpg">';
-                        echo '</td><td><span class="book-table-bold">Title: </span><a href="#" onclick="return title_clicked(';
+                        echo '</td><td><span class="book-table-title"><a href="#" onclick="return title_clicked(';
                         echo $row["book_id"];
                         echo ')">';
                         echo $row["title"];
-                        echo '</a><br><span class="book-table-bold">Author(s): </span>';
+                        echo '</a></span><br><span class="book-table-bold">Author(s): </span>';
                         $author_array = explode(',', $row["author"]);
                         foreach($author_array as $i => $author) {
 
