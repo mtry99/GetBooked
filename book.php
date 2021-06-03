@@ -82,6 +82,32 @@ function ColorHSLToRGB($h, $s, $l){
     return "rgb(".($r * 255.0).",".($g * 255.0).",".($b * 255.0).")";
 }
 
+$sql = '
+-- select grouped details of 25 books --
+SELECT *
+FROM
+    (SELECT c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
+    FROM 
+        (SELECT b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
+        FROM 
+            (SELECT * FROM book 
+            WHERE MATCH(book.title) AGAINST("Religion" IN NATURAL LANGUAGE MODE)
+            AND book.number_of_pages BETWEEN 224 AND 814
+            AND book.publish_year BETWEEN 1753 AND 2015) as b
+        LEFT JOIN book_author ba ON b.book_id = ba.book_id
+        LEFT JOIN author a ON ba.author_id  = a.author_id
+        GROUP BY b.book_id) as c
+    LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+    LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
+    LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
+    GROUP BY c.book_id) as d
+WHERE UPPER(d.publisher_name) LIKE UPPER("%publishing%")
+AND UPPER(d.author) LIKE UPPER("%john%")
+AND UPPER(d.genre) LIKE UPPER("%general%")
+ORDER BY d.book_id LIMIT 25;';
+
+$result = $conn->query($sql);
+
 //var_dump($book_filter);
 
 ?>
@@ -269,23 +295,6 @@ function ColorHSLToRGB($h, $s, $l){
             <tbody>
 
                 <?php
-
-                $sql = '-- select grouped details of 10 books --
-                SELECT c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
-                FROM 
-                    (SELECT b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
-                    FROM 
-                        (SELECT * FROM book) as b
-                        LEFT JOIN book_author ba ON b.book_id = ba.book_id
-                        LEFT JOIN author a ON ba.author_id  = a.author_id 
-                    GROUP BY b.book_id) as c
-                LEFT JOIN book_genre bg ON c.book_id = bg.book_id
-                LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
-                LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
-                GROUP BY c.book_id
-                ORDER BY c.book_id LIMIT 54, 25;';
-
-                $result = $conn->query($sql);
                 
                 if ($result->num_rows > 0) {
                     // output data of each row
