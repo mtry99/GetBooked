@@ -21,6 +21,67 @@ $book_filter["year_on"] = isset($_GET["year_on"]) ? $_GET["year_on"] : "false";
 $book_filter["year_min"] = isset($_GET["year_min"]) ? $_GET["year_min"] : "1900";
 $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021";
 
+function ColorHSLToRGB($h, $s, $l){
+
+    $r = $l;
+    $g = $l;
+    $b = $l;
+    $v = ($l <= 0.5) ? ($l * (1.0 + $s)) : ($l + $s - $l * $s);
+    if ($v > 0){
+          $m;
+          $sv;
+          $sextant;
+          $fract;
+          $vsf;
+          $mid1;
+          $mid2;
+
+          $m = $l + $l - $v;
+          $sv = ($v - $m ) / $v;
+          $h *= 6.0;
+          $sextant = floor($h);
+          $fract = $h - $sextant;
+          $vsf = $v * $sv * $fract;
+          $mid1 = $m + $vsf;
+          $mid2 = $v - $vsf;
+
+          switch ($sextant)
+          {
+                case 0:
+                      $r = $v;
+                      $g = $mid1;
+                      $b = $m;
+                      break;
+                case 1:
+                      $r = $mid2;
+                      $g = $v;
+                      $b = $m;
+                      break;
+                case 2:
+                      $r = $m;
+                      $g = $v;
+                      $b = $mid1;
+                      break;
+                case 3:
+                      $r = $m;
+                      $g = $mid2;
+                      $b = $v;
+                      break;
+                case 4:
+                      $r = $mid1;
+                      $g = $m;
+                      $b = $v;
+                      break;
+                case 5:
+                      $r = $v;
+                      $g = $m;
+                      $b = $mid2;
+                      break;
+          }
+    }
+    return "rgb(".($r * 255.0).",".($g * 255.0).",".($b * 255.0).")";
+}
+
 //var_dump($book_filter);
 
 ?>
@@ -200,9 +261,9 @@ $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021"
             <thead>
                 <tr>
                 <th scope="col" style="width: 2.5%">#</th>
-                <th scope="col" style="width: 42.5%">Title</th>
-                <th scope="col" style="width: 35%">Author</th>
-                <th scope="col" style="width: 20%">Publisher</th>
+                <th scope="col" style="width: 15%">Cover</th>
+                <th scope="col" style="width: 47.5%">Book</th>
+                <th scope="col" style="width: 35%">Genre(s)</th>
                 </tr>
             </thead>
             <tbody>
@@ -210,9 +271,9 @@ $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021"
                 <?php
 
                 $sql = '-- select grouped details of 10 books --
-                SELECT c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
+                SELECT c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
                 FROM 
-                    (SELECT b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
+                    (SELECT b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
                     FROM 
                         (SELECT * FROM book) as b
                         LEFT JOIN book_author ba ON b.book_id = ba.book_id
@@ -222,7 +283,7 @@ $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021"
                 LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
                 LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
                 GROUP BY c.book_id
-                ORDER BY c.book_id LIMIT 54, 10;';
+                ORDER BY c.book_id LIMIT 54, 25;';
 
                 $result = $conn->query($sql);
                 
@@ -232,11 +293,14 @@ $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021"
 
                         echo '<tr><th scope="row">';
                         echo $row["book_id"];
-                        echo '</th><td><a href="#" onclick="return title_clicked(';
+                        echo '</th><td><img id="cover-';
+                        echo $row["original_key"];
+                        echo '" class="cover-image" src="no_cover.jpg">';
+                        echo '</td><td><span class="book-table-bold">Title: </span><a href="#" onclick="return title_clicked(';
                         echo $row["book_id"];
                         echo ')">';
                         echo $row["title"];
-                        echo '</a></td><td>';
+                        echo '</a><br><span class="book-table-bold">Author(s): </span>';
                         $author_array = explode(',', $row["author"]);
                         foreach($author_array as $i => $author) {
 
@@ -252,13 +316,35 @@ $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021"
                             echo $author_array_array[1];
                             echo '</a>';
                         }
-                        echo '</td><td><a href="#" onclick="return publisher_clicked(';
+                        echo '<br><span class="book-table-bold">Publisher: </span><a href="#" onclick="return publisher_clicked(';
                         echo $row["publisher_id"];
                         echo ')">';
                         echo $row["publisher_name"];
-                        echo '</a></td>';
-                        echo 'sgsdgsdgsdg';
-                        echo '</tr>';
+                        echo ' (';
+                        echo $row["publish_year"];
+                        echo ')</a><br><span class="book-table-bold">ISBN: </span>';
+                        echo $row["isbn"];
+                        echo '<span class="book-table-bold"> Language: </span>';
+                        echo $row["language"];
+                        echo '</td><td>';
+                        $genre_array = explode(',', $row["genre"]);
+                        foreach($genre_array as $i => $genre) {
+
+                            $genre_array_array = explode(':', $genre);
+
+                            if($i !== 0) {
+                                echo ' ';
+                            }
+
+                            echo '<a href="#" class="badge" onclick="return genre_clicked(';
+                            echo $genre_array_array[0];
+                            echo ')" style="background-color: ';
+                            echo ColorHSLToRGB(($genre_array_array[0]*1049)%360/360,0.8,0.6);
+                            echo ';">';
+                            echo $genre_array_array[1];
+                            echo '</a>';
+                        }
+                        echo '</td></tr>';
                     }
                 } else {
                     echo "0 results";

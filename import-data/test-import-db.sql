@@ -130,9 +130,9 @@ FROM
 ORDER BY b.book_id;
 
 -- select grouped details of 10 books --
-SELECT c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
+SELECT c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
 FROM 
-    (SELECT b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
+    (SELECT b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
     FROM 
         (SELECT * FROM book) as b
         LEFT JOIN book_author ba ON b.book_id = ba.book_id
@@ -142,4 +142,4 @@ LEFT JOIN book_genre bg ON c.book_id = bg.book_id
 LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
 LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
 GROUP BY c.book_id
-ORDER BY c.book_id LIMIT 10;
+ORDER BY c.book_id LIMIT 54, 25;

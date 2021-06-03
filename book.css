@@ -345,3 +345,22 @@ input[type=number] {
 .book-table tbody tr:nth-child(even):hover {
     background-color: #ffd5a2;
 }
+
+.book-table-bold {
+    font-weight: bold;
+}
+
+.badge {
+    color: white;
+}
+
+.badge:hover {
+    background-color: white !important;
+}
+
+.cover-image {
+    width:100%;
+    max-height:100%;
+    object-fit: contain;
+    overflow: hidden;
+}
