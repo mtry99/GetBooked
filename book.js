@@ -60,6 +60,8 @@ $(document).ready(function () {
     $("#input-publisher").val(book_filter["publisher"]);
     $("#input-genre").val(book_filter["genre"]);
 
+    $("#input-language").val(book_filter["language"]);
+
     $('.cover-image').each(function(i, obj) {
         let book_og_key = obj.id.split('-')[1];
         obj.onload = function() {
@@ -97,6 +99,8 @@ function apply_filter() {
         }).join(","),
 
         in_stock: $("#in-stock-check").is(":checked"),
+
+        language: $("#input-language option:selected").val()
     };
 
     filter_obj.page_min = $("#pages-amount1").val();
@@ -135,6 +139,9 @@ function apply_filter() {
         url += "year_on=" + encodeURIComponent(filter_obj.year_on) + "&";
         url += "year_min=" + encodeURIComponent(filter_obj.year_min) + "&";
         url += "year_max=" + encodeURIComponent(filter_obj.year_max) + "&";
+    }
+    if(filter_obj.language !== "any") {
+        url += "language=" + encodeURIComponent(filter_obj.language) + "&";
     }
 
     url = url.replace(/&\s*$/, "");

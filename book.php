@@ -21,6 +21,8 @@ $book_filter["year_on"] = isset($_GET["year_on"]) ? $_GET["year_on"] : "false";
 $book_filter["year_min"] = isset($_GET["year_min"]) ? $_GET["year_min"] : "1900";
 $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021";
 
+$book_filter["language"] = isset($_GET["language"]) ? $_GET["language"] : "any";
+
 function ColorHSLToRGB($h, $s, $l){
 
     $r = $l;
@@ -82,12 +84,16 @@ function ColorHSLToRGB($h, $s, $l){
     return "rgb(".($r * 255.0).",".($g * 255.0).",".($b * 255.0).")";
 }
 
+$language_map = array("afr"=>"Afrikaans","alb"=>"Albanian","amh"=>"Amharic","ang"=>"English, Old","ara"=>"Arabic","arm"=>"Armenian","asm"=>"Assamese","ava"=>"Avaric","aze"=>"Azerbaijani","baq"=>"Basque","bel"=>"Belarusian","ben"=>"Bengali","bnt"=>"Bantu","bos"=>"Bosnian","bre"=>"Breton","bul"=>"Bulgarian","cat"=>"Catalan","cau"=>"Caucasian","chi"=>"Chinese","chv"=>"Chuvash","cmn"=>"Mandarin","cze"=>"Czech","dan"=>"Danish","dut"=>"Dutch","dzo"=>"Dzongkha","egy"=>"Egyptian","eng"=>"English","enm"=>"English, Middle","esk"=>"Eskimo languages","esp"=>"Esperanto","est"=>"Estonian","fao"=>"Faroese","fin"=>"Finnish","fiu"=>"Finno-Ugrian","fre"=>"French","fri"=>"Frisian","frm"=>"French, Middle","fro"=>"French, Old","gae"=>"Scottish Gaelix","gag"=>"Galician","geo"=>"Georgian","ger"=>"German","gle"=>"Irish","glg"=>"Galician","gmh"=>"German, Middle High","grc"=>"Ancient Greek","gre"=>"Greek","gsw"=>"gsw","guj"=>"Gujarati","hat"=>"Haitian French Creole","hau"=>"Hausa","heb"=>"Hebrew","hin"=>"Hindi","hrv"=>"Croatian","hun"=>"Hungarian","ibo"=>"Igbo","ice"=>"Icelandic","ind"=>"Indonesian","iri"=>"Irish","ita"=>"Italian","jpn"=>"Japanese","kal"=>"Kalâtdlisut","kan"=>"Kannada","kaz"=>"Kazakh","khi"=>"Khoisan","kir"=>"Kyrgyz","kok"=>"Konkani","kor"=>"Korean","kur"=>"Kurdish","lad"=>"Ladino","lao"=>"Lao","lat"=>"Latin","lav"=>"Latvian","lit"=>"Lithuanian","mac"=>"Macedonian","mai"=>"Maithili","mal"=>"Malayalam","mao"=>"Maori","mar"=>"Marathi","may"=>"Malay","mni"=>"Manipuri","mol"=>"Moldavian","mon"=>"Mongolian","mul"=>"Multiple languages","nai"=>"North American Indian","nep"=>"Nepali","new"=>"Newari","nor"=>"Norwegian","oci"=>"Occitan","oji"=>"Ojibwa","ori"=>"Oriya","oss"=>"Ossetic","ota"=>"Turkish, Ottoman","paa"=>"Papuan","pan"=>"Panjabi","pap"=>"Papiamento","per"=>"Persian","pol"=>"Polish","por"=>"Portuguese","roa"=>"Romance","rom"=>"Romani","rum"=>"Romanian","run"=>"Rundi","rus"=>"Russian","sah"=>"Yakut","san"=>"Sanskrit","scc"=>"Serbian","scr"=>"Croatian","sin"=>"Sinhalese","slo"=>"Slovak","slv"=>"Slovenian","smo"=>"Samoan","snh"=>"Sinhalese","som"=>"Somali","spa"=>"Spanish","srp"=>"Serbian","swa"=>"Swahili","swe"=>"Swedish","tag"=>"Tagalog","tam"=>"Tamil","tat"=>"Tatar","tel"=>"Telugu","tgk"=>"Tajik","tgl"=>"Tagalog","tha"=>"Thai","tib"=>"Tibetan","tuk"=>"Turkmen","tur"=>"Turkish","tut"=>"Altaic","twi"=>"Twi","ukr"=>"Ukrainian","und"=>"Undetermined","urd"=>"Urdu","uzb"=>"Uzbek","vie"=>"Vietnamese","wel"=>"Welsh","wen"=>"Sorbian","xho"=>"Xhosa","yid"=>"Yiddish","yor"=>"Yoruba","zap"=>"Zapotec");
+
 $query_title = '';
 $query_page = '';
 $query_year = '';
 $query_publisher = '';
 $query_author = '';
 $query_genre = '';
+
+$query_language = '';
 
 $search_str = '';
 $search_str_1 = '';
@@ -114,6 +120,10 @@ if($book_filter["page_on"] !== "false") {
 }
 if($book_filter["year_on"] !== "false") {
     $query_year = ($first?' WHERE ':' AND ').'book.publish_year BETWEEN '.$book_filter["year_min"].' AND '.$book_filter["year_max"].' ';
+    $first = false;
+}
+if($book_filter["language"] !== "any") {
+    $query_language = ($first?' WHERE ':' AND ').'book.language = "'.$book_filter["language"].'" ';
     $first = false;
 }
 
@@ -148,6 +158,7 @@ FROM
             (SELECT * %s FROM book 
             %s
             %s
+            %s
             %s) as b
         LEFT JOIN book_author ba ON b.book_id = ba.book_id
         LEFT JOIN author a ON ba.author_id  = a.author_id
@@ -162,7 +173,7 @@ FROM
 %s
 LIMIT 25;',
 $search_str_1, $search_str_2, $search_str, $query_title, $query_page, 
-$query_year, $query_publisher, $query_author, $query_genre, $search_str_order);
+$query_year, $query_language, $query_publisher, $query_author, $query_genre, $search_str_order);
 
 //var_dump($sql);
 
@@ -221,6 +232,8 @@ $result = $conn->query($sql);
     book_filter["year_on"] = <?php echo $book_filter["year_on"]; ?>;
     book_filter["year_min"] = <?php echo $book_filter["year_min"]; ?>;
     book_filter["year_max"] = <?php echo $book_filter["year_max"]; ?>;
+
+    book_filter["language"] = "<?php echo $book_filter["language"]; ?>";
 
     console.log(book_filter);
 
@@ -317,9 +330,22 @@ $result = $conn->query($sql);
                         <input type="text" placeholder="Any publisher" class="form-control" id="input-publisher">
                         </div>
                     </div>
-                    <div class="form-group">
-                    <label for="input-genre">Genres (enter comma separated list)</label>
-                    <input type="text" placeholder="Any genre" class="form-control" id="input-genre">
+                    <div class="form-row">
+                        <div class="form-group col-md-9">
+                            <label for="input-genre">Genres (enter comma separated list)</label>
+                            <input type="text" placeholder="Any genre" class="form-control" id="input-genre">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="input-language">Language</label>
+                            <select id="input-language" name="languages" class="custom-select">
+                                <option value='any' selected>Any</option>
+                                <?php
+                                foreach($language_map as $lan => $language) {
+                                    echo '<option value="'.$lan.'">'.$language.'</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="d-flex align-items-center">
