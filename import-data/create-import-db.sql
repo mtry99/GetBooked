@@ -35,6 +35,7 @@ CREATE TABLE `book` (
     `language` VARCHAR(5) NOT NULL , 
     `publisher_id` INT NOT NULL , 
     `publish_year` INT NOT NULL , 
+    `count` INT NOT NULL ,
     PRIMARY KEY (`book_id`),
     FOREIGN KEY (`publisher_id`) REFERENCES `publisher`(`publisher_id`)
 );
