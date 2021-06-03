@@ -1,5 +1,26 @@
 <?php
 
+// year_on=true&year_min=1753&year_max=1925
+
+$book_filter = array();
+
+$book_filter["title"] = isset($_GET["title"]) ? $_GET["title"] : "";
+$book_filter["author"] = isset($_GET["author"]) ? $_GET["author"] : "";
+$book_filter["publisher"] = isset($_GET["publisher"]) ? $_GET["publisher"] : "";
+$book_filter["genre"] = isset($_GET["genre"]) ? $_GET["genre"] : "";
+
+$book_filter["in_stock"] = isset($_GET["in_stock"]) ? $_GET["in_stock"] : "false";
+
+$book_filter["page_on"] = isset($_GET["page_on"]) ? $_GET["page_on"] : "false";
+$book_filter["page_min"] = isset($_GET["page_min"]) ? $_GET["page_min"] : "500";
+$book_filter["page_max"] = isset($_GET["page_max"]) ? $_GET["page_max"] : "1200";
+
+$book_filter["year_on"] = isset($_GET["year_on"]) ? $_GET["year_on"] : "false";
+$book_filter["year_min"] = isset($_GET["year_min"]) ? $_GET["year_min"] : "1900";
+$book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021";
+
+//var_dump($book_filter);
+
 ?>
 
 <!DOCTYPE html>
@@ -12,28 +33,49 @@
 
     <title>Book Search</title>
 
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>     
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
     
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Popper.JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
-    
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     
     <!-- Our Custom CSS -->
     <link rel="stylesheet" href="book.css">
+
+    <script>
+    
+    let book_filter = {};
+
+    book_filter["title"] = "<?php echo $book_filter["title"]; ?>";
+    book_filter["author"] = "<?php echo $book_filter["author"]; ?>";
+    book_filter["publisher"] = "<?php echo $book_filter["publisher"]; ?>";
+    book_filter["genre"] = "<?php echo $book_filter["genre"]; ?>";
+
+    book_filter["in_stock"] = <?php echo $book_filter["in_stock"]; ?>;
+
+    book_filter["page_on"] = <?php echo $book_filter["page_on"]; ?>;
+    book_filter["page_min"] = <?php echo $book_filter["page_min"]; ?>;
+    book_filter["page_max"] = <?php echo $book_filter["page_max"]; ?>;
+
+    book_filter["year_on"] = <?php echo $book_filter["year_on"]; ?>;
+    book_filter["year_min"] = <?php echo $book_filter["year_min"]; ?>;
+    book_filter["year_max"] = <?php echo $book_filter["year_max"]; ?>;
+
+    console.log(book_filter);
+
+    </script>
 
 </head>
 <body>
@@ -55,13 +97,13 @@
                 <div id="collapse-pages" class="collapse">
                 <div class="row mt-2">
                     <div class="col-sm-3">
-                    <input type="text" pattern="\d*" id="pages-amount1" class="form-control text-right" placeholder="Enter amount1" name="pages-amount1">
+                    <input type="number" step="1" id="pages-amount1" class="form-control text-right" placeholder="Enter amount1" name="pages-amount1">
                     </div>
                     <div class="col-sm-6 text-center form-control-plaintext text-light">
                     Pages
                     </div>
                     <div class="col-sm-3">
-                    <input type="text" pattern="\d*" id="pages-amount2" class="form-control" placeholder="Enter amount2" name="pages-amount2">
+                    <input type="number" step="1" id="pages-amount2" class="form-control" placeholder="Enter amount2" name="pages-amount2">
                     </div>
                 </div>
                 <div id="pages-range-slider" class="mt-2 range-slider"></div>
@@ -76,13 +118,13 @@
                 <div id="collapse-year" class="collapse">
                 <div class="row mt-2">
                     <div class="col-sm-3">
-                    <input type="text" pattern="\d*" id="year-amount1" class="form-control text-right" placeholder="Enter amount1" name="year-amount1">
+                    <input type="number" step="1" id="year-amount1" class="form-control text-right" placeholder="Enter amount1" name="year-amount1">
                     </div>
                     <div class="col-sm-6 text-center form-control-plaintext text-light">
                     Publish Year
                     </div>
                     <div class="col-sm-3">
-                    <input type="text" pattern="\d*" id="year-amount2" class="form-control" placeholder="Enter amount2" name="year-amount2">
+                    <input type="number" step="1" id="year-amount2" class="form-control" placeholder="Enter amount2" name="year-amount2">
                     </div>
                 </div>
                 <div id="year-range-slider" class="mt-2 range-slider"></div>
@@ -130,7 +172,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                    <label for="input-genre">Genre (enter comma separated list)</label>
+                    <label for="input-genre">Genres (enter comma separated list)</label>
                     <input type="text" placeholder="Any genre" class="form-control" id="input-genre">
                     </div>
                     <div class="form-group">
