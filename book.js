@@ -128,7 +128,25 @@ function apply_filter() {
     // sad,,as,df,asd,,a3,5,35,as,35a,s,5a ,,asa, d< B#%,  <#$^<,W$^<
     // http://localhost/book.php?title=df&author=sdfsd&publisher=sdfs&genre=sad%2Cas%2Cdf%2Casd%2Ca3%2C5%2C35%2Cas%2C35a%2Cs%2C5a%2Casa%2Cd%3C%20b%23%25%2C%3C%23%24%5E%3C%2Cw%24%5E%3C&in_stock=true&page_on=true&page_min=224&page_max=814&year_on=true&year_min=1753&year_max=1925
 
-    //window.location.href = window.location.origin + "/book.php?";
+    window.location.href = url;
+
+    return false;
+}
+
+function title_clicked(id) {
+    console.log("title_clicked: " + id);
+
+    return false;
+}
+
+function author_clicked(id) {
+    console.log("author_clicked: " + id);
+
+    return false;
+}
+
+function publisher_clicked(id) {
+    console.log("publisher_clicked: " + id);
 
     return false;
 }

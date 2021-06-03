@@ -337,3 +337,11 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.book-table tbody tr:nth-child(odd):hover {
+    background-color: #ebc494;
+}
+
+.book-table tbody tr:nth-child(even):hover {
+    background-color: #ffd5a2;
+}

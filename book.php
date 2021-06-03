@@ -1,5 +1,7 @@
 <?php
 
+require_once "config.php";
+
 // year_on=true&year_min=1753&year_max=1925
 
 $book_filter = array();
@@ -194,24 +196,78 @@ $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021"
 
             </nav>
             
-            <h2>Collapsible Sidebar Using Bootstrap 4</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <table class="table table-striped table-hover book-table">
+            <thead>
+                <tr>
+                <th scope="col" style="width: 2.5%">#</th>
+                <th scope="col" style="width: 42.5%">Title</th>
+                <th scope="col" style="width: 35%">Author</th>
+                <th scope="col" style="width: 20%">Publisher</th>
+                </tr>
+            </thead>
+            <tbody>
 
-            <div class="line"></div>
+                <?php
 
-            <h2>Lorem Ipsum Dolor</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                $sql = '-- select grouped details of 10 books --
+                SELECT c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
+                FROM 
+                    (SELECT b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
+                    FROM 
+                        (SELECT * FROM book) as b
+                        LEFT JOIN book_author ba ON b.book_id = ba.book_id
+                        LEFT JOIN author a ON ba.author_id  = a.author_id 
+                    GROUP BY b.book_id) as c
+                LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+                LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
+                LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
+                GROUP BY c.book_id
+                ORDER BY c.book_id LIMIT 54, 10;';
 
-            <div class="line"></div>
+                $result = $conn->query($sql);
+                
+                if ($result->num_rows > 0) {
+                    // output data of each row
+                    while($row = $result->fetch_assoc()) {
 
-            <h2>Lorem Ipsum Dolor</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        echo '<tr><th scope="row">';
+                        echo $row["book_id"];
+                        echo '</th><td><a href="#" onclick="return title_clicked(';
+                        echo $row["book_id"];
+                        echo ')">';
+                        echo $row["title"];
+                        echo '</a></td><td>';
+                        $author_array = explode(',', $row["author"]);
+                        foreach($author_array as $i => $author) {
 
-            <div class="line"></div>
+                            $author_array_array = explode(':', $author);
 
-            <h3>Lorem Ipsum Dolor</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            if($i !== 0) {
+                                echo ', ';
+                            }
+
+                            echo '<a href="#" onclick="return author_clicked(';
+                            echo $author_array_array[0];
+                            echo ')">';
+                            echo $author_array_array[1];
+                            echo '</a>';
+                        }
+                        echo '</td><td><a href="#" onclick="return publisher_clicked(';
+                        echo $row["publisher_id"];
+                        echo ')">';
+                        echo $row["publisher_name"];
+                        echo '</a></td>';
+                        echo 'sgsdgsdgsdg';
+                        echo '</tr>';
+                    }
+                } else {
+                    echo "0 results";
+                }
+
+                ?>
+            </tbody>
+            </table>
+        
         </div>
     </div>
 

@@ -1,6 +1,6 @@
 <?php
 $servername = "localhost:3306";
-$dbusername = "genericperson";
+$dbusername = "importperson";
 $dbpassword = "genericpassword";
 $dbname = "importdb";
 
