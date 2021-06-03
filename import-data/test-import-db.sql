@@ -137,7 +137,7 @@ FROM
         (SELECT b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
         FROM 
             (SELECT * FROM book 
-            WHERE MATCH(book.title) AGAINST("Religion" IN NATURAL LANGUAGE MODE)
+            WHERE MATCH(book.title) AGAINST('( *religion* ) ("religion")' IN NATURAL LANGUAGE MODE)
             AND book.number_of_pages BETWEEN 224 AND 814
             AND book.publish_year BETWEEN 1753 AND 2015) as b
         LEFT JOIN book_author ba ON b.book_id = ba.book_id
@@ -150,4 +150,4 @@ FROM
 WHERE UPPER(d.publisher_name) LIKE UPPER("%publishing%")
 AND UPPER(d.author) LIKE UPPER("%john%")
 AND UPPER(d.genre) LIKE UPPER("%general%")
-ORDER BY d.book_id LIMIT 25;
+LIMIT 25;

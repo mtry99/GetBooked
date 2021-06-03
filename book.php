@@ -82,18 +82,66 @@ function ColorHSLToRGB($h, $s, $l){
     return "rgb(".($r * 255.0).",".($g * 255.0).",".($b * 255.0).")";
 }
 
-$sql = '
--- select grouped details of 25 books --
+$query_title = '';
+$query_page = '';
+$query_year = '';
+$query_publisher = '';
+$query_author = '';
+$query_genre = '';
+
+$search_str = '';
+$search_str_1 = '';
+$search_str_2 = '';
+$search_str_order = '';
+
+$first = true;
+if($book_filter["title"] !== "") {
+    $pieces = explode(" ", $book_filter["title"]);
+    $search_str = implode(" +", $pieces); // "( *".implode("* *", $pieces)."* ) (\"".implode(" ", $pieces)."\")"
+    $search_str = 'MATCH(book.title) AGAINST(\'+'.$search_str.'\' IN BOOLEAN MODE) ';
+    $query_title = ($first?' WHERE ':' AND ').$search_str;
+    //var_dump($query_title);
+    $first = false;
+
+    $search_str = ', '.$search_str.'score ';
+    $search_str_1 = 'c.score, ';
+    $search_str_2 = 'b.score, ';
+    $search_str_order = 'ORDER BY score DESC';
+}
+if($book_filter["page_on"] !== "false") {
+    $query_page = ($first?' WHERE ':' AND ').'book.number_of_pages BETWEEN '.$book_filter["page_min"].' AND '.$book_filter["page_max"].' ';
+    $first = false;
+}
+if($book_filter["year_on"] !== "false") {
+    $query_year = ($first?' WHERE ':' AND ').'book.publish_year BETWEEN '.$book_filter["year_min"].' AND '.$book_filter["year_max"].' ';
+    $first = false;
+}
+
+$first = true;
+if($book_filter["publisher"] !== "") {
+    $query_publisher = ($first?' WHERE ':' AND ').'UPPER(d.publisher_name) LIKE UPPER("%'.$book_filter["publisher"].'%") ';
+    $first = false;
+}
+if($book_filter["author"] !== "") {
+    $query_author = ($first?' WHERE ':' AND ').'UPPER(d.author) LIKE UPPER("%'.$book_filter["author"].'%") ';
+    $first = false;
+}
+if($book_filter["genre"] !== "") {
+    $query_genre = ($first?' WHERE ':' AND ').'UPPER(d.genre) LIKE UPPER("%'.$book_filter["genre"].'%") ';
+    $first = false;
+}
+
+$sql = sprintf('
 SELECT *
 FROM
-    (SELECT c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
+    (SELECT %s c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
     FROM 
-        (SELECT b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
+        (SELECT %s b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
         FROM 
-            (SELECT * FROM book 
-            WHERE MATCH(book.title) AGAINST("Religion" IN NATURAL LANGUAGE MODE)
-            AND book.number_of_pages BETWEEN 224 AND 814
-            AND book.publish_year BETWEEN 1753 AND 2015) as b
+            (SELECT * %s FROM book 
+            %s
+            %s
+            %s) as b
         LEFT JOIN book_author ba ON b.book_id = ba.book_id
         LEFT JOIN author a ON ba.author_id  = a.author_id
         GROUP BY b.book_id) as c
@@ -101,10 +149,15 @@ FROM
     LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
     LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
     GROUP BY c.book_id) as d
-WHERE UPPER(d.publisher_name) LIKE UPPER("%publishing%")
-AND UPPER(d.author) LIKE UPPER("%john%")
-AND UPPER(d.genre) LIKE UPPER("%general%")
-ORDER BY d.book_id LIMIT 25;';
+%s
+%s
+%s
+%s
+LIMIT 25;',
+$search_str_1, $search_str_2, $search_str, $query_title, $query_page, 
+$query_year, $query_publisher, $query_author, $query_genre, $search_str_order);
+
+//var_dump($sql);
 
 $result = $conn->query($sql);
 
@@ -163,6 +216,10 @@ $result = $conn->query($sql);
     book_filter["year_max"] = <?php echo $book_filter["year_max"]; ?>;
 
     console.log(book_filter);
+
+    let sql = `<?php echo ($sql); ?>`;
+
+    console.log(sql);
 
     </script>
 
@@ -314,6 +371,10 @@ $result = $conn->query($sql);
                         foreach($author_array as $i => $author) {
 
                             $author_array_array = explode(':', $author);
+
+                            if(!isset($author_array_array[1])) {
+                                continue;
+                            }
 
                             if($i !== 0) {
                                 echo ', ';
