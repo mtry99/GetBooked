@@ -132,6 +132,32 @@ END//
 
 DELIMITER ;
 
+-- add book
+CREATE PROCEDURE ADD_BOOK(
+    in bookname VARCHAR(255),
+    in author VARCHAR(255),
+    in pages INT,
+    in language VARCHAR(255),
+    in publisher VARCHAR(255),
+    in publishedYear INT,
+    in genreComedy VARCHAR(255),
+    in genreHorror VARCHAR(255),
+    in genreThriller VARCHAR(255),
+    in genreRomance VARCHAR(255))
+BEGIN
+	
+END//
+
+-- delete book
+CREATE PROCEDURE DELETE_BOOK()
+
+
+BEGIN
+
+END//
+
+DELIMITER ;
+
 
 -- insert some basic values --------------------------------------------------
 
