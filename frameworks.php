@@ -1,9 +1,3 @@
-<?php
-
-?>
-
-<!DOCTYPE html>
-<html lang="en">
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

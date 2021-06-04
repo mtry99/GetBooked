@@ -386,6 +386,7 @@ input[type=number] {
     color: white;
 }
 
-.clickable-book-info a:hover {
+.clickable-book-info a:hover,
+#detail-values li div div p a:hover {
     color: #f88680;
 }

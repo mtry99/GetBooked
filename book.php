@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+    
 <?php
 
 require_once "config.php";
@@ -129,8 +132,6 @@ $result = $conn->query($sql);
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
 <head>
 
     <meta charset="utf-8">
@@ -140,6 +141,31 @@ $result = $conn->query($sql);
     <title>Book Search</title>
 
     <?php require_once "frameworks.php"; ?>
+
+    <script>
+    
+    let book_filter = {};
+
+    book_filter["title"] = "<?php echo $book_filter["title"]; ?>";
+    book_filter["author"] = "<?php echo $book_filter["author"]; ?>";
+    book_filter["publisher"] = "<?php echo $book_filter["publisher"]; ?>";
+    book_filter["genre"] = "<?php echo $book_filter["genre"]; ?>";
+
+    book_filter["in_stock"] = <?php echo $book_filter["in_stock"]; ?>;
+
+    book_filter["page_on"] = <?php echo $book_filter["page_on"]; ?>;
+    book_filter["page_min"] = <?php echo $book_filter["page_min"]; ?>;
+    book_filter["page_max"] = <?php echo $book_filter["page_max"]; ?>;
+
+    book_filter["year_on"] = <?php echo $book_filter["year_on"]; ?>;
+    book_filter["year_min"] = <?php echo $book_filter["year_min"]; ?>;
+    book_filter["year_max"] = <?php echo $book_filter["year_max"]; ?>;
+
+    book_filter["language"] = "<?php echo $book_filter["language"]; ?>";
+
+    console.log(book_filter);
+
+    </script>
 
 </head>
 <body>
@@ -277,6 +303,6 @@ $result = $conn->query($sql);
     </div>
     
     <script src="book.js"></script>
-    
+
 </body>
 </html>

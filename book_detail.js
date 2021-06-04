@@ -1,7 +1,7 @@
 
 $(document).ready(function () {
 
-    $('.cover-image').each(function(i, obj) {
+    $('.cover-image-big').each(function(i, obj) {
         let book_og_key = obj.id.split('-')[1];
         obj.onload = function() {
             //console.log(this.naturalWidth, this.naturalHeight);
@@ -12,6 +12,6 @@ $(document).ready(function () {
         obj.onerror = function() {
             obj.src = "no_cover.jpg";
         };
-        obj.src = "http://covers.openlibrary.org/b/olid/" + book_og_key + "-M.jpg";
+        obj.src = "http://covers.openlibrary.org/b/olid/" + book_og_key + "-L.jpg";
     });
 });
