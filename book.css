@@ -373,3 +373,19 @@ input[type=number] {
 #apply-filter-spinner {
     color: #ffffff !important;
 }
+
+.availability, .availability:hover {
+    font-weight: bold;
+    font-size: 1.0em;
+    background-color: rgb(209, 66, 66) !important;
+    color: white;
+}
+
+.available, .available:hover {
+    background-color: rgb(77, 218, 89) !important;
+    color: white;
+}
+
+.clickable-book-info a:hover {
+    color: #f88680;
+}

@@ -94,6 +94,7 @@ $query_author = '';
 $query_genre = '';
 
 $query_language = '';
+$query_count = '';
 
 $search_str = '';
 $search_str_1 = '';
@@ -126,6 +127,10 @@ if($book_filter["language"] !== "any") {
     $query_language = ($first?' WHERE ':' AND ').'book.language = "'.$book_filter["language"].'" ';
     $first = false;
 }
+if($book_filter["in_stock"] !== "false") {
+    $query_count = ($first?' WHERE ':' AND ').'book.count > "0" ';
+    $first = false;
+}
 
 $first = true;
 if($book_filter["publisher"] !== "") {
@@ -151,11 +156,12 @@ if($book_filter["genre"] !== "") {
 $sql = sprintf('
 SELECT *
 FROM
-    (SELECT %s c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
+    (SELECT %s c.count, c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
     FROM 
-        (SELECT %s b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
+        (SELECT %s b.count, b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
         FROM 
             (SELECT * %s FROM book 
+            %s
             %s
             %s
             %s
@@ -172,8 +178,8 @@ FROM
 %s
 %s
 LIMIT 25;',
-$search_str_1, $search_str_2, $search_str, $query_title, $query_page, 
-$query_year, $query_language, $query_publisher, $query_author, $query_genre, $search_str_order);
+$search_str_1, $search_str_2, $search_str, $query_title, $query_page, $query_year, $query_language, 
+$query_count, $query_publisher, $query_author, $query_genre, $search_str_order);
 
 //var_dump($sql);
 
@@ -353,7 +359,7 @@ $result = $conn->query($sql);
                                 <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="in-stock-check">
                                 <label class="form-check-label" for="in-stock-check">
-                                    Display only in stock books
+                                    Display books that are in stock only 
                                 </label>
                                 </div>
                             </div>
@@ -395,7 +401,7 @@ $result = $conn->query($sql);
                         echo '</th><td><img id="cover-';
                         echo $row["original_key"];
                         echo '" class="cover-image" src="no_cover.jpg">';
-                        echo '</td><td><span class="book-table-title"><a href="#" onclick="return title_clicked(';
+                        echo '</td><td class="clickable-book-info"><span class="book-table-title"><a href="#" onclick="return title_clicked(';
                         echo $row["book_id"];
                         echo ')">';
                         echo $row["title"];
@@ -428,8 +434,16 @@ $result = $conn->query($sql);
                         echo ')</a><br><span class="book-table-bold">ISBN: </span>';
                         echo $row["isbn"];
                         echo '<span class="book-table-bold"> Language: </span>';
-                        echo $row["language"];
-                        echo '</td><td>';
+                        echo $language_map[$row["language"]];
+                        echo '<br><span class="book-table-bold badge availability ';
+                        if($row["count"] !== "0") {
+                            echo 'available';
+                            echo '">Available copies: ';
+                            echo $row["count"];
+                        } else {
+                            echo '">OUT OF STOCK';
+                        }
+                        echo '</span></td><td>';
                         $genre_array = explode(',', $row["genre"]);
                         foreach($genre_array as $i => $genre) {
 
