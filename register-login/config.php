@@ -1,8 +1,8 @@
 <?php
 $servername = "localhost:3306";
-$dbusername = "genericperson";
+$dbusername = "bookperson";
 $dbpassword = "genericpassword";
-$dbname = "libraryDBtmp";
+$dbname = "bookdb";
 
 
 // Create connection

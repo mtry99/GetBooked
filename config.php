@@ -1,8 +1,8 @@
 <?php
 $servername = "localhost:3306";
-$dbusername = "importperson";
+$dbusername = "bookperson";
 $dbpassword = "genericpassword";
-$dbname = "importdb";
+$dbname = "bookdb";
 
 
 // Create connection
