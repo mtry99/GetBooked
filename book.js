@@ -62,19 +62,6 @@ $(document).ready(function () {
 
     $("#input-language").val(book_filter["language"]);
 
-    $('.cover-image').each(function(i, obj) {
-        let book_og_key = obj.id.split('-')[1];
-        obj.onload = function() {
-            //console.log(this.naturalWidth, this.naturalHeight);
-            if(this.naturalWidth + this.naturalHeight === 2) {
-                obj.src = "no_cover.jpg";
-            }
-        };
-        obj.onerror = function() {
-            obj.src = "no_cover.jpg";
-        };
-        obj.src = "http://covers.openlibrary.org/b/olid/" + book_og_key + "-M.jpg";
-    });
 });
 
 function apply_filter() {
@@ -152,30 +139,6 @@ function apply_filter() {
     // http://localhost/book.php?title=df&author=sdfsd&publisher=sdfs&genre=sad%2Cas%2Cdf%2Casd%2Ca3%2C5%2C35%2Cas%2C35a%2Cs%2C5a%2Casa%2Cd%3C%20b%23%25%2C%3C%23%24%5E%3C%2Cw%24%5E%3C&in_stock=true&page_on=true&page_min=224&page_max=814&year_on=true&year_min=1753&year_max=1925
 
     window.location.href = url;
-
-    return false;
-}
-
-function title_clicked(id) {
-    console.log("title_clicked: " + id);
-
-    return false;
-}
-
-function author_clicked(id) {
-    console.log("author_clicked: " + id);
-
-    return false;
-}
-
-function publisher_clicked(id) {
-    console.log("publisher_clicked: " + id);
-
-    return false;
-}
-
-function genre_clicked(id) {
-    console.log("genre_clicked: " + id);
 
     return false;
 }

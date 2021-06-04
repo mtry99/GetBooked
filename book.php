@@ -1,6 +1,7 @@
 <?php
 
 require_once "config.php";
+require_once "utils.php";
 
 // year_on=true&year_min=1753&year_max=1925
 
@@ -22,67 +23,6 @@ $book_filter["year_min"] = isset($_GET["year_min"]) ? $_GET["year_min"] : "1900"
 $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021";
 
 $book_filter["language"] = isset($_GET["language"]) ? $_GET["language"] : "any";
-
-function ColorHSLToRGB($h, $s, $l){
-
-    $r = $l;
-    $g = $l;
-    $b = $l;
-    $v = ($l <= 0.5) ? ($l * (1.0 + $s)) : ($l + $s - $l * $s);
-    if ($v > 0){
-          $m;
-          $sv;
-          $sextant;
-          $fract;
-          $vsf;
-          $mid1;
-          $mid2;
-
-          $m = $l + $l - $v;
-          $sv = ($v - $m ) / $v;
-          $h *= 6.0;
-          $sextant = floor($h);
-          $fract = $h - $sextant;
-          $vsf = $v * $sv * $fract;
-          $mid1 = $m + $vsf;
-          $mid2 = $v - $vsf;
-
-          switch ($sextant)
-          {
-                case 0:
-                      $r = $v;
-                      $g = $mid1;
-                      $b = $m;
-                      break;
-                case 1:
-                      $r = $mid2;
-                      $g = $v;
-                      $b = $m;
-                      break;
-                case 2:
-                      $r = $m;
-                      $g = $v;
-                      $b = $mid1;
-                      break;
-                case 3:
-                      $r = $m;
-                      $g = $mid2;
-                      $b = $v;
-                      break;
-                case 4:
-                      $r = $mid1;
-                      $g = $m;
-                      $b = $v;
-                      break;
-                case 5:
-                      $r = $v;
-                      $g = $m;
-                      $b = $mid2;
-                      break;
-          }
-    }
-    return "rgb(".($r * 255.0).",".($g * 255.0).",".($b * 255.0).")";
-}
 
 $language_map = array("afr"=>"Afrikaans","alb"=>"Albanian","amh"=>"Amharic","ang"=>"English, Old","ara"=>"Arabic","arm"=>"Armenian","asm"=>"Assamese","ava"=>"Avaric","aze"=>"Azerbaijani","baq"=>"Basque","bel"=>"Belarusian","ben"=>"Bengali","bnt"=>"Bantu","bos"=>"Bosnian","bre"=>"Breton","bul"=>"Bulgarian","cat"=>"Catalan","cau"=>"Caucasian","chi"=>"Chinese","chv"=>"Chuvash","cmn"=>"Mandarin","cze"=>"Czech","dan"=>"Danish","dut"=>"Dutch","dzo"=>"Dzongkha","egy"=>"Egyptian","eng"=>"English","enm"=>"English, Middle","esk"=>"Eskimo languages","esp"=>"Esperanto","est"=>"Estonian","fao"=>"Faroese","fin"=>"Finnish","fiu"=>"Finno-Ugrian","fre"=>"French","fri"=>"Frisian","frm"=>"French, Middle","fro"=>"French, Old","gae"=>"Scottish Gaelix","gag"=>"Galician","geo"=>"Georgian","ger"=>"German","gle"=>"Irish","glg"=>"Galician","gmh"=>"German, Middle High","grc"=>"Ancient Greek","gre"=>"Greek","gsw"=>"gsw","guj"=>"Gujarati","hat"=>"Haitian French Creole","hau"=>"Hausa","heb"=>"Hebrew","hin"=>"Hindi","hrv"=>"Croatian","hun"=>"Hungarian","ibo"=>"Igbo","ice"=>"Icelandic","ind"=>"Indonesian","iri"=>"Irish","ita"=>"Italian","jpn"=>"Japanese","kal"=>"Kalâtdlisut","kan"=>"Kannada","kaz"=>"Kazakh","khi"=>"Khoisan","kir"=>"Kyrgyz","kok"=>"Konkani","kor"=>"Korean","kur"=>"Kurdish","lad"=>"Ladino","lao"=>"Lao","lat"=>"Latin","lav"=>"Latvian","lit"=>"Lithuanian","mac"=>"Macedonian","mai"=>"Maithili","mal"=>"Malayalam","mao"=>"Maori","mar"=>"Marathi","may"=>"Malay","mni"=>"Manipuri","mol"=>"Moldavian","mon"=>"Mongolian","mul"=>"Multiple languages","nai"=>"North American Indian","nep"=>"Nepali","new"=>"Newari","nor"=>"Norwegian","oci"=>"Occitan","oji"=>"Ojibwa","ori"=>"Oriya","oss"=>"Ossetic","ota"=>"Turkish, Ottoman","paa"=>"Papuan","pan"=>"Panjabi","pap"=>"Papiamento","per"=>"Persian","pol"=>"Polish","por"=>"Portuguese","roa"=>"Romance","rom"=>"Romani","rum"=>"Romanian","run"=>"Rundi","rus"=>"Russian","sah"=>"Yakut","san"=>"Sanskrit","scc"=>"Serbian","scr"=>"Croatian","sin"=>"Sinhalese","slo"=>"Slovak","slv"=>"Slovenian","smo"=>"Samoan","snh"=>"Sinhalese","som"=>"Somali","spa"=>"Spanish","srp"=>"Serbian","swa"=>"Swahili","swe"=>"Swedish","tag"=>"Tagalog","tam"=>"Tamil","tat"=>"Tatar","tel"=>"Telugu","tgk"=>"Tajik","tgl"=>"Tagalog","tha"=>"Thai","tib"=>"Tibetan","tuk"=>"Turkmen","tur"=>"Turkish","tut"=>"Altaic","twi"=>"Twi","ukr"=>"Ukrainian","und"=>"Undetermined","urd"=>"Urdu","uzb"=>"Uzbek","vie"=>"Vietnamese","wel"=>"Welsh","wen"=>"Sorbian","xho"=>"Xhosa","yid"=>"Yiddish","yor"=>"Yoruba","zap"=>"Zapotec");
 
@@ -199,55 +139,7 @@ $result = $conn->query($sql);
 
     <title>Book Search</title>
 
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>     
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-    <!-- Bootstrap CSS CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- Font Awesome JS -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
-    
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    
-    <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="book.css">
-
-    <script>
-    
-    let book_filter = {};
-
-    book_filter["title"] = "<?php echo $book_filter["title"]; ?>";
-    book_filter["author"] = "<?php echo $book_filter["author"]; ?>";
-    book_filter["publisher"] = "<?php echo $book_filter["publisher"]; ?>";
-    book_filter["genre"] = "<?php echo $book_filter["genre"]; ?>";
-
-    book_filter["in_stock"] = <?php echo $book_filter["in_stock"]; ?>;
-
-    book_filter["page_on"] = <?php echo $book_filter["page_on"]; ?>;
-    book_filter["page_min"] = <?php echo $book_filter["page_min"]; ?>;
-    book_filter["page_max"] = <?php echo $book_filter["page_max"]; ?>;
-
-    book_filter["year_on"] = <?php echo $book_filter["year_on"]; ?>;
-    book_filter["year_min"] = <?php echo $book_filter["year_min"]; ?>;
-    book_filter["year_max"] = <?php echo $book_filter["year_max"]; ?>;
-
-    book_filter["language"] = "<?php echo $book_filter["language"]; ?>";
-
-    console.log(book_filter);
-
-    let sql = `<?php echo ($sql); ?>`;
-
-    console.log(sql);
-
-    </script>
+    <?php require_once "frameworks.php"; ?>
 
 </head>
 <body>
@@ -379,102 +271,12 @@ $result = $conn->query($sql);
 
             </nav>
             
-            <table class="table table-striped table-hover book-table">
-            <thead>
-                <tr>
-                <th scope="col" style="width: 2.5%">#</th>
-                <th scope="col" style="width: 15%">Cover</th>
-                <th scope="col" style="width: 47.5%">Book</th>
-                <th scope="col" style="width: 35%">Genre(s)</th>
-                </tr>
-            </thead>
-            <tbody>
-
-                <?php
-                
-                if ($result->num_rows > 0) {
-                    // output data of each row
-                    while($row = $result->fetch_assoc()) {
-
-                        echo '<tr><th scope="row">';
-                        echo $row["book_id"];
-                        echo '</th><td><img id="cover-';
-                        echo $row["original_key"];
-                        echo '" class="cover-image" src="no_cover.jpg">';
-                        echo '</td><td class="clickable-book-info"><span class="book-table-title"><a href="#" onclick="return title_clicked(';
-                        echo $row["book_id"];
-                        echo ')">';
-                        echo $row["title"];
-                        echo '</a></span><br><span class="book-table-bold">Author(s): </span>';
-                        $author_array = explode(',', $row["author"]);
-                        foreach($author_array as $i => $author) {
-
-                            $author_array_array = explode(':', $author);
-
-                            if(!isset($author_array_array[1])) {
-                                continue;
-                            }
-
-                            if($i !== 0) {
-                                echo ', ';
-                            }
-
-                            echo '<a href="#" onclick="return author_clicked(';
-                            echo $author_array_array[0];
-                            echo ')">';
-                            echo $author_array_array[1];
-                            echo '</a>';
-                        }
-                        echo '<br><span class="book-table-bold">Publisher: </span><a href="#" onclick="return publisher_clicked(';
-                        echo $row["publisher_id"];
-                        echo ')">';
-                        echo $row["publisher_name"];
-                        echo ' (';
-                        echo $row["publish_year"];
-                        echo ')</a><br><span class="book-table-bold">ISBN: </span>';
-                        echo $row["isbn"];
-                        echo '<span class="book-table-bold"> Language: </span>';
-                        echo $language_map[$row["language"]];
-                        echo '<br><span class="book-table-bold badge availability ';
-                        if($row["count"] !== "0") {
-                            echo 'available';
-                            echo '">Available copies: ';
-                            echo $row["count"];
-                        } else {
-                            echo '">OUT OF STOCK';
-                        }
-                        echo '</span></td><td>';
-                        $genre_array = explode(',', $row["genre"]);
-                        foreach($genre_array as $i => $genre) {
-
-                            $genre_array_array = explode(':', $genre);
-
-                            if($i !== 0) {
-                                echo ' ';
-                            }
-
-                            echo '<a href="#" class="badge" onclick="return genre_clicked(';
-                            echo $genre_array_array[0];
-                            echo ')" style="background-color: ';
-                            echo ColorHSLToRGB(($genre_array_array[0]*1049)%360/360,0.8,0.6);
-                            echo ';">';
-                            echo $genre_array_array[1];
-                            echo '</a>';
-                        }
-                        echo '</td></tr>';
-                    }
-                } else {
-                    echo "0 results";
-                }
-
-                ?>
-            </tbody>
-            </table>
+            <?php require_once "book_table.php"; ?>
         
         </div>
     </div>
-
     
     <script src="book.js"></script>
+    
 </body>
 </html>
