@@ -1,55 +1,123 @@
-<?php include_once("connect-to-db.php") ?>
+<?php 
+// connect to DB
+require_once "config.php";
 
-<!DOCTYPE html>
-<html>
-<body>
+// initialize session
+session_start();
 
+// if already logged in
+if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+	// redirect to admin or user page
+	if($_SESSION["isadmin"] == true) {
+		header("location: admin.php");
+		exit;
+	} else {
+		header("location: user.php");
+		exit;
+	}
+}
 
-<?php
+// initialize variables with empty values
+$uname = $upassword = "";
+$uname_err = $upassword_err = $login_err = "";
 
-$name = $upassword = "";
-
-?>
-<form method="post" "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-
-<h1>Login</h1>
-Username: <input type="text" name="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username'], ENT_QUOTES) : '';?>">
-<br><br>
-Password: <input type="text" name="password" value="<?php echo $upassword;?>">
-
-<br><br>
-
-<input type="submit" name="submit" value="Login">
-</form>
-<br><br>
-
-<?php
+// handle data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-	$name = $_POST["username"];
-	$upassword = $_POST["password"];
 	
-	$name = "'" . $name . "'";
-	$upassword = "'" . $upassword . "'";
-	$sql = "CALL VALIDATE_LOGIN({$name}, {$upassword});";
-	//echo $sql;
-	$result = $conn->query($sql);
-
-	$row = $result->fetch_array();
-	echo $row[0] . "\t\t" . $row[1];
-	echo "<br/>";
-
-	if ($row[0] == 'TRUE') {
-		echo "Login successful";
-		header("Location:user.php");
-		exit();
+	// check if username is empty
+	if(empty(trim($_POST["username"]))) {
+		$uname_err = "Please enter username.";
+	} else {
+		$uname = trim($_POST["username"]);
 	}
-	else {
-		echo "Login failed";
+	
+	// check if password is empty
+    if(empty($_POST["password"])){
+        $upassword_err = "Please enter your password.";
+    } else {
+        $upassword = $_POST["password"];
+    }
+	
+	// if no error with username and password
+	if(empty($uname_err) && empty($upassword_err)) {
+
+		// call stored procedure
+		// addslashes() used in case password or username uses escape characters
+		$sql = "CALL VALIDATE_LOGIN('" . addslashes($uname) . "', '" . addslashes($upassword) . "');";
+
+		$result = $conn->query($sql);
+
+		// if user exists
+		if($result && $result->num_rows == 1) {
+
+			$row = $result->fetch_array();
+
+			// start new session
+			session_start();
+			
+			$_SESSION["loggedin"] = true;
+			$_SESSION["uid"] = $row[1];
+
+			// redirect depending on if user is admin
+			if($row[2]) {
+				$_SESSION["isadmin"] = true;
+				header("location: admin.php");
+				exit;
+			} else {
+				$_SESSION["isadmin"] = false;
+				// redirect to user page
+				header("location: user.php");
+				exit;
+			}
+			
+		} else {
+			// user does not exist
+			$login_err = "Invalid username or password.";
+		}
 	}
-	$upassword = "";
 }
 
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body{ font: 14px sans-serif; }
+        .wrapper{ width: 360px; padding: 20px; }
+    </style>
+</head>
+<body>
+	<div class="wrapper">
+        <h2>Login</h2>
+        <p>Please fill in your credentials to login.</p>
+
+        <?php 
+        if(!empty($login_err)){
+            echo '<div class="alert alert-danger">' . $login_err . '</div>';
+        }        
+        ?>
+
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control <?php echo (!empty($uname_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $uname; ?>">
+                <span class="invalid-feedback"><?php echo $uname_err; ?></span>
+            </div>    
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control <?php echo (!empty($upassword_err)) ? 'is-invalid' : ''; ?>">
+                <span class="invalid-feedback"><?php echo $upassword_err; ?></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Login">
+            </div>
+            <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
+        </form>
+    </div>
 
 </body>
 </html>
