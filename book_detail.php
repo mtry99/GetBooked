@@ -175,11 +175,11 @@ console.log(obj);
                                     <li>
 
                                         <div class="row">
-                                            <div class="col-md-5 col-5">
-                                                <i class="fas fa-graduation-cap text-orange"></i>
+                                            <div class="col-md-3 col-3">
+                                                <i class="fas fa-book text-orange"></i>
                                                 <strong class="margin-10px-left text-orange">Id:</strong>
                                             </div>
-                                            <div class="col-md-7 col-7">
+                                            <div class="col-md-9 col-9">
                                                 <p><?php 
                                                 echo '<a href="#" onclick="return title_clicked(';
                                                 echo $row["book_id"];
@@ -193,11 +193,11 @@ console.log(obj);
                                     </li>
                                     <li>
                                         <div class="row">
-                                            <div class="col-md-5 col-5">
-                                                <i class="fas fa-envelope text-pink"></i>
+                                            <div class="col-md-3 col-3">
+                                                <i class="fas fa-user text-pink"></i>
                                                 <strong class="margin-10px-left xs-margin-four-left text-pink">Author(s):</strong>
                                             </div>
-                                            <div class="col-md-7 col-7">
+                                            <div class="col-md-9 col-9">
                                                 <p>
                                                     <?php
                                                     $author_array = explode(',', $row["author"]);
@@ -227,11 +227,11 @@ console.log(obj);
                                     <li>
 
                                         <div class="row">
-                                            <div class="col-md-5 col-5">
-                                                <i class="far fa-gem text-yellow"></i>
+                                            <div class="col-md-3 col-3">
+                                                <i class="fas fa-building text-yellow"></i>
                                                 <strong class="margin-10px-left text-yellow">Publisher:</strong>
                                             </div>
-                                            <div class="col-md-7 col-7">
+                                            <div class="col-md-9 col-9">
                                                 <p><?php 
                                                 echo '<a href="#" onclick="return publisher_clicked(';
                                                 echo $row["publisher_id"];
@@ -246,24 +246,11 @@ console.log(obj);
                                     <li>
 
                                         <div class="row">
-                                            <div class="col-md-5 col-5">
-                                                <i class="far fa-file text-lightred"></i>
-                                                <strong class="margin-10px-left text-lightred">Publishing Year:</strong>
-                                            </div>
-                                            <div class="col-md-7 col-7">
-                                                <p><?php echo $row["publish_year"]; ?></p>
-                                            </div>
-                                        </div>
-
-                                    </li>
-                                    <li>
-
-                                        <div class="row">
-                                            <div class="col-md-5 col-5">
-                                                <i class="fas fa-map-marker-alt text-green"></i>
+                                            <div class="col-md-3 col-3">
+                                                <i class="fas fa-barcode text-green"></i>
                                                 <strong class="margin-10px-left text-green">ISBN:</strong>
                                             </div>
-                                            <div class="col-md-7 col-7">
+                                            <div class="col-md-9 col-9">
                                                 <p><?php echo $row["isbn"]; ?></p>
                                             </div>
                                         </div>
@@ -272,11 +259,11 @@ console.log(obj);
                                     <li>
 
                                         <div class="row">
-                                            <div class="col-md-5 col-5">
-                                                <i class="fas fa-mobile-alt text-purple"></i>
+                                            <div class="col-md-3 col-3">
+                                                <i class="fas fa-language text-purple"></i>
                                                 <strong class="margin-10px-left xs-margin-four-left text-purple">Language:</strong>
                                             </div>
-                                            <div class="col-md-7 col-7">
+                                            <div class="col-md-9 col-9">
                                                 <p><?php echo $language_map[$row["language"]]; ?></p>
                                             </div>
                                         </div>

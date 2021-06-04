@@ -3,6 +3,12 @@
 function title_clicked(id) {
     console.log("title_clicked: " + id);
 
+    url = "/book_detail.php?id=" + id;
+
+    console.log(url);
+
+    window.location.href = url;
+
     return false;
 }
 
