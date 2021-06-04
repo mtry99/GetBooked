@@ -2,6 +2,8 @@
 session_start();
 
 
+
+
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     // if not logged in, redirect to login page
     header("location: login.php");
@@ -12,8 +14,21 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     exit;
 }
 
+
+// ADD BOOK 
+if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['new-book'])){
+    header("location: new-book.php");
+}
+
+// DELETE BOOK
+if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['delete-book'])){
+    header("location: delete-book.php");
+}
+
+
+
 // if Logout button has been clicked
-if($_SERVER["REQUEST_METHOD"] == "POST") {
+if($_SERVER["REQUEST_METHOD"] == "POST" and !(isset($_POST['new-book'])) and !(isset($_POST['delete-book']))) {
     // unset session variables and destroy session
     $_SESSION = array();
     session_destroy();
@@ -22,6 +37,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     header("location: login.php");
     exit;
 }
+
+
 
 ?>
 
@@ -43,11 +60,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-group">
             <input type="submit" class="btn btn-primary" value="Logout">
         </div>
-    </form>
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <div class="form-group">
-            <input type="submit" class="btn btn-danger" value="New Book">
+            <input name="new-book" type="submit" class="btn btn-success" value="New Book">
+        </div>
+  
+        <div class="form-group">
+            <input name="delete-book" type="submit" class="btn btn-danger" value="Delete Book">
         </div>
     </form>
 
@@ -73,6 +92,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
      </div>
   </div>
+    
+  </div>
+
 </div>
 </body>
 </html>

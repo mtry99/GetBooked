@@ -116,3 +116,7 @@
     line-height: 1.4;
   }
 }
+
+#checkboxes label {
+  float: left;
+}
