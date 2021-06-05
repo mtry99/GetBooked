@@ -15,8 +15,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $publishedYear = trim($_POST["published-year"]);
     $isbn = trim($_POST["isbn"]);
     $genre= trim($_POST["genre"]);
-
+    $genreArray = explode(',', $genre);
     
+    #adding genres
+    foreach ($genreArray as &$value){   
+        $sql ="insert ignore into genre (name) values ('$value');";
+        echo $sql;
+        $result = $conn->query($sql);
+        if ($result){
+            echo "successfully added";
+        }else {
+            echo "failed to add genre";
+        }
+    }
     #call ADD BOOK sql procedure
     $sql = "CALL ADD_BOOK(
             '" . addslashes($bookName) . "', 
@@ -25,18 +36,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             '" . addslashes($language) . "',
             '" . addslashes($publisher) . "',
             '" . addslashes($publishedYear) . "',
-            '" . addslashes($genre) . "',
             '" . addslashes($isbn) . "');";
 
     echo $sql;
 
     $result = $conn->query($sql);
+    
+
+
+
     if ($result){
         echo "Successfully added new book";
     }else{
         echo "ERROR ADDING NEW BOOK";
     }
-
+    
 }
 ?>
 
@@ -71,7 +85,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" id="publisher" name="publisher"><br>
         <label>Published Year:</label><br>
         <input type="text" id="published-year" name="published-year"><br>
-        <label>Genre: (enter comma seperated values)</label><br>
+        <label>Genre: (enter comma seperated values without spaces)</label><br>
         <input type="text" id="genre" name="genre"><br>
         <br></br>
         <div class="form-group">

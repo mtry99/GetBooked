@@ -138,15 +138,21 @@ CREATE PROCEDURE ADD_BOOK(
     in lang VARCHAR(255),
     in publisherName VARCHAR(255),
     in publishedYear INT,
-    in genre VARCHAR(255),
     in ISBN VARCHAR(255))
 BEGIN
 	INSERT INTO author(name) VALUES (authorName);
     INSERT INTO publisher(name) VALUES (publisherName);
 
+    
     INSERT INTO book (title, isbn, publisher_id, number_of_pages, language, count, publish_year) 
     SELECT bookName, ISBN, publisher_id, pages, lang, 1, publishedYear
     FROM publisher WHERE name = publisherName;
+
+    INSERT INTO book_author (book_id, author_id)
+    SELECT book_id, author_id From book, author
+    WHERE title = bookName and name = authorName;
+    
+
 
 END//
 
