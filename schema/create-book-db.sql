@@ -7,7 +7,7 @@ USE bookDB;
 CREATE TABLE `author` ( 
     `author_id` INT NOT NULL AUTO_INCREMENT , 
     `name` VARCHAR(30) , 
-    `original_key` VARCHAR(30) NOT NULL , 
+    `original_key` VARCHAR(30) , 
     PRIMARY KEY (`author_id`)
 );
 
@@ -29,9 +29,9 @@ CREATE TABLE `publisher` (
 CREATE TABLE `book` ( 
     `book_id` INT NOT NULL AUTO_INCREMENT , 
     `title` VARCHAR(70) NOT NULL , 
-    `original_key` VARCHAR(20) NOT NULL , 
-    `isbn` VARCHAR(13) NOT NULL , 
-    `number_of_pages` INT NOT NULL , 
+    `original_key` VARCHAR(20), 
+    `isbn` VARCHAR(13) NOT NULL, 
+    `number_of_pages` INT NOT NULL, 
     `language` VARCHAR(5) NOT NULL , 
     `publisher_id` INT NOT NULL , 
     `publish_year` INT NOT NULL , 
@@ -90,7 +90,6 @@ ON `genre`(`name`);
 CREATE UNIQUE INDEX `publisher_name_key_index`
 ON `publisher`(`name`);
 
-GRANT ALL ON bookdb.* TO 'bookperson'@'localhost';
 
 -- set up user table --------------------------------------------------
 
@@ -130,22 +129,21 @@ BEGIN
 	    (u_username, u_password, u_name, FALSE);
 END//
 
-DELIMITER ;
 
 -- add book
 CREATE PROCEDURE ADD_BOOK(
     in bookname VARCHAR(255),
-    in author VARCHAR(255),
+    in authorName VARCHAR(255),
     in pages INT,
     in language VARCHAR(255),
     in publisher VARCHAR(255),
     in publishedYear INT,
-    in genreComedy VARCHAR(255),
-    in genreHorror VARCHAR(255),
-    in genreThriller VARCHAR(255),
-    in genreRomance VARCHAR(255))
+    in genre VARCHAR(255),
+    in ISBN VARCHAR(255))
 BEGIN
-	
+	INSERT INTO author(name) VALUES (authorName);
+    INSERT INTO publisher(name) VALUES (publisherName);
+    INSERT INTO book (title, isbn, number_of_pages, language, count) VALUES (bookName, ISBN, pages, language, 1);
 END//
 
 -- delete book

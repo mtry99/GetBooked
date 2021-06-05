@@ -5,17 +5,6 @@ require_once "config.php";
 // initialize session
 session_start();
 
-// if already logged in
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
-	// redirect to admin or user page
-	if($_SESSION["isadmin"] == true) {
-		header("location: admin.php");
-		exit;
-	} else {
-		header("location: user.php");
-		exit;
-	}
-}
 
 // initialize variables with empty values
 $uname = $upassword = "";
@@ -61,12 +50,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 			// redirect depending on if user is admin
 			if($row[2]) {
 				$_SESSION["isadmin"] = true;
-				header("location: admin.php");
+				header("location: book.php");
 				exit;
 			} else {
 				$_SESSION["isadmin"] = false;
 				// redirect to user page
-				header("location: user.php");
+
+				header("location: book.php");
 				exit;
 			}
 			
