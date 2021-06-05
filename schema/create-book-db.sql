@@ -135,15 +135,19 @@ CREATE PROCEDURE ADD_BOOK(
     in bookname VARCHAR(255),
     in authorName VARCHAR(255),
     in pages INT,
-    in language VARCHAR(255),
-    in publisher VARCHAR(255),
+    in lang VARCHAR(255),
+    in publisherName VARCHAR(255),
     in publishedYear INT,
     in genre VARCHAR(255),
     in ISBN VARCHAR(255))
 BEGIN
 	INSERT INTO author(name) VALUES (authorName);
     INSERT INTO publisher(name) VALUES (publisherName);
-    INSERT INTO book (title, isbn, number_of_pages, language, count) VALUES (bookName, ISBN, pages, language, 1);
+
+    INSERT INTO book (title, isbn, publisher_id, number_of_pages, language, count, publish_year) 
+    SELECT bookName, ISBN, publisher_id, pages, lang, 1, publishedYear
+    FROM publisher WHERE name = publisherName;
+
 END//
 
 -- delete book
