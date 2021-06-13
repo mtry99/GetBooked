@@ -34,6 +34,23 @@ $row = $result->fetch_assoc();
 $json = file_get_contents('https://openlibrary.org/books/'.$row['original_key'].'.json');
 $obj = json_decode($json, true);
 
+if(isset($_POST["checkout"])) {
+    $quantity = $_POST["quantity"];
+    $count = $row["count"];
+    $id = $_GET["id"];
+    if($count - $quantity >= 0) {
+        $count -= $quantity;
+        $checkout = "UPDATE book SET count = $count WHERE book_id = $id";
+        $results = $conn -> query($checkout);
+        // header("Refresh:0");
+    } else {
+        $error = true;
+        // echo "Not enough copies available!";
+    }
+} else {
+    $error = false;
+}
+
 ?>
 
 <script>
@@ -303,6 +320,19 @@ console.log(obj);
                                 <div class="custom-progress progress">
                                     <div role="progressbar" style="width:<?php echo intval($row["count"])*100/10; ?>%" class="animated custom-bar progress-bar slideInLeft bg-green"></div>
                                 </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <form method="post">
+                                    <label for="quantity">Quantity:</label>
+                                    <input type="number" name="quantity" style="width: 100px;" min="1" placeholder="1">
+                                    <!-- <button name="checkout" type="button" class="btn btn-secondary p-2 m-4">Checkout</button> -->
+                                        <input type="submit" name="checkout" value="Checkout" class="btn btn-secondary p-2 m-4">
+                                    </form>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <?php if($error) echo '<h6 style="color:red">Not Enough Copies Available!</p>'; ?>
+                                </div>
+
                             </div>
 
                         </div>
@@ -315,7 +345,7 @@ console.log(obj);
             </div>
         </div>
     </div>
-    
+
     <script src="book_detail.js"></script>
 </body>
 </html>
