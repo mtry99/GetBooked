@@ -157,15 +157,12 @@ BEGIN
 
     
     INSERT INTO book (title, isbn, publisher_id, number_of_pages, language, count, publish_year) 
-    SELECT bookName, ISBN, publisher_id, pages, lang, 1, publishedYear
+    SELECT bookname, ISBN, publisher_id, pages, lang, 1, publishedYear
     FROM publisher WHERE name = publisherName;
 
     INSERT INTO book_author (book_id, author_id)
     SELECT book_id, author_id From book, author
     WHERE title = bookName and name = authorName;
-    
-
-
 END//
 
 -- delete book
