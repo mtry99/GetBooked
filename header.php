@@ -1,8 +1,3 @@
-<?php
-session_start();
-
-?>
-
 <nav id="navbar" class="navbar navbar-expand-lg navbar-dark">
   <a class="navbar-brand" href="#">Library</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,7 +11,7 @@ session_start();
         ?>
         <a class="nav-item nav-link <?php echo $uri_parts[0] === "/book.php"?"active":"" ?>" href="/book.php">Search Books </span></a>
         <a class="nav-item nav-link <?php echo $uri_parts[0] === "/book_detail.php"?"active":"" ?>" href="/book_detail.php">Random Book </a>
-        
+        <a class="nav-item nav-link" href="/account.php">Account History </a>
         <?php if ((isset($_SESSION["isadmin"])) && ($_SESSION["isadmin"] === true)): ?>
         <a class="nav-item nav-link <?php echo $uri_parts[0] === "/book_detail.php"?"active":"" ?>"  href="/new-book.php">Add New Book </a>
         <?php endif; ?>
