@@ -58,6 +58,18 @@ CREATE TABLE `book_genre` (
     FOREIGN KEY (`genre_id`) REFERENCES `genre`(`genre_id`)
 );
 
+CREATE TABLE `log` (
+    `log_id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT NOT NULL,
+    `book_id` INT NOT NULL,
+    `borrow_date` DATE NOT NULL,
+    `return_date` DATE,
+    `return_by_date` DATE NOT NULL,
+    PRIMARY KEY (`log_id`, `user_id`, `book_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
+    FOREIGN KEY (`book_id`) REFERENCES `book`(`book_id`)
+);
+
 -- add unique key constraint to original_key  --------------------------------------------------
 ALTER TABLE `book`
 ADD CONSTRAINT `book_unique_original_key_constraint` UNIQUE KEY(`original_key`);

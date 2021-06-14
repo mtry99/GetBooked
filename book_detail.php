@@ -37,12 +37,20 @@ $obj = json_decode($json, true);
 if(isset($_POST["checkout"])) {
     $quantity = $_POST["quantity"];
     $count = $row["count"];
-    $id = $_GET["id"];
+    $book_id = $_GET["id"];
     if($count - $quantity >= 0) {
+        //update book table
         $count -= $quantity;
-        $checkout = "UPDATE book SET count = $count WHERE book_id = $id";
+        $checkout = "UPDATE book SET count = $count WHERE book_id = $book_id";
         $results = $conn -> query($checkout);
-        // header("Refresh:0");
+        //add into log table
+        $uid = $_SESSION['uid'];
+        $cur_date = date("Y-m-d");
+        $week = date("Y-m-d", strtotime($cur_date. ' + 7 days'));
+        $log = "INSERT INTO log VALUES (NULL, '$uid', '$book_id', '$cur_date', NULL, '$week')";
+        $results = $conn -> query($log);
+        echo "<meta http-equiv='refresh' content='0'>";
+        // echo mysqli_error($conn);
     } else {
         $error = true;
         // echo "Not enough copies available!";

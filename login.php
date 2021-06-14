@@ -45,7 +45,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 			session_start();
 			
 			$_SESSION["loggedin"] = true;
-			$_SESSION["uid"] = $row[1];
+			$_SESSION["uid"] = $row[0];
 
 			// redirect depending on if user is admin
 			if($row[2]) {
