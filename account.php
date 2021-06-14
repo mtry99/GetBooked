@@ -34,8 +34,6 @@
 
     <?php
     $uid = $_SESSION["uid"];
-    // $query = "SELECT book.title, book.original_key, book., log.book_id, log.borrow_date, log.return_date, log.return_by_date, 
-    // FROM log INNER JOIN book ON log.book_id = book.book_id WHERE user_id = '".$uid."'";
     $query = "SELECT * FROM log INNER JOIN (SELECT * 
     FROM
         (SELECT c.count, c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, p.publisher_id, p.name as 'publisher_name'
@@ -95,6 +93,9 @@
                 echo '<input name="book_id" value="';
                 echo $row["book_id"];
                 echo '" type="hidden"></input>';
+                echo '<input name="count" value="';
+                echo $row["count"];
+                echo '" type="hidden"></input>';
                 echo '<input type="submit" name="return" value="Return" class="btn btn-secondary p-2 m-4">';
                 echo '</form>';
             } else echo $row["return_date"];
@@ -134,6 +135,10 @@
         $cur_date = date("Y-m-d");
         $renew = "UPDATE log SET return_date = '$cur_date' WHERE book_id = $book_id";
         $results = $conn -> query($renew);
+        $count = $_POST["count"];
+        $count++;
+        $checkout = "UPDATE book SET count = $count WHERE book_id = $book_id";
+        $results = $conn -> query($checkout);
         echo "<meta http-equiv='refresh' content='0'>";
     }
     ?>

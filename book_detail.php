@@ -34,13 +34,17 @@ $row = $result->fetch_assoc();
 $json = file_get_contents('https://openlibrary.org/books/'.$row['original_key'].'.json');
 $obj = json_decode($json, true);
 
+$copiesError = false;
+$alreadyOwn = false;
+
 if(isset($_POST["checkout"])) {
-    $quantity = $_POST["quantity"];
+    // $quantity = $_POST["quantity"];
     $count = $row["count"];
     $book_id = $_GET["id"];
-    if($count - $quantity >= 0) {
+    if($count > 0) {
         //update book table
-        $count -= $quantity;
+        // $count -= $quantity;
+        $count--;
         $checkout = "UPDATE book SET count = $count WHERE book_id = $book_id";
         $results = $conn -> query($checkout);
         //add into log table
@@ -52,11 +56,9 @@ if(isset($_POST["checkout"])) {
         echo "<meta http-equiv='refresh' content='0'>";
         // echo mysqli_error($conn);
     } else {
-        $error = true;
+        $copiesError = true;
         // echo "Not enough copies available!";
     }
-} else {
-    $error = false;
 }
 
 ?>
@@ -331,14 +333,17 @@ console.log(obj);
 
                                 <div class="d-flex justify-content-center">
                                     <form method="post">
-                                    <label for="quantity">Quantity:</label>
-                                    <input type="number" name="quantity" style="width: 100px;" min="1" placeholder="1">
+                                    <!-- <label for="quantity">Quantity:</label> -->
+                                    <!-- <input type="number" name="quantity" style="width: 100px;" min="1"> -->
                                     <!-- <button name="checkout" type="button" class="btn btn-secondary p-2 m-4">Checkout</button> -->
                                         <input type="submit" name="checkout" value="Checkout" class="btn btn-secondary p-2 m-4">
                                     </form>
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                    <?php if($error) echo '<h6 style="color:red">Not Enough Copies Available!</p>'; ?>
+                                    <?php
+                                    if($copiesError) echo '<h6 style="color:red">Not Enough Copies Available!</p>';
+                                    else if($alreadyOwn) echo '<h6 style="color:red">You already own a copy!</p>';
+                                    ?>
                                 </div>
 
                             </div>
