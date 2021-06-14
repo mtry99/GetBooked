@@ -7,6 +7,8 @@ Run queries in "schema/test-book-db.sql" to test the data.
 
 Open login.php to start the app.
 
+Admin can login in using username: account2 password: password2
+
 Data from https://openlibrary.org/developers/dumps
 
 Currently Supported Features:
