@@ -36,11 +36,11 @@ $obj = json_decode($json, true);
 
 $copiesError = false;
 $alreadyOwn = false;
-
+// var_dump($row);
 if(isset($_POST["checkout"])) {
     // $quantity = $_POST["quantity"];
     $count = $row["count"];
-    $book_id = $_GET["id"];
+    $book_id = $row["book_id"];
     if($count > 0) {
         //update book table
         // $count -= $quantity;
