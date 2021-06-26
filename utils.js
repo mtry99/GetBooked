@@ -15,6 +15,12 @@ function title_clicked(id) {
 function author_clicked(id) {
     console.log("author_clicked: " + id);
 
+    url = "/author_detail.php?id=" + id;
+
+    console.log(url);
+
+    window.location.href = url;
+
     return false;
 }
 
