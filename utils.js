@@ -33,5 +33,11 @@ function publisher_clicked(id) {
 function genre_clicked(id) {
     console.log("genre_clicked: " + id);
 
+    url = "/genre_detail.php?id=" + id;
+
+    console.log(url);
+
+    window.location.href = url;
+
     return false;
 }
