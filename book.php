@@ -44,6 +44,11 @@ $query_genre = '';
 $query_language = '';
 $query_count = '';
 
+$query_filter_books = '';
+$query_limit_books = '';
+
+$query_book = '';
+
 $search_str = '';
 $search_str_1 = '';
 $search_str_2 = '';
@@ -101,6 +106,28 @@ if($book_filter["genre"] !== "") {
     }
 }
 
+$first = true;
+if($query_publisher == "" && $query_author == "" && $query_genre == "") {
+    $query_limit_books = "LIMIT 25";
+} else if ($query_author != "" || $query_genre != "") {
+    $query_filter_books = 'RIGHT JOIN (';
+    if($query_genre != "") {
+        $query_filter_books = $query_filter_books.($first?'':' UNION ').sprintf('
+            SELECT bg.book_id as filtered_book_id FROM genre as g
+            RIGHT JOIN book_genre bg ON g.genre_id = bg.genre_id
+            %s', str_replace("d.genre", "g.name", $query_genre));
+        $first = false;
+    }
+    if($query_author != "") {
+        $query_filter_books = $query_filter_books.($first?'':' UNION ').sprintf('
+            SELECT ba.book_id as filtered_book_id FROM author as a
+            RIGHT JOIN book_author ba ON a.author_id = ba.author_id
+            %s', str_replace("d.author", "a.name", $query_author));
+        $first = false;
+    }
+    $query_filter_books = $query_filter_books.') g ON g.filtered_book_id = book.book_id';
+}
+
 $sql = sprintf('
 SELECT *
 FROM
@@ -109,6 +136,8 @@ FROM
         (SELECT %s b.count, b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
         FROM 
             (SELECT * %s FROM book 
+            %s
+            %s
             %s
             %s
             %s
@@ -126,8 +155,8 @@ FROM
 %s
 %s
 LIMIT 25;',
-$search_str_1, $search_str_2, $search_str, $query_title, $query_page, $query_year, $query_language, 
-$query_count, $query_publisher, $query_author, $query_genre, $search_str_order);
+$search_str_1, $search_str_2, $search_str, $query_filter_books, $query_title, $query_page, $query_year, $query_language, 
+$query_count, $query_limit_books, $query_publisher, $query_author, $query_genre, $search_str_order);
 
 //var_dump($sql);
 
