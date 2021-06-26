@@ -27,6 +27,12 @@ function author_clicked(id) {
 function publisher_clicked(id) {
     console.log("publisher_clicked: " + id);
 
+    url = "/publisher_detail.php?id=" + id;
+
+    console.log(url);
+
+    window.location.href = url;
+
     return false;
 }
 

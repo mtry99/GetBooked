@@ -84,7 +84,7 @@ console.log(author_obj);
     <?php require "header.php"; ?>
 
     <h4 class="font-size38 sm-font-size32 xs-font-size30 text-center mt-3 mb-1">
-        <?php echo $author_obj["name"]; ?>
+        <?php echo strtoupper($author_obj["name"]); ?>
     </h4>
 
 	<div class="wrapper">

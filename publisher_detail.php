@@ -6,21 +6,21 @@
 require_once "config.php";
 require_once "utils.php";
 
-$sql = 'SELECT CEIL(RAND() * (SELECT MAX(genre.genre_id) FROM genre)) as id';
+$sql = 'SELECT CEIL(RAND() * (SELECT MAX(publisher.publisher_id) FROM publisher)) as id';
 $result = $conn->query($sql);
 $row = $result->fetch_assoc();
 
-$genre_id = isset($_GET["id"]) ? $_GET["id"] : $row["id"];
-$genre_id_query = 'WHERE genre.genre_id = "'.$genre_id.'"';
+$publisher_id = isset($_GET["id"]) ? $_GET["id"] : $row["id"];
+$publisher_id_query = 'WHERE book.publisher_id = "'.$publisher_id.'"';
 
-$genre_sql = sprintf('
-SELECT * FROM genre
+$publisher_sql = sprintf('
+SELECT * FROM publisher as book
 %s
 LIMIT 1;',
-$genre_id_query);
+$publisher_id_query);
 
-$genre_result = $conn->query($genre_sql);
-$genre_row = $genre_result->fetch_assoc();
+$publisher_result = $conn->query($publisher_sql);
+$publisher_row = $publisher_result->fetch_assoc();
 
 $sql = sprintf('
 SELECT *
@@ -30,9 +30,7 @@ FROM
         (SELECT  b.count, b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
         FROM 
             (SELECT * FROM book 
-            RIGHT JOIN (
-            SELECT genre.book_id as filtered_book_id FROM book_genre as genre
-            %s ) g ON g.filtered_book_id = book.book_id) as b
+            %s ) as b
         LEFT JOIN book_author ba ON b.book_id = ba.book_id
         LEFT JOIN author a ON ba.author_id = a.author_id
         GROUP BY b.book_id) as c
@@ -41,7 +39,7 @@ FROM
     LEFT JOIN publisher p ON p.publisher_id = c.publisher_id 
     GROUP BY c.book_id) as d
 LIMIT 25;',
-$genre_id_query);
+$publisher_id_query);
 
 $result = $conn->query($sql);
 
@@ -49,9 +47,9 @@ $result = $conn->query($sql);
 
 <script>
 
-let genre_id = `<?php echo ($genre_id); ?>`;
+let publisher_id = `<?php echo ($publisher_id); ?>`;
 
-console.log(genre_id);
+console.log(publisher_id);
 
 </script>
 
@@ -74,7 +72,7 @@ console.log(genre_id);
     <?php require "header.php"; ?>
 
     <h4 class="font-size38 sm-font-size32 xs-font-size30 text-center mt-3 mb-1">
-        <?php echo strtoupper($genre_row["name"]); ?>
+        <?php echo strtoupper($publisher_row["name"]); ?>
     </h4>
 
 	<div class="wrapper">
