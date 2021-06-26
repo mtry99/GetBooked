@@ -15,17 +15,35 @@ function title_clicked(id) {
 function author_clicked(id) {
     console.log("author_clicked: " + id);
 
+    url = "/author_detail.php?id=" + id;
+
+    console.log(url);
+
+    window.location.href = url;
+
     return false;
 }
 
 function publisher_clicked(id) {
     console.log("publisher_clicked: " + id);
 
+    url = "/publisher_detail.php?id=" + id;
+
+    console.log(url);
+
+    window.location.href = url;
+
     return false;
 }
 
 function genre_clicked(id) {
     console.log("genre_clicked: " + id);
+
+    url = "/genre_detail.php?id=" + id;
+
+    console.log(url);
+
+    window.location.href = url;
 
     return false;
 }
