@@ -17,5 +17,7 @@
 <!-- Popper.JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
+<link href='https://fonts.googleapis.com/css?family=Merienda' rel='stylesheet'>
+
 <!-- Our Custom CSS -->
 <link rel="stylesheet" href="book.css">

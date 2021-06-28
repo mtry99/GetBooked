@@ -203,38 +203,38 @@ CREATE TABLE `collection` (
 CREATE TABLE `collection_book` (
 	`collection_id` INT NOT NULL,
 	`book_id` INT NOT NULL,
-	`weight` INT NOT NULL,
+	`rarity` INT NOT NULL,
     PRIMARY KEY (`collection_id`, `book_id`),
     FOREIGN KEY (`collection_id`) REFERENCES `collection`(`collection_id`),
     FOREIGN KEY (`book_id`) REFERENCES `book`(`book_id`)
 );
 
 INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Aristotle and Plato');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '11', '50');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '4583', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '6733', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '7946', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '9662', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '9766', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '10429', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '12002', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '16403', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '19745', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '30298', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '34671', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '34875', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '35959', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '36293', '50');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '38673', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '43322', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '45346', '50');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '46983', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '49112', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '52259', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '59906', '10');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '60875', '20');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '63870', '50');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `weight`) VALUES ('1', '64967', '10');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '11', '5');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '4583', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '6733', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '7946', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '9662', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '9766', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '10429', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '12002', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '16403', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '19745', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '30298', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '34671', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '34875', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '35959', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '36293', '5');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '38673', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '43322', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '45346', '5');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '46983', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '49112', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '52259', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '59906', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '60875', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '63870', '5');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '64967', '3');
 
 INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 1');
 INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 2');

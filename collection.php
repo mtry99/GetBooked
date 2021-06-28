@@ -9,8 +9,7 @@ require_once "utils.php";
 $sql = sprintf('
 SELECT *
 FROM collection
-LIMIT 25;',
-$publisher_id_query);
+LIMIT 25;');
 
 $result = $conn->query($sql);
 
@@ -51,21 +50,34 @@ console.log(sql);
         <!-- Page Content Holder -->
         <div id="content">
 
-        <?php
-    
-        if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
+            <div class="d-flex justify-content-around flex-wrap">
+                <?php
+            
+                if ($result->num_rows > 0) {
+                    // output data of each row
+                    while($row = $result->fetch_assoc()) {
+                        ?>
+                        <div onclick="collection_clicked('<?php echo $row['collection_id'];?>')" class="text-center square" style="width: 23%; margin-bottom: 2%;">
+                            <div class="card-body p-0">
+                                <?php
 
-                
-            }
-        } else {
-            echo "0 results";
-        }
+                                echo '<div class="pt-3">';
+                                echo '<h1 class="h5">'.$row['name'].'</h1>';
+                                echo '</div>';
 
-        ?>
+                                ?>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    echo "0 results";
+                }
 
-        <script src="collection.js"></script>
+                ?>
+            </div>
+
+            <script src="collection.js"></script>
         
         </div>
     </div>
