@@ -93,18 +93,24 @@ for(let i = 1; i < 30; i++) {
     coverEdgePoints.push({x: coverWidth, y: i / 30 * coverHeight, r: Math.random()});
 }
 
+let metal_arrow_img = new Image();
+metal_arrow_img.src = "metal_arrow.png";
+
+let c = 7;
+let d = 30 * (coverWidth + coverGap) - width/2 + coverWidth/2 + 0.7 * coverWidth * (Math.random()-0.5);
+let x = 0;
+
 function onFrame() {
-    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.fillStyle = "rgba(0,0,0, 0.2)";
     ctx.fillRect(0, 0, width, height);
     
     let wheelSize = (wheel.length * (coverWidth + coverGap));
 
-    let c = 7;
-    let d = 30 * (coverWidth + coverGap) - width/2 + coverWidth/2;
-
     t += 1/60;
-    wheelPos = - d / (c * c) * Math.pow(t - c, 2) + d;
-    if(t > c) {
+
+    x += 1/60;
+    wheelPos = - d / (c * c) * Math.pow(x - c, 2) + d;
+    if(x > c) {
         wheelPos = d;
     }
 
@@ -177,6 +183,20 @@ function onFrame() {
         if(book.color) {
             ctx.fillStyle = book.color;
             ctx.fillRect(bookPos.x, bookPos.y, bookPos.w, bookPos.h);
+            
+            ctx.font = "32px Old Standard TT";
+            ctx.textAlign = "center";
+            if(book.splitTitle) {
+                for(let j = 0; j < book.splitTitle.length; j++) {
+                    let depth = 0.5;
+                    ctx.fillStyle = "rgb(150,150,150)";
+                    ctx.fillText(book.splitTitle[j], bookPos.x + bookPos.w / 2 - depth, bookPos.y + 50 + 35 * j + depth);
+                    ctx.fillStyle = "rgb(100,100,100)";
+                    ctx.fillText(book.splitTitle[j], bookPos.x + bookPos.w / 2 + depth, bookPos.y + 50 + 35 * j - depth);
+                    ctx.fillStyle = "rgb(255,255,255)";
+                    ctx.fillText(book.splitTitle[j], bookPos.x + bookPos.w / 2, bookPos.y + 50 + 35 * j);
+                }
+            }
         }
 
         ctx.restore();
@@ -215,8 +235,9 @@ function onFrame() {
         }
 
         ctx.restore();
-        
     }
+
+    ctx.drawImage(metal_arrow_img, width/2 - metal_arrow_img.width/4, -20, metal_arrow_img.width/2, metal_arrow_img.height/2);
 }
 
 function generateWheel(num) {
@@ -296,8 +317,29 @@ $(document).ready(function() {
     console.log(fireFrameImgs);
 
     generateWheel(30);
-    //wheel.push({rarity: 5, idx: 0, r: Math.random()});
+    wheel.push({rarity: 5, idx: 0, r: Math.random()});
     generateWheel(5);
+
+    for(let i = 1; i <= 5; i++) {
+        for(let j = 0; j < obj[i].length; j++) {
+            let s = obj[i][j].title;
+            let result = [];
+            let words = s.split(" ");
+            let curLine = "";
+            let lineMax = 12;
+            for(word of words) {
+                if(word.length + curLine.length + 1 > lineMax) {
+                    result.push(curLine);
+                    curLine = word;
+                } else {
+                    curLine += ' ' + word;
+                }
+            }
+            result.push(curLine);
+            obj[i][j].splitTitle = result;
+        }
+    }
+    console.log(obj);
 
     setInterval(onFrame, 1000 / 60);
 });
