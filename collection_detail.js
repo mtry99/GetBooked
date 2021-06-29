@@ -100,6 +100,9 @@ let c = 7;
 let d = 30 * (coverWidth + coverGap) - width/2 + coverWidth/2 + 0.7 * coverWidth * (Math.random()-0.5);
 let x = 0;
 
+let startSpin = false;
+let spinned = false;
+
 function onFrame() {
     ctx.fillStyle = "rgba(0,0,0, 0.2)";
     ctx.fillRect(0, 0, width, height);
@@ -108,10 +111,11 @@ function onFrame() {
 
     t += 1/60;
 
-    x += 1/60;
+    if(startSpin) x += 1/60;
     wheelPos = - d / (c * c) * Math.pow(x - c, 2) + d;
     if(x > c) {
         wheelPos = d;
+        startSpin = false;
     }
 
     let effectiveWheelPos = - (wheelPos) % wheelSize;
@@ -240,6 +244,25 @@ function onFrame() {
     ctx.drawImage(metal_arrow_img, width/2 - metal_arrow_img.width/4, -20, metal_arrow_img.width/2, metal_arrow_img.height/2);
 }
 
+function onOpenClick() {
+    console.log("OPEN!");
+    if(spinned) {
+        resetWheel();
+    }
+    spinned = true;
+    startSpin = true;
+}
+
+function resetWheel() {
+    wheel = [];
+    generateWheel(30);
+    wheel.push({rarity: 5, idx: 0, r: Math.random()});
+    generateWheel(5);
+
+    x = 0;
+    startSpin = false;
+}
+
 function generateWheel(num) {
     let chance = [0,256,128,64,8,1];
     let total = 0;
@@ -316,9 +339,7 @@ $(document).ready(function() {
 
     console.log(fireFrameImgs);
 
-    generateWheel(30);
-    wheel.push({rarity: 5, idx: 0, r: Math.random()});
-    generateWheel(5);
+    resetWheel();
 
     for(let i = 1; i <= 5; i++) {
         for(let j = 0; j < obj[i].length; j++) {

@@ -98,7 +98,10 @@ console.log(obj);
         <!-- Page Content Holder -->
         <div id="content">
             <div class="rarity_container" style="padding-right: 0rem;">
-                <canvas id="canvas"></canvas>
+                <div class="canvasContainer">
+                    <canvas id="canvas"></canvas>
+                    <button id="buttonOpen" class="btn btn-danger" onclick="onOpenClick()" type="button">OPEN</button>
+                </div>
             </div>
             <?php
             $rarity_heights = [0, 5.0, 5.0, 7.0, 10.0, 15.0];
