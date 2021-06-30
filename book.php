@@ -15,7 +15,7 @@ require_once "utils.php";
 
 $book_filter = array();
 
-$book_filter["title"] = isset($_GET["title"]) ? $_GET["title"] : "";
+$book_filter["title"] = isset($_GET["title"]) ? $_GET["title"] : ""; 
 $book_filter["author"] = isset($_GET["author"]) ? $_GET["author"] : "";
 $book_filter["publisher"] = isset($_GET["publisher"]) ? $_GET["publisher"] : "";
 $book_filter["genre"] = isset($_GET["genre"]) ? $_GET["genre"] : "";

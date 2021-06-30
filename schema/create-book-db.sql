@@ -152,9 +152,18 @@ CREATE PROCEDURE ADD_BOOK(
     in publishedYear INT,
     in ISBN VARCHAR(255))
 BEGIN
-	INSERT INTO author(name) VALUES (authorName);
-    INSERT INTO publisher(name) VALUES (publisherName);
-
+	
+    INSERT INTO Author (name) 
+    SELECT aname
+    FROM (SELECT (authorName) AS aname) AS t
+    WHERE NOT EXISTS (SELECT name FROM Author WHERE name=authorName) ;
+    
+    INSERT INTO Publisher (name) 
+    SELECT pname
+    FROM (SELECT (publisherName) AS pname) AS t
+    WHERE NOT EXISTS (SELECT name FROM Publisher WHERE name=publisherName); 
+    
+    
     
     INSERT INTO book (title, isbn, publisher_id, number_of_pages, language, count, publish_year) 
     SELECT bookname, ISBN, publisher_id, pages, lang, 1, publishedYear

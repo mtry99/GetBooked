@@ -3,33 +3,75 @@
 require_once "config.php";
 
 // initialize variables with empty values
-$bookName = $authorName = $pages = $language = $publisher = $publishedYear= $isbn= $genre = "";
+$bookName = $authorName = $pages = $language = $publisher = $publishedYear= $isbn = $genre = "";
+$book_err = $bookName_err = $authorName_err = $pages_err = $language_err = $publisher_err = $publishedYear_err = $isbn_err = $genre_err = "";
+$output = 0;
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $bookName = trim($_POST["book-name"]);
-    $authorName = trim($_POST["author-name"]);
-    $pages = trim($_POST["book-number-of-pages"]);
-    $language = trim($_POST["language"]);
-    $publisher = trim($_POST["publisher"]);
-    $publishedYear = trim($_POST["published-year"]);
-    $isbn = trim($_POST["isbn"]);
-    $genre= trim($_POST["genre"]);
-    $genreArray = explode(',', $genre);
-    
-    #adding genres
-    foreach ($genreArray as &$value){   
-        $sql ="insert ignore into genre (name) values ('$value');";
-        echo $sql;
-        $result = $conn->query($sql);
-        if ($result){
-            echo "successfully added";
-        }else {
-            echo "failed to add genre";
-        }
+    $output = 0;
+    // check if name is empty
+    if (empty(trim($_POST["book-name"]))){
+        $bookName_err = "Please enter a book name.";
+    } else{
+        $bookName = trim($_POST["book-name"]);
     }
-    #call ADD BOOK sql procedure
-    $sql = "CALL ADD_BOOK(
+
+    if (empty(trim($_POST["author-name"]))){
+        $authorName_err = "Please enter an author name.";
+    } else {
+        $authorName = trim($_POST["author-name"]);
+    }
+
+    if (empty(trim($_POST["book-number-of-pages"]))){
+        $pages_err = "Please enter number of pages";
+    } else {
+        $pages = trim($_POST["book-number-of-pages"]);
+    }
+
+    if (empty(trim($_POST["language"]))){
+        $language_err = "Please enter a language";
+    } else {
+        $language = trim($_POST["language"]);
+    }
+
+    if (empty(trim($_POST["publisher"]))){
+        $publisher_err = "Please enter a publisher";
+    } else {
+        $publisher = trim($_POST["publisher"]);
+    }
+
+    if (empty(trim($_POST["published-year"]))){
+        $publishedYear_err = "Please enter a published year";
+    } else {
+        $publishedYear = trim($_POST["published-year"]);
+    }
+
+    if (empty(trim($_POST["isbn"]))){
+        $isbn_err = "Please enter isbn";
+    } else {
+        $isbn = trim($_POST["isbn"]);
+    }
+
+    if (empty(trim($_POST["genre"]))){
+        $genre_err = "Please enter genre";
+    }else {
+        $genre= trim($_POST["genre"]);
+    }
+
+
+    
+    if (empty($bookName_err) && empty($authorName_err) && empty($pages_err) && empty($language_err) && empty($publisher_err) && empty($publishedYear_err) && empty($isbn_err) && empty($genre_err)){
+        $genreArray = explode(',', $genre);
+
+        #adding genres
+        foreach ($genreArray as &$value){   
+            $sql ="insert ignore into genre (name) values ('$value');";
+            $result = $conn->query($sql);
+        }
+
+        #call ADD BOOK sql procedure
+        $sql = "CALL ADD_BOOK(
             '" . addslashes($bookName) . "', 
             '" . addslashes($authorName) . "', 
             '" . addslashes($pages) . "', 
@@ -38,19 +80,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             '" . addslashes($publishedYear) . "',
             '" . addslashes($isbn) . "');";
 
-    echo $sql;
 
-    $result = $conn->query($sql);
+        $result = $conn->query($sql);
+        
+        if (!$result){
+            $book_err = "ERROR ADDING NEW BOOK";
+            
+        }
+        $output = 1;
     
-
-
-
-    if ($result){
-        echo "Successfully added new book";
-    }else{
-        echo "ERROR ADDING NEW BOOK";
+    
     }
-    
 }
 ?>
 
@@ -70,29 +110,48 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <?php require "header.php"; ?>
     <div id="content"> 
+    <?php 
+        if(!empty($book_err)){
+            echo '<div class="alert alert-danger">' . $book_err . '</div>';
+        }        
+    ?>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <label>Book Name:</label><br>
-        <input type="text" id="book-name" name="book-name" value="<?php echo $bookName; ?>"><br>
+        <input type="text" id="book-name" name="book-name" class="<?php echo (!empty($bookName_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $bookName; ?>"><br>
+        <span class="invalid-feedback"><?php echo $bookName_err; ?></span>
         <label>Author Name:</label><br>
-        <input type="text" id="author-name" name="author-name"><br>
+        <input type="text" id="author-name" name="author-name" class="<?php echo (!empty($authorName_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $authorName; ?>"><br>
+        <span class="invalid-feedback"><?php echo $authorName_err; ?></span>
         <label>ISBN:</label><br>
-        <input type="text" id="isbn" name="isbn"><br>
+        <input type="text" id="isbn" name="isbn" class="<?php echo (!empty($isbn_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $isbn; ?>"><br>
+        <span class="invalid-feedback"><?php echo $isbn_err; ?></span>
         <label>Number of pages:</label><br>
-        <input type="text" id="book-number-of-pages" name="book-number-of-pages"><br>
+        <input type="text" id="book-number-of-pages" name="book-number-of-pages" class="<?php echo (!empty($pages_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $pages; ?>"><br>
+        <span class="invalid-feedback"><?php echo $pages_err; ?></span>
         <label>Language: </label><br>
-        <input type="text" id="language" name="language"><br>
+        <input type="text" id="language" name="language" class="<?php echo (!empty($language_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $language; ?>"><br>
+        <span class="invalid-feedback"><?php echo $language_err; ?></span>
         <label>Publisher:</label><br>
-        <input type="text" id="publisher" name="publisher"><br>
+        <input type="text" id="publisher" name="publisher" class="<?php echo (!empty($publisher_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $publisher; ?>"><br>
+        <span class="invalid-feedback"><?php echo $publisher_err; ?></span>
         <label>Published Year:</label><br>
-        <input type="text" id="published-year" name="published-year"><br>
+        <input type="text" id="published-year" name="published-year" class="<?php echo (!empty($publishedYear_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $publishedYear; ?>"><br>
+        <span class="invalid-feedback"><?php echo $publishedYear_err; ?></span>
         <label>Genre: (enter comma seperated values without spaces)</label><br>
-        <input type="text" id="genre" name="genre"><br>
+        <input type="text" id="genre" name="genre" class="<?php echo (!empty($genre_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $genre; ?>"><br>
+        <span class="invalid-feedback"><?php echo $genre_err; ?></span>
         <br></br>
         <div class="form-group">
                 <input type="submit" name="submit" class="btn btn-success" value="Add New Book">
         </div>
-
     </form>
+    
+    <?php 
+        if(empty($book_err) && ($output == 1)){
+            echo '<div class="alert alert-success">' . "Successfully Add a New Book" . '</div>';
+        }        
+    ?>
+
     </div>
 </body>
 </html>
