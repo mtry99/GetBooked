@@ -113,9 +113,11 @@ function onFrame() {
 
     if(startSpin) x += 1/60;
     wheelPos = - d / (c * c) * Math.pow(x - c, 2) + d;
-    if(x > c) {
+    if(x > c && startSpin) {
         wheelPos = d;
         startSpin = false;
+
+        $('#bookModal').modal('show');
     }
 
     let effectiveWheelPos = - (wheelPos) % wheelSize;
@@ -244,6 +246,10 @@ function onFrame() {
     ctx.drawImage(metal_arrow_img, width/2 - metal_arrow_img.width/4, -20, metal_arrow_img.width/2, metal_arrow_img.height/2);
 }
 
+function onDismissModal() {
+    $('#buttonOpen').show();
+}
+
 function onOpenClick() {
     console.log("OPEN!");
     if(spinned) {
@@ -251,6 +257,8 @@ function onOpenClick() {
     }
     spinned = true;
     startSpin = true;
+    
+    $('#buttonOpen').fadeOut();
 }
 
 function resetWheel() {
@@ -285,7 +293,7 @@ function generateWheel(num) {
         let rarity = dice();
         wheel.push({rarity: rarity, idx: Math.floor(Math.random() * obj[rarity].length), r: Math.random()});
     }
-    console.log(wheel);
+    //console.log(wheel);
 }
 
 let empty_cover_img = new Image();
@@ -361,6 +369,8 @@ $(document).ready(function() {
         }
     }
     console.log(obj);
+
+    $('#bookModal').modal('show');
 
     setInterval(onFrame, 1000 / 60);
 });
