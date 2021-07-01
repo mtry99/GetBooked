@@ -1,0 +1,106 @@
+/* 3d book */
+
+@keyframes book3dInitAnimation {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(-30deg);
+    }
+}
+
+/* 3d book rarity 5 ------------------------ */
+
+.book_box_rarity_3 .book-container3d {
+    width: var(--size1);
+    height: var(--size2);
+    margin: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: var(--size3);
+    --glow1: rgb(166, 194, 255);
+    --glow2: rgb(95, 196, 255);
+    --size1: 6rem;
+    --size2: 9rem;
+    --size3: 12rem;
+}
+
+.book_box_rarity_3 .book-container3d .book3d {
+    transform: rotateY(-30deg);
+    position: relative;
+    transform-style: preserve-3d;
+    width: var(--size1);
+    height: var(--size2);
+    transition: transform 1s ease;
+    animation: 0s ease 0s 1 book3dInitAnimation;
+}
+
+.book_box_rarity_3 .book-container3d .book3d:hover {
+    transform: rotate(0deg) translateX(1.0rem);
+}
+
+.book_box_rarity_3 .book-container3d .book3d .book3d-cover {
+    position: absolute;
+    width: var(--size1);
+    height: var(--size2);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    animation: cover_glow_move_4 2s infinite;
+}
+
+.book_box_rarity_3 .book-container3d .book3d::before {
+    content: ' ';
+    background: rgb(255, 245, 219);
+    height: calc(var(--size2) - 2 * 3px);
+    width: 2.5rem;
+    top: 3px;
+    position: absolute;
+    transform: translateX(calc(var(--size1) - 2.5rem / 2 - 0.25rem)) rotateY(90deg) translateX(calc(2.5rem / 2 + 0.25rem))
+}
+
+.book_box_rarity_3 .book-container3d .book3d .book3d-cover-back {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    width: var(--size1);
+    height: var(--size2);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background: #01060f;
+    transform: translateZ(-2.5rem);
+    animation: cover_back_glow_move_4 2s infinite;
+    z-index: -10;
+}
+
+.book_box_rarity_3 {
+    background-color: rgba(243, 232, 255, 0);
+    /*animation: glow_move_4 3s infinite;*/
+    margin: 0.0rem 0.3rem;
+    width: 8rem;
+    height: var(--size1);
+    flex: 0 0 8rem;
+}
+
+@keyframes cover_glow_move_4 {
+    0% {box-shadow: 1px 1px 10px var(--glow1);}
+    50% {box-shadow: 1px 1px 10px var(--glow2);}
+    100% {box-shadow: 1px 1px 10px var(--glow1);}
+}
+
+@keyframes cover_back_glow_move_4 {
+    0% {box-shadow: -3px 0 1.2rem 5px var(--glow2);}
+    50% {box-shadow: -3px 0 1.2rem 5px var(--glow1);}
+    100% {box-shadow: -3px 0 1.2rem 5px var(--glow2);}
+}
+
+.book_box_rarity_3 .book-container3d .book3d .cover-title {
+    font-size: 20px;
+    line-height: 0.8;
+    padding-top: 0.5rem;
+}
+
+.book_box_rarity_3 .star-container-container {
+    margin-top: -0.7rem;
+    margin-left: 2.7rem;
+}

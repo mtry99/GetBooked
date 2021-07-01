@@ -203,6 +203,55 @@ SELECT * FROM user;
 -- added full text index to book title
 ALTER TABLE `book` ADD FULLTEXT `book_title_index` (`title`);
 
+-- 6/26/2021 --------------------------------------------------
+CREATE TABLE `collection` (
+	`collection_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE `collection_book` (
+	`collection_id` INT NOT NULL,
+	`book_id` INT NOT NULL,
+	`rarity` INT NOT NULL,
+    PRIMARY KEY (`collection_id`, `book_id`),
+    FOREIGN KEY (`collection_id`) REFERENCES `collection`(`collection_id`),
+    FOREIGN KEY (`book_id`) REFERENCES `book`(`book_id`)
+);
+
+INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Aristotle and Plato');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '11', '5');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '4583', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '6733', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '7946', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '9662', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '9766', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '10429', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '12002', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '16403', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '19745', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '30298', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '34671', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '34875', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '35959', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '36293', '5');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '38673', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '43322', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '45346', '5');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '46983', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '49112', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '52259', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '59906', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '60875', '4');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '63870', '5');
+INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '64967', '3');
+
+INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 1');
+INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 2');
+INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 3');
+INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 4');
+INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 5');
+INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 6');
+INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 7');
 
 ------------------------------------------------------------------
 -- user setup ----------------------------------------------------
