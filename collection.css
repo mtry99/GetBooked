@@ -69,10 +69,6 @@ body{
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.548);
 }
 
-.book_box {
-    border-radius: 1rem;
-}
-
 .rarity_container::-webkit-scrollbar-track {
 	background-color: rgba(0, 0, 0, 0);
     margin: 0.2rem;
@@ -131,4 +127,28 @@ body{
     line-height: 1.5;
     border-radius: 2rem;
     padding: 0 2rem;
+}
+
+#modal-book-box {
+    margin: auto;
+}
+
+.modal-book-box-5 {
+    padding-right: 15rem !important;
+}
+
+.modal-book-box-4 {
+    padding-right: 13rem !important;
+}
+
+.modal-book-box-3 {
+    padding-right: 11rem !important;
+}
+
+.modal-body {
+    overflow: visible;
+} 
+
+.book_box {
+    border-radius: 1rem;
 }

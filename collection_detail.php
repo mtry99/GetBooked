@@ -94,13 +94,14 @@ console.log(obj);
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">You Received:</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                ...
+            <div class="modal-body rarity_container" style="padding: 1rem 0;">
+                <div id="modal-book-box" class="book_box">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" onclick="onDismissModal()" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -133,7 +134,7 @@ console.log(obj);
                     foreach($collection_books[$i] as $j => $book) {
                         ?>
                         <div class="book_box book_box_rarity_<?php echo $i; ?>">
-                            <div class="book-container3d">
+                            <div id="book-container3d-<?php echo $i; ?>-<?php echo $j; ?>" class="book-container3d">
                                 <div class="book3d">
                                     <div class="book3d-cover cover-title" id="cover-title-<?php echo $i; ?>-<?php echo $j; ?>"><?php echo $book["title"]; ?></div>
                                     <img class="book3d-cover" id="cover-<?php echo $i; ?>-<?php echo $j; ?>" src="no_cover.jpg"/>

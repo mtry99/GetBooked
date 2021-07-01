@@ -3,14 +3,17 @@
 require_once "config.php";
 
 $response = ["success" => false];
+$response = ["message" => "failed"];
 
 if(!isset($_GET["id"])) {
+    $response["message"] = "invalid collection id";
     header('Content-type: application/json');
     echo json_encode($response);
     die();
 }
 
 if(!isset($_SESSION["uid"])) {
+    $response["message"] = "invalid user id";
     header('Content-type: application/json');
     echo json_encode($response);
     die();
@@ -49,7 +52,7 @@ while($row = $result->fetch_assoc()) {
     array_push($collection_books[$row['rarity']], $row);
 }
 
-$chance = [0,256,128,64,8,1];
+$chance = [0,256,128,16,4,1];
 $total = 0;
 for($r = 1; $r <= 5; $r++) {
     if(count($collection_books[$r]) != 0) {
@@ -69,6 +72,7 @@ for($r = 5; $r >= 1; $r--) {
 }
 
 if($book_r == 0) {
+    $response["message"] = "invalid book id";
     header('Content-type: application/json');
     echo json_encode($response);
     die();
@@ -105,6 +109,7 @@ $obj = json_decode($json, true);
 
 $response["book"] = $row;
 $response["book_detail"] = $obj;
+$response["message"] = "success";
 
 $response["success"] = true;
 header('Content-type: application/json');

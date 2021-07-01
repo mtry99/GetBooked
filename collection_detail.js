@@ -58,6 +58,19 @@ function drawStar(cx,cy,spikes,outerRadius,innerRadius){
     ctx.closePath();
 }
 
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+}
+
 let canvas = document.getElementById("canvas");
 const { width, height } = canvas.getBoundingClientRect();
 canvas.width = Math.ceil(width);
@@ -103,7 +116,36 @@ let x = 0;
 let startSpin = false;
 let spinned = false;
 
+let modal_book_animation = 10000;
+let modal_book_animation_c = 50;
+let modal_book_animation_scale_d = 20;
+let modal_book_animation_bright_d = 100;
+
 function onFrame() {
+
+    if(modal_book_animation < 50) {
+
+        let book_scale = (1 - modal_book_animation_scale_d)
+                       * Math.sqrt(modal_book_animation/50)
+                       + modal_book_animation_scale_d;
+                       
+        $('#modal-book-box').css({ transform: `scale(${book_scale})` });
+        $('#modal-book-box').css({ filter: `brightness(${0}%)` });
+
+    } else if(modal_book_animation < 50 + 10) {
+
+        let book_bright = (modal_book_animation_bright_d)
+                        * Math.sqrt((modal_book_animation - 50)/10);
+
+        $('#modal-book-box').css({ filter: `brightness(${book_bright}%)` });
+
+    } else {
+        $('#modal-book-box').css({ transform: `scale(1)` });
+        $('#modal-book-box').css({ filter: `brightness(100%)` });
+    }
+
+    modal_book_animation ++;
+
     ctx.fillStyle = "rgba(0,0,0, 0.2)";
     ctx.fillRect(0, 0, width, height);
     
@@ -116,7 +158,8 @@ function onFrame() {
     if(x > c && startSpin) {
         wheelPos = d;
         startSpin = false;
-
+        
+        modal_book_animation = 0;
         $('#bookModal').modal('show');
     }
 
@@ -252,19 +295,15 @@ function onDismissModal() {
 
 function onOpenClick() {
     console.log("OPEN!");
-    if(spinned) {
-        resetWheel();
-    }
-    spinned = true;
-    startSpin = true;
+    openCollection();
     
     $('#buttonOpen').fadeOut();
 }
 
-function resetWheel() {
+function resetWheel(r, i) {
     wheel = [];
     generateWheel(30);
-    wheel.push({rarity: 5, idx: 0, r: Math.random()});
+    wheel.push({rarity: r, idx: i, r: Math.random()});
     generateWheel(5);
 
     x = 0;
@@ -294,6 +333,42 @@ function generateWheel(num) {
         wheel.push({rarity: rarity, idx: Math.floor(Math.random() * obj[rarity].length), r: Math.random()});
     }
     //console.log(wheel);
+}
+
+function openCollection() {
+    let collection_id = findGetParameter("id")
+
+    let req = new XMLHttpRequest();
+    req.responseType = 'json';
+    req.open('GET', `collection_open.php?id=${collection_id}`, true);
+    req.onload  = function() {
+        let jsonResponse = req.response;
+
+        console.log(jsonResponse);
+
+        let book = {r: 0, i: 0};
+
+        for(let i = 1; i <= 5 && book.r == 0; i++) {
+            for(let j = 0; j < obj[i].length && book.r == 0; j++) {
+                if(obj[i][j].book_id == jsonResponse.book.book_id) {
+                    book.r = i;
+                    book.i = j;
+                }
+            }
+        }
+
+        $('#modal-book-box').removeClass();
+        $('#modal-book-box').empty();
+        $('#modal-book-box').addClass(`book_box`);
+        $('#modal-book-box').addClass(`book_box_rarity_${book.r}`);
+        $('#modal-book-box').addClass(`modal-book-box-${book.r}`);
+        $('#modal-book-box').append($(`#book-container3d-${book.r}-${book.i}`).clone()).html();   
+
+        resetWheel(book.r, book.i);
+        spinned = true;
+        startSpin = true;
+    };
+    req.send(null);
 }
 
 let empty_cover_img = new Image();
@@ -347,7 +422,7 @@ $(document).ready(function() {
 
     console.log(fireFrameImgs);
 
-    resetWheel();
+    //resetWheel();
 
     for(let i = 1; i <= 5; i++) {
         for(let j = 0; j < obj[i].length; j++) {
@@ -369,8 +444,6 @@ $(document).ready(function() {
         }
     }
     console.log(obj);
-
-    $('#bookModal').modal('show');
 
     setInterval(onFrame, 1000 / 60);
 });
