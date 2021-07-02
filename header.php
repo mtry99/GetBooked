@@ -11,9 +11,11 @@
         ?>
         <a class="nav-item nav-link <?php echo $uri_parts[0] === "/book.php"?"active":"" ?>" href="/book.php">Search Books </span></a>
         <a class="nav-item nav-link <?php echo $uri_parts[0] === "/book_detail.php"?"active":"" ?>" href="/book_detail.php">Random Book </a>
-        <a class="nav-item nav-link" href="/account.php">Account History </a>
+        <a class="nav-item nav-link <?php echo ($uri_parts[0] === "/collection.php" || $uri_parts[0] === "/collection_detail.php")?"active":"" ?>" href="/collection.php">Collections </a>
+        <a class="nav-item nav-link <?php echo $uri_parts[0] === "/inventory.php"?"active":"" ?>" href="/inventory.php">My Inventory </a>
+        <a class="nav-item nav-link" <?php echo $uri_parts[0] === "/account.php"?"active":"" ?>" href="/account.php">My Borrow History </a>
         <?php if ((isset($_SESSION["isadmin"])) && ($_SESSION["isadmin"] === true)): ?>
-        <a class="nav-item nav-link <?php echo $uri_parts[0] === "/book_detail.php"?"active":"" ?>"  href="/new-book.php">Add New Book </a>
+        <a class="nav-item nav-link <?php echo $uri_parts[0] === "/new-book.php"?"active":"" ?>"  href="/new-book.php">Add New Book </a>
         <?php endif; ?>
         <a class="nav-item nav-link <?php  $_SESSION["loggedin"]= false?>" href="/login.php"> Logout </a>
     </div>

@@ -72,12 +72,12 @@ console.log(author_obj);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Book Detail</title>
+    <title>Author Detail</title>
 
     <?php require_once "frameworks.php"; ?>
 
     <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="book_details.css">
+    <link rel="stylesheet" href="css/book_details.css">
 
 </head>
 <body>

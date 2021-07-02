@@ -12,7 +12,7 @@
 <?php require_once "frameworks.php"; ?>
 
 <!-- Our Custom CSS -->
-<link rel="stylesheet" href="book_details.css">
+<link rel="stylesheet" href="css/book_details.css">
 
 </head>
 <body>
@@ -57,7 +57,7 @@
             echo $row["book_id"];
             echo '</th><td><img id="cover-';
             echo $row["original_key"];
-            echo '" class="cover-image" src="no_cover.jpg">';
+            echo '" class="cover-image" src="assets/no_cover.jpg">';
             echo '</td><td class="clickable-book-info"><span class="book-table-title"><a href="#" onclick="return title_clicked(';
             echo $row["book_id"];
             echo ')">';
@@ -118,7 +118,7 @@
         echo '</td></tr>';
     }
     ?>
-    <script src="book_table.js"></script>
+    <script src="js/book_table.js"></script>
 
     <?php
     if(isset($_POST["renew"])) {
