@@ -21,3 +21,4 @@
 
 <!-- Our Custom CSS -->
 <link rel="stylesheet" href="book.css">
+<script src="utils.js"></script>

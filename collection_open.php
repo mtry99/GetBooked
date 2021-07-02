@@ -37,6 +37,8 @@ $collection_row = $collection_result->fetch_assoc();
 $sql = sprintf('
 SELECT *
 FROM collection_book as collection
+LEFT JOIN book as b 
+ON collection.book_id = b.book_id
 %s;',
 $collection_id_query);
 
@@ -52,7 +54,7 @@ while($row = $result->fetch_assoc()) {
     array_push($collection_books[$row['rarity']], $row);
 }
 
-$chance = [0,256,128,16,4,1];
+$chance = [0,256,128,4,2,1];
 $total = 0;
 for($r = 1; $r <= 5; $r++) {
     if(count($collection_books[$r]) != 0) {
@@ -65,7 +67,7 @@ $book_r = 0;
 
 $rng = rand(0, $total - 1);
 for($r = 5; $r >= 1; $r--) {
-    if($rng > $chance[$r]) {
+    if($rng >= $chance[$r]) {
         $book_r = $r;
         break;
     }
@@ -79,6 +81,27 @@ if($book_r == 0) {
 }
 
 $book_idx = rand(0, count($collection_books[$book_r]) - 1);
+
+// add to inventory
+
+$inventory_query = '("'.$uid.'","'.$collection_books[$book_r][$book_idx]["book_id"].'","1")';
+
+$sql = sprintf('
+INSERT INTO user_inventory (user_id,book_id,amount) 
+VALUES %s
+ON DUPLICATE KEY UPDATE amount=amount+1;',
+$inventory_query);
+
+$result = $conn->query($sql);
+
+if(!$result) {
+    $response["message"] = "error inserting into inventory";
+    header('Content-type: application/json');
+    echo json_encode($response);
+    die();
+}
+
+// get book detail
 
 $book_id_query = 'WHERE book.book_id = "'.$collection_books[$book_r][$book_idx]["book_id"].'"';
 

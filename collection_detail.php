@@ -7,6 +7,10 @@ if(!isset($_GET["id"])) {
     header('Location: collection.php');
 }
 
+if(!isset($_SESSION["uid"])) {
+    header('Location: login.php');
+}
+
 $collection_id = $_GET["id"];
 
 $collection_id_query = 'WHERE collection.collection_id = "'.$collection_id.'"';
@@ -60,10 +64,6 @@ console.log(sql);
 console.log(obj);
 
 </script>
-
-<?php
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">

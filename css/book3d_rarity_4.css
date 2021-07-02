@@ -9,6 +9,7 @@
     }
 }
 
+
 /* 3d book rarity 5 ------------------------ */
 
 .book_box_rarity_4 .book-container3d {
@@ -84,15 +85,27 @@
 }
 
 @keyframes cover_glow_move_4 {
-    0% {box-shadow: 3px 3px 20px var(--glow1);}
-    50% {box-shadow: 3px 3px 20px var(--glow2);}
-    100% {box-shadow: 3px 3px 20px var(--glow1);}
+    0% {
+        box-shadow: 3px 3px 20px var(--glow1);
+    }
+    50% {
+        box-shadow: 3px 3px 20px var(--glow2);
+    }
+    100% {
+        box-shadow: 3px 3px 20px var(--glow1);
+    }
 }
 
 @keyframes cover_back_glow_move_4 {
-    0% {box-shadow: -5px 0 2.5rem 10px var(--glow2);}
-    50% {box-shadow: -5px 0 2.5rem 10px var(--glow1);}
-    100% {box-shadow: -5px 0 2.5rem 10px var(--glow2);}
+    0% {
+        box-shadow: -5px 0 2.5rem 10px var(--glow2);
+    }
+    50% {
+        box-shadow: -5px 0 2.5rem 10px var(--glow1);
+    }
+    100% {
+        box-shadow: -5px 0 2.5rem 10px var(--glow2);
+    }
 }
 
 .book_box_rarity_4 .book-container3d .book3d .cover-title {
