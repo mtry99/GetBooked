@@ -9,6 +9,7 @@
     }
 }
 
+
 /* 3d book rarity 5 ------------------------ */
 
 .book_box_rarity_3 .book-container3d {
@@ -46,7 +47,7 @@
     height: var(--size2);
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    animation: cover_glow_move_4 2s infinite;
+    animation: cover_glow_move_3 2s infinite;
 }
 
 .book_box_rarity_3 .book-container3d .book3d::before {
@@ -69,7 +70,7 @@
     border-bottom-right-radius: 3px;
     background: #01060f;
     transform: translateZ(-2.5rem);
-    animation: cover_back_glow_move_4 2s infinite;
+    animation: cover_back_glow_move_3 2s infinite;
     z-index: -10;
 }
 
@@ -82,16 +83,28 @@
     flex: 0 0 8rem;
 }
 
-@keyframes cover_glow_move_4 {
-    0% {box-shadow: 1px 1px 10px var(--glow1);}
-    50% {box-shadow: 1px 1px 10px var(--glow2);}
-    100% {box-shadow: 1px 1px 10px var(--glow1);}
+@keyframes cover_glow_move_3 {
+    0% {
+        box-shadow: 1px 1px 10px var(--glow1);
+    }
+    50% {
+        box-shadow: 1px 1px 10px var(--glow2);
+    }
+    100% {
+        box-shadow: 1px 1px 10px var(--glow1);
+    }
 }
 
-@keyframes cover_back_glow_move_4 {
-    0% {box-shadow: -3px 0 1.2rem 5px var(--glow2);}
-    50% {box-shadow: -3px 0 1.2rem 5px var(--glow1);}
-    100% {box-shadow: -3px 0 1.2rem 5px var(--glow2);}
+@keyframes cover_back_glow_move_3 {
+    0% {
+        box-shadow: -3px 0 1.2rem 5px var(--glow2);
+    }
+    50% {
+        box-shadow: -3px 0 1.2rem 5px var(--glow1);
+    }
+    100% {
+        box-shadow: -3px 0 1.2rem 5px var(--glow2);
+    }
 }
 
 .book_box_rarity_3 .book-container3d .book3d .cover-title {

@@ -203,7 +203,7 @@ SELECT * FROM user;
 -- added full text index to book title
 ALTER TABLE `book` ADD FULLTEXT `book_title_index` (`title`);
 
--- 6/26/2021 --------------------------------------------------
+-- 2021/6/26 --------------------------------------------------
 CREATE TABLE `collection` (
 	`collection_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL
@@ -252,6 +252,47 @@ INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collectio
 INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 5');
 INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 6');
 INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 7');
+
+-- 2021/7/1/ --------------------------------------------------
+
+CREATE TABLE `user_inventory` (
+	`user_id` INT NOT NULL,
+	`book_id` INT NOT NULL,
+	`amount` INT NOT NULL,
+    PRIMARY KEY (`user_id`, `book_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
+    FOREIGN KEY (`book_id`) REFERENCES `book`(`book_id`)
+);
+
+ALTER TABLE `book` ADD `rarity` INT NOT NULL AFTER `count`;
+
+UPDATE book SET rarity = '3' WHERE book_id = '4583';
+UPDATE book SET rarity = '3' WHERE book_id = '6733';
+UPDATE book SET rarity = '3' WHERE book_id = '7946';
+UPDATE book SET rarity = '3' WHERE book_id = '9766';
+UPDATE book SET rarity = '3' WHERE book_id = '12002';
+UPDATE book SET rarity = '3' WHERE book_id = '30298';
+UPDATE book SET rarity = '3' WHERE book_id = '34671';
+UPDATE book SET rarity = '3' WHERE book_id = '35959';
+UPDATE book SET rarity = '3' WHERE book_id = '38673';
+UPDATE book SET rarity = '3' WHERE book_id = '59906';
+UPDATE book SET rarity = '3' WHERE book_id = '64967';
+UPDATE book SET rarity = '4' WHERE book_id = '9662';
+UPDATE book SET rarity = '4' WHERE book_id = '10429';
+UPDATE book SET rarity = '4' WHERE book_id = '16403';
+UPDATE book SET rarity = '4' WHERE book_id = '19745';
+UPDATE book SET rarity = '4' WHERE book_id = '34875';
+UPDATE book SET rarity = '4' WHERE book_id = '43322';
+UPDATE book SET rarity = '4' WHERE book_id = '46983';
+UPDATE book SET rarity = '4' WHERE book_id = '49112';
+UPDATE book SET rarity = '4' WHERE book_id = '52259';
+UPDATE book SET rarity = '4' WHERE book_id = '60875';
+UPDATE book SET rarity = '5' WHERE book_id = '11';
+UPDATE book SET rarity = '5' WHERE book_id = '45346';
+UPDATE book SET rarity = '5' WHERE book_id = '36293';
+UPDATE book SET rarity = '5' WHERE book_id = '63870';
+
+ALTER TABLE collection_book DROP COLUMN rarity;
 
 ------------------------------------------------------------------
 -- user setup ----------------------------------------------------
