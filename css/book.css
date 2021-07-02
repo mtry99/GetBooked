@@ -6,6 +6,10 @@
 body {
     font-family: 'Poppins', sans-serif;
     background: #fafafa;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0.8px;
 }
 
 p {
@@ -410,4 +414,8 @@ input[type=number] {
 .clickable-book-info a:hover,
 #detail-values li div div p a:hover {
     color: #f88680;
+}
+
+.btn-logout {
+    color: white !important;
 }
