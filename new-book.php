@@ -1,3 +1,4 @@
+
 <?php
 // connect to DB 
 require_once "config.php";

@@ -17,7 +17,7 @@
         <?php if ((isset($_SESSION["isadmin"])) && ($_SESSION["isadmin"] === true)): ?>
         <a class="nav-item nav-link <?php echo $uri_parts[0] === "/new-book.php"?"active":"" ?>"  href="/new-book.php">Add New Book </a>
         <?php endif; ?>
-        <a class="nav-item nav-link" href="/login.php"> Logout </a>
+        <a class="nav-item nav-link <?php  $_SESSION["loggedin"]= false?>" href="/login.php"> Logout </a>
     </div>
   </div>
 </nav>
