@@ -280,7 +280,7 @@ function generateWheel(num) {
     function dice() {
         let rng = Math.random() * total;
         for (let r = 5; r >= 1; r--) {
-            if (rng > chance[r]) {
+            if (rng >= chance[r]) {
                 return r;
             }
         }
