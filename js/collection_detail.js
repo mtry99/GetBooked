@@ -78,7 +78,18 @@ let modal_book_animation_c = 50;
 let modal_book_animation_scale_d = 20;
 let modal_book_animation_bright_d = 100;
 
+let prevMilli = 0;
+
+let targetFps = 240;
+let fps = targetFps;
+
+let capable = true;
+
 function onFrame() {
+
+    let curMilli = Date.now();
+    let delta = (curMilli - prevMilli) / (1000 / 60);
+    prevMilli = curMilli;
 
     if (modal_book_animation < 50) {
 
@@ -101,16 +112,16 @@ function onFrame() {
         $('#modal-book-box').css({ filter: `brightness(100%)` });
     }
 
-    modal_book_animation++;
+    modal_book_animation += delta;
 
     ctx.fillStyle = "rgba(0,0,0, 0.2)";
     ctx.fillRect(0, 0, width, height);
 
     let wheelSize = (wheel.length * (coverWidth + coverGap));
 
-    t += 1 / 60;
+    t += delta / 60;
 
-    if (startSpin) x += 1 / 60;
+    if (startSpin) x += delta / 60;
     wheelPos = -d / (c * c) * Math.pow(x - c, 2) + d;
     if (x > c && startSpin) {
         wheelPos = d;
@@ -150,17 +161,22 @@ function onFrame() {
 
         ctx.translate(bookPos.x, bookPos.y);
 
-        for (p of coverEdgePoints) {
-            let glowSize = rarityGlows[rarity].gs * (0.3 * Math.cos(t * 5 + 2 * Math.PI * p.r + 2 * Math.PI * wheel[idx].r) + 1);
-            let glowHue = rarityGlows[rarity].c1 + 30 * Math.cos(t * 3 + 3 * Math.PI * p.r + 3 * Math.PI * wheel[idx].r);
-            glowHue = glowHue % 360;
-            let glowClr = hslToRgb(glowHue / 360, 1, 0.5);
-            ctx.fillStyle = gradientRadial([p.x, p.y, glowSize], `${glowClr[0]},${glowClr[1]},${glowClr[2]}`);
-            ctx.fillRect(p.x - glowSize, p.y - glowSize, 2 * glowSize, 2 * glowSize);
+        if (capable) {
+            for (p of coverEdgePoints) {
+                let glowSize = rarityGlows[rarity].gs * (0.3 * Math.cos(t * 5 + 2 * Math.PI * p.r + 2 * Math.PI * wheel[idx].r) + 1);
+                let glowHue = rarityGlows[rarity].c1 + 30 * Math.cos(t * 3 + 3 * Math.PI * p.r + 3 * Math.PI * wheel[idx].r);
+                glowHue = glowHue % 360;
+                let glowClr = hslToRgb(glowHue / 360, 1, 0.5);
+                ctx.fillStyle = gradientRadial([p.x, p.y, glowSize], `${glowClr[0]},${glowClr[1]},${glowClr[2]}`);
+                ctx.fillRect(p.x - glowSize, p.y - glowSize, 2 * glowSize, 2 * glowSize);
+            }
         }
 
         ctx.restore();
     }
+
+    ctx.font = "32px Old Standard TT";
+    ctx.textAlign = "center";
 
     for (let i = 0; i < wheel.length * 2; i++) {
         let idx = i < wheel.length ? i : i - wheel.length;
@@ -190,8 +206,6 @@ function onFrame() {
             ctx.fillStyle = book.color;
             ctx.fillRect(bookPos.x, bookPos.y, bookPos.w, bookPos.h);
 
-            ctx.font = "32px Old Standard TT";
-            ctx.textAlign = "center";
             if (book.splitTitle) {
                 for (let j = 0; j < book.splitTitle.length; j++) {
                     let depth = 0.5;
@@ -244,6 +258,18 @@ function onFrame() {
     }
 
     ctx.drawImage(metal_arrow_img, width / 2 - metal_arrow_img.width / 4, -20, metal_arrow_img.width / 2, metal_arrow_img.height / 2);
+
+    if (delta != 0) {
+        fps = fps * 0.95 + (1000 / ((1000 / 60) * delta)) * 0.05;
+    }
+
+    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.textAlign = "left";
+    ctx.fillText('fps: ' + fps.toFixed(0), 5, 25);
+
+    if (fps < 20) {
+        capable = false;
+    }
 }
 
 function onDismissModal() {
@@ -402,5 +428,6 @@ $(document).ready(function() {
     }
     console.log(obj);
 
-    setInterval(onFrame, 1000 / 60);
+    prevMilli = Date.now();
+    setInterval(onFrame, 1000 / targetFps);
 });
