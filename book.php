@@ -336,7 +336,7 @@ $result = $conn->query($sql);
         </div>
     </div>
     
-    <script src="book.js"></script>
+    <script src="js/book.js"></script>
 
 </body>
 </html>

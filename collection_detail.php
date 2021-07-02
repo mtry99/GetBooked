@@ -79,7 +79,7 @@ console.log(obj);
     <?php require_once "frameworks.php"; ?>
 
     <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="collection.css">
+    <link rel="stylesheet" href="css/collection.css">
     <link rel="stylesheet" href="css/book3d_rarity_5.css">
     <link rel="stylesheet" href="css/book3d_rarity_4.css">
     <link rel="stylesheet" href="css/book3d_rarity_3.css">
@@ -137,9 +137,9 @@ console.log(obj);
                             <div id="book-container3d-<?php echo $i; ?>-<?php echo $j; ?>" class="book-container3d">
                                 <div class="book3d">
                                     <div class="book3d-cover cover-title" id="cover-title-<?php echo $i; ?>-<?php echo $j; ?>"><?php echo $book["title"]; ?></div>
-                                    <img class="book3d-cover" id="cover-<?php echo $i; ?>-<?php echo $j; ?>" src="no_cover.jpg"/>
+                                    <img class="book3d-cover" id="cover-<?php echo $i; ?>-<?php echo $j; ?>" src="assets/no_cover.jpg"/>
                                     <div class="book3d-cover-back cover-title" id="cover-back-title-<?php echo $i; ?>-<?php echo $j; ?>"></div>
-                                    <img class="book3d-cover-back" id="cover-back-<?php echo $i; ?>-<?php echo $j; ?>" src="no_cover.jpg"/>
+                                    <img class="book3d-cover-back" id="cover-back-<?php echo $i; ?>-<?php echo $j; ?>" src="assets/no_cover.jpg"/>
                                 </div>
                             </div>
                             <div class="star-container-container">
@@ -164,7 +164,7 @@ console.log(obj);
         </div>
     </div>
     
-    <script src="collection_detail.js"></script>
+    <script src="js/collection_detail.js"></script>
 
 </body>
 </html>
