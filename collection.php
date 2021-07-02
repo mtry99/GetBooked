@@ -34,7 +34,7 @@ console.log(sql);
     <?php require_once "frameworks.php"; ?>
 
     <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="collection.css">
+    <link rel="stylesheet" href="css/collection.css">
 
 </head>
 <body>
@@ -77,7 +77,7 @@ console.log(sql);
                 ?>
             </div>
 
-            <script src="collection.js"></script>
+            <script src="js/collection.js"></script>
         
         </div>
     </div>

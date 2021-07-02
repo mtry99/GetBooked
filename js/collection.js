@@ -1,4 +1,3 @@
-
 function collection_clicked(id) {
     console.log("collection_clicked: " + id);
 
@@ -10,4 +9,3 @@ function collection_clicked(id) {
 
     return false;
 }
-

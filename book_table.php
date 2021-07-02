@@ -28,7 +28,7 @@ console.log(sql);
             echo $row["book_id"];
             echo '</th><td><img id="cover-';
             echo $row["original_key"];
-            echo '" class="cover-image" src="no_cover.jpg">';
+            echo '" class="cover-image" src="assets/no_cover.jpg">';
             echo '</td><td class="clickable-book-info"><span class="book-table-title"><a href="#" onclick="return title_clicked(';
             echo $row["book_id"];
             echo ')">';
@@ -97,6 +97,6 @@ console.log(sql);
 
     ?>
 
-    <script src="book_table.js"></script>
+    <script src="js/book_table.js"></script>
 </tbody>
 </table>

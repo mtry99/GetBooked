@@ -1,6 +1,5 @@
-
-$(document).ready(function () {
-    $('#sidebarCollapse').on('click', function () {
+$(document).ready(function() {
+    $('#sidebarCollapse').on('click', function() {
         $('#sidebar').toggleClass('active');
         $(this).toggleClass('active');
     });
@@ -10,7 +9,7 @@ $(document).ready(function () {
         min: 0,
         max: 1500,
         values: [book_filter["page_min"], book_filter["page_max"]],
-        slide: function (event, ui) {
+        slide: function(event, ui) {
             $("#pages-amount1").val("" + ui.values[0]);
             $("#pages-amount2").val("" + ui.values[1]);
         }
@@ -23,8 +22,8 @@ $(document).ready(function () {
     $("#pages-amount2").change(function() {
         $("#pages-range-slider").slider("values", 1, $("#pages-amount2").val());
     });
-    if(book_filter["page_on"]) {
-        $("#switch-pages").attr('checked','checked');
+    if (book_filter["page_on"]) {
+        $("#switch-pages").attr('checked', 'checked');
         $("#collapse-pages").collapse('show');
     }
 
@@ -33,7 +32,7 @@ $(document).ready(function () {
         min: 1700,
         max: 2021,
         values: [book_filter["year_min"], book_filter["year_max"]],
-        slide: function (event, ui) {
+        slide: function(event, ui) {
             $("#year-amount1").val("" + ui.values[0]);
             $("#year-amount2").val("" + ui.values[1]);
         }
@@ -46,13 +45,13 @@ $(document).ready(function () {
     $("#year-amount2").change(function() {
         $("#year-range-slider").slider("values", 1, $("#year-amount2").val());
     });
-    if(book_filter["year_on"]) {
-        $("#switch-year").attr('checked','checked');
+    if (book_filter["year_on"]) {
+        $("#switch-year").attr('checked', 'checked');
         $("#collapse-year").collapse('show');
     }
 
-    if(book_filter["in_stock"]) {
-        $("#in-stock-check").attr('checked','checked');
+    if (book_filter["in_stock"]) {
+        $("#in-stock-check").attr('checked', 'checked');
     }
 
     $("#input-title").val(book_filter["title"]);
@@ -66,12 +65,12 @@ $(document).ready(function () {
 
 function apply_filter() {
 
-    $("#apply-filter-text").css( "display", "none" );
-    $("#apply-filter-spinner").css( "display", "inline-block" );
+    $("#apply-filter-text").css("display", "none");
+    $("#apply-filter-spinner").css("display", "inline-block");
 
     let filter_obj = {
         page_on: $("#switch-pages").is(":checked"),
-    
+
         year_on: $("#switch-year").is(":checked"),
 
         title: $("#input-title").val(),
@@ -79,11 +78,11 @@ function apply_filter() {
         publisher: $("#input-publisher").val(),
 
         genre: $("#input-genre").val()
-        .split(",").map((x) => {
-            return x.trim().toLowerCase();
-        }).filter((x) => {
-            return x !== "";
-        }).join(","),
+            .split(",").map((x) => {
+                return x.trim().toLowerCase();
+            }).filter((x) => {
+                return x !== "";
+            }).join(","),
 
         in_stock: $("#in-stock-check").is(":checked"),
 
@@ -92,7 +91,7 @@ function apply_filter() {
 
     filter_obj.page_min = $("#pages-amount1").val();
     filter_obj.page_max = $("#pages-amount2").val();
-    
+
     filter_obj.year_min = $("#year-amount1").val();
     filter_obj.year_max = $("#year-amount2").val();
 
@@ -102,32 +101,32 @@ function apply_filter() {
 
     let url = window.location.origin + "/book.php?";
 
-    if(filter_obj.title !== "") {
+    if (filter_obj.title !== "") {
         url += "title=" + encodeURIComponent(filter_obj.title) + "&";
     }
-    if(filter_obj.author !== "") {
+    if (filter_obj.author !== "") {
         url += "author=" + encodeURIComponent(filter_obj.author) + "&";
     }
-    if(filter_obj.publisher !== "") {
+    if (filter_obj.publisher !== "") {
         url += "publisher=" + encodeURIComponent(filter_obj.publisher) + "&";
     }
-    if(filter_obj.genre !== "") {
+    if (filter_obj.genre !== "") {
         url += "genre=" + encodeURIComponent(filter_obj.genre) + "&";
     }
-    if(filter_obj.in_stock) {
+    if (filter_obj.in_stock) {
         url += "in_stock=" + encodeURIComponent(filter_obj.in_stock) + "&";
     }
-    if(filter_obj.page_on) {
+    if (filter_obj.page_on) {
         url += "page_on=" + encodeURIComponent(filter_obj.page_on) + "&";
         url += "page_min=" + encodeURIComponent(filter_obj.page_min) + "&";
         url += "page_max=" + encodeURIComponent(filter_obj.page_max) + "&";
     }
-    if(filter_obj.year_on) {
+    if (filter_obj.year_on) {
         url += "year_on=" + encodeURIComponent(filter_obj.year_on) + "&";
         url += "year_min=" + encodeURIComponent(filter_obj.year_min) + "&";
         url += "year_max=" + encodeURIComponent(filter_obj.year_max) + "&";
     }
-    if(filter_obj.language !== "any") {
+    if (filter_obj.language !== "any") {
         url += "language=" + encodeURIComponent(filter_obj.language) + "&";
     }
 

@@ -84,7 +84,7 @@ console.log(obj);
     <?php require_once "frameworks.php"; ?>
 
     <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="book_details.css">
+    <link rel="stylesheet" href="css/book_details.css">
 
 </head>
 <body>
@@ -102,7 +102,7 @@ console.log(obj);
                             <?php
                             echo '<img id="cover-';
                             echo $row["original_key"];
-                            echo '" class="cover-image-big" src="no_cover.jpg">';
+                            echo '" class="cover-image-big" src="assets/no_cover.jpg">';
                             ?>
                         </div>
                         <div class="bg-light-gray padding-30px-all md-padding-25px-all sm-padding-20px-all text-center">
@@ -359,6 +359,6 @@ console.log(obj);
         </div>
     </div>
 
-    <script src="book_detail.js"></script>
+    <script src="js/book_detail.js"></script>
 </body>
 </html>

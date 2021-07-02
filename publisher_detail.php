@@ -64,7 +64,7 @@ console.log(publisher_id);
     <?php require_once "frameworks.php"; ?>
 
     <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="book_details.css">
+    <link rel="stylesheet" href="css/book_details.css">
 
 </head>
 <body>

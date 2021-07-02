@@ -20,5 +20,5 @@
 <link href='https://fonts.googleapis.com/css?family=Merienda' rel='stylesheet'>
 
 <!-- Our Custom CSS -->
-<link rel="stylesheet" href="book.css">
-<script src="utils.js"></script>
+<link rel="stylesheet" href="css/book.css">
+<script src="js/utils.js"></script>

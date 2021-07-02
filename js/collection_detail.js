@@ -64,7 +64,7 @@ for (let i = 1; i < 30; i++) {
 }
 
 let metal_arrow_img = new Image();
-metal_arrow_img.src = "metal_arrow.png";
+metal_arrow_img.src = "assets/metal_arrow.png";
 
 let c = 7;
 let d = 30 * (coverWidth + coverGap) - width / 2 + coverWidth / 2 + 0.7 * coverWidth * (Math.random() - 0.5);
@@ -330,7 +330,7 @@ function openCollection() {
 }
 
 let empty_cover_img = new Image();
-empty_cover_img.src = "empty_cover_small.png";
+empty_cover_img.src = "assets/empty_cover_small.png";
 
 $(document).ready(function() {
     console.log("ready!");
@@ -347,9 +347,9 @@ $(document).ready(function() {
                     div0 = document.getElementById("cover-back-title-" + i + "-" + j);
                     div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
                     div0 = document.getElementById("cover-" + i + "-" + j);
-                    div0.src = "empty_cover.png";
+                    div0.src = "assets/empty_cover.png";
                     div0 = document.getElementById("cover-back-" + i + "-" + j);
-                    div0.src = "empty_cover.png";
+                    div0.src = "assets/empty_cover.png";
                     obj[i][j].img = empty_cover_img;
                     obj[i][j].color = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
                 } else {
@@ -372,7 +372,7 @@ $(document).ready(function() {
     for (let i = 0; i <= 20; i++) {
         for (let j = 3; j <= 5; j++) {
             fireFrameImgs[j].push(new Image());
-            fireFrameImgs[j][i].src = `fire_frame_${j}/frame_${String(i).padStart(2, '0')}_delay-0.03s.png`;
+            fireFrameImgs[j][i].src = `assets/fire_frame_${j}/frame_${String(i).padStart(2, '0')}_delay-0.03s.png`;
         }
 
     }
