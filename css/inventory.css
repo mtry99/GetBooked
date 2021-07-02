@@ -68,3 +68,7 @@
 .book_box_rarity_3:hover .amount-container {
     transform: scale(0.6) translate(2rem, -2rem);
 }
+
+.book-container3d:hover {
+    cursor: pointer;
+}
