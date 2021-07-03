@@ -109,10 +109,13 @@
                     echo '<input name="book_id" value="';
                     echo $row["book_id"];
                     echo '" type="hidden"></input>';
+                    echo '<input name="log_id" value="';
+                    echo $row["log_id"];
+                    echo '" type="hidden"></input>';
                     echo '<input name="count" value="';
                     echo $row["count"];
                     echo '" type="hidden"></input>';
-                    echo '<input type="submit" name="return" value="Return" class="btn btn-secondary p-2 m-4">';
+                    echo '<input type="submit" name="return" value="Return" class="btn btn-primary p-2 m-4">';
                     echo '</form>';
                 } else echo $row["return_date"];
                 echo '</td>';
@@ -123,10 +126,13 @@
                     echo '<input name="book_id" value="';
                     echo $row["book_id"];
                     echo '" type="hidden"></input>';
+                    echo '<input name="log_id" value="';
+                    echo $row["log_id"];
+                    echo '" type="hidden"></input>';
                     echo '<input name="old_date" value="';
                     echo $row["return_by_date"];
                     echo '" type="hidden"></input>';
-                    echo '<input type="submit" name="renew" value="Renew" class="btn btn-secondary p-2 m-4">';
+                    echo '<input type="submit" name="renew" value="Renew" class="btn btn-success p-2 m-4">';
                     echo '</form>';
                 }
                 // echo '</td>';
@@ -139,21 +145,21 @@
         <?php
         if(isset($_POST["renew"])) {
             $book_id = $_POST['book_id'];
+            $log_id = $_POST['log_id'];
             $date = $_POST["old_date"];
             $week = date("Y-m-d", strtotime($date. ' + 7 days'));
-            $renew = "UPDATE log SET return_by_date = '$week' WHERE book_id = $book_id";
+            $renew = "UPDATE log SET return_by_date = '$week' WHERE log_id = $log_id";
             $results = $conn -> query($renew);
             echo "<meta http-equiv='refresh' content='0'>";
         }
 
         if(isset($_POST["return"])) {
             $book_id = $_POST['book_id'];
+            $log_id = $_POST['log_id'];
             $cur_date = date("Y-m-d");
-            $renew = "UPDATE log SET return_date = '$cur_date' WHERE book_id = $book_id";
+            $renew = "UPDATE log SET return_date = '$cur_date' WHERE log_id = $log_id";
             $results = $conn -> query($renew);
-            $count = $_POST["count"];
-            $count++;
-            $checkout = "UPDATE book SET count = $count WHERE book_id = $book_id";
+            $checkout = "UPDATE book SET count = count + 1 WHERE book_id = $book_id";
             $results = $conn -> query($checkout);
             echo "<meta http-equiv='refresh' content='0'>";
         }
