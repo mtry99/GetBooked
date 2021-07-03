@@ -3,9 +3,19 @@
 */
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-body {
+body,
+html {
     font-family: 'Poppins', sans-serif;
     background: #fafafa;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0.8px;
+    height: 100%
+}
+
+.wrapper {
+    min-height: 70%;
 }
 
 p {
@@ -410,4 +420,21 @@ input[type=number] {
 .clickable-book-info a:hover,
 #detail-values li div div p a:hover {
     color: #f88680;
+}
+
+.btn-logout {
+    color: white !important;
+}
+
+.footer {
+    color: white !important;
+    background-color: #e6891e;
+}
+
+.footer-bar {
+    background-color: #ff9b59;
+}
+
+.footer-content p {
+    color: white;
 }

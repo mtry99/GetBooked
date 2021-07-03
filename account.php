@@ -19,18 +19,19 @@
 
     <?php require "header.php"; ?>
     <!-- <h1>Loan History</h1> -->
-    <table class="table table-striped table-hover book-table">
-    <thead>
-        <tr>
-        <th scope="col" style="width: 1.5%">#</th>
-        <th scope="col" style="width: 12%">Cover</th>
-        <th scope="col" style="width: 40%">Book</th>
-        <th scope="col" style="width: 15.5%; text-align:center">Borrow Date</th>
-        <th scope="col" style="width: 15.5%; text-align:center">Date Returned</th>
-        <th scope="col" style="width: 15.5%; text-align:center">Return By Date</th>
-        </tr>
-    </thead>
-    <tbody>
+    <div class="wrapper container">
+        <table class="table table-striped table-hover book-table">
+        <thead>
+            <tr>
+            <th scope="col" style="width: 1.5%">#</th>
+            <th scope="col" style="width: 12%">Cover</th>
+            <th scope="col" style="width: 40%">Book</th>
+            <th scope="col" style="width: 15.5%; text-align:center">Borrow Date</th>
+            <th scope="col" style="width: 15.5%; text-align:center">Date Returned</th>
+            <th scope="col" style="width: 15.5%; text-align:center">Return By Date</th>
+            </tr>
+        </thead>
+        <tbody>
 
     <?php
     $uid = $_SESSION["uid"];
@@ -81,81 +82,85 @@
             $author_array = explode(',', $row["author"]);
             foreach($author_array as $i => $author) {
 
-                $author_array_array = explode(':', $author);
+                    $author_array_array = explode(':', $author);
 
-                if(!isset($author_array_array[1])) {
-                    continue;
+                    if(!isset($author_array_array[1])) {
+                        continue;
+                    }
+
+                    if($i !== 0) {
+                        echo ', ';
+                    }
+
+                    echo '<a href="#" onclick="return author_clicked(';
+                    echo $author_array_array[0];
+                    echo ')">';
+                    echo $author_array_array[1];
+                    echo '</a>';
                 }
-
-                if($i !== 0) {
-                    echo ', ';
-                }
-
-                echo '<a href="#" onclick="return author_clicked(';
-                echo $author_array_array[0];
-                echo ')">';
-                echo $author_array_array[1];
-                echo '</a>';
-            }
-            echo '</td>';
-            echo '<td style="text-align:center">';
-            echo $row["borrow_date"];
-            echo '</td>';
-            echo '<td style="text-align:center">';
-            if($row["return_date"] == NULL) {
-                echo "N/A";
-                echo '<form method="post">';
-                echo '<input name="book_id" value="';
-                echo $row["book_id"];
-                echo '" type="hidden"></input>';
-                echo '<input name="count" value="';
-                echo $row["count"];
-                echo '" type="hidden"></input>';
-                echo '<input type="submit" name="return" value="Return" class="btn btn-secondary p-2 m-4">';
-                echo '</form>';
-            } else echo $row["return_date"];
-            echo '</td>';
-            echo '<td style="text-align:center">';
-            echo $row["return_by_date"];
-            if($row["return_date"] == NULL) {
-                echo '<form method="post">';
-                echo '<input name="book_id" value="';
-                echo $row["book_id"];
-                echo '" type="hidden"></input>';
-                echo '<input name="old_date" value="';
+                echo '</td>';
+                echo '<td style="text-align:center">';
+                echo $row["borrow_date"];
+                echo '</td>';
+                echo '<td style="text-align:center">';
+                if($row["return_date"] == NULL) {
+                    echo "N/A";
+                    echo '<form method="post">';
+                    echo '<input name="book_id" value="';
+                    echo $row["book_id"];
+                    echo '" type="hidden"></input>';
+                    echo '<input name="count" value="';
+                    echo $row["count"];
+                    echo '" type="hidden"></input>';
+                    echo '<input type="submit" name="return" value="Return" class="btn btn-secondary p-2 m-4">';
+                    echo '</form>';
+                } else echo $row["return_date"];
+                echo '</td>';
+                echo '<td style="text-align:center">';
                 echo $row["return_by_date"];
-                echo '" type="hidden"></input>';
-                echo '<input type="submit" name="renew" value="Renew" class="btn btn-secondary p-2 m-4">';
-                echo '</form>';
+                if($row["return_date"] == NULL) {
+                    echo '<form method="post">';
+                    echo '<input name="book_id" value="';
+                    echo $row["book_id"];
+                    echo '" type="hidden"></input>';
+                    echo '<input name="old_date" value="';
+                    echo $row["return_by_date"];
+                    echo '" type="hidden"></input>';
+                    echo '<input type="submit" name="renew" value="Renew" class="btn btn-secondary p-2 m-4">';
+                    echo '</form>';
+                }
+                // echo '</td>';
             }
-            // echo '</td>';
+            echo '</td></tr>';
         }
-        echo '</td></tr>';
-    }
-    ?>
-    <script src="js/book_table.js"></script>
+        ?>
+        <script src="js/book_table.js"></script>
 
-    <?php
-    if(isset($_POST["renew"])) {
-        $book_id = $_POST['book_id'];
-        $date = $_POST["old_date"];
-        $week = date("Y-m-d", strtotime($date. ' + 7 days'));
-        $renew = "UPDATE log SET return_by_date = '$week' WHERE book_id = $book_id";
-        $results = $conn -> query($renew);
-        echo "<meta http-equiv='refresh' content='0'>";
-    }
+        <?php
+        if(isset($_POST["renew"])) {
+            $book_id = $_POST['book_id'];
+            $date = $_POST["old_date"];
+            $week = date("Y-m-d", strtotime($date. ' + 7 days'));
+            $renew = "UPDATE log SET return_by_date = '$week' WHERE book_id = $book_id";
+            $results = $conn -> query($renew);
+            echo "<meta http-equiv='refresh' content='0'>";
+        }
 
-    if(isset($_POST["return"])) {
-        $book_id = $_POST['book_id'];
-        $cur_date = date("Y-m-d");
-        $renew = "UPDATE log SET return_date = '$cur_date' WHERE book_id = $book_id";
-        $results = $conn -> query($renew);
-        $count = $_POST["count"];
-        $count++;
-        $checkout = "UPDATE book SET count = $count WHERE book_id = $book_id";
-        $results = $conn -> query($checkout);
-        echo "<meta http-equiv='refresh' content='0'>";
-    }
-    ?>
+        if(isset($_POST["return"])) {
+            $book_id = $_POST['book_id'];
+            $cur_date = date("Y-m-d");
+            $renew = "UPDATE log SET return_date = '$cur_date' WHERE book_id = $book_id";
+            $results = $conn -> query($renew);
+            $count = $_POST["count"];
+            $count++;
+            $checkout = "UPDATE book SET count = $count WHERE book_id = $book_id";
+            $results = $conn -> query($checkout);
+            echo "<meta http-equiv='refresh' content='0'>";
+        }
+        ?>
+        </tbody>
+        </table>
+    </div>
 </body>
+<?php require "footer.php"; ?>
 </html>

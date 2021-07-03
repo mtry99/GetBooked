@@ -109,7 +109,7 @@ $obj = json_decode($json, true);
                 <li>
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-2" data-toggle="tooltip" data-placement="right" title="Book Id">
                             <i class="fas fa-book text-orange"></i>
                             <strong class="margin-10px-left text-orange">:</strong>
                         </div>
@@ -127,7 +127,7 @@ $obj = json_decode($json, true);
                 </li>
                 <li>
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-2" data-toggle="tooltip" data-placement="right" title="Author">
                             <i class="fas fa-user text-pink"></i>
                             <strong class="margin-10px-left xs-margin-four-left text-pink">:</strong>
                         </div>
@@ -161,7 +161,7 @@ $obj = json_decode($json, true);
                 <li>
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-2" data-toggle="tooltip" data-placement="right" title="Publisher">
                             <i class="fas fa-building text-yellow"></i>
                             <strong class="margin-10px-left text-yellow">:</strong>
                         </div>
@@ -180,7 +180,7 @@ $obj = json_decode($json, true);
                 <li>
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-2" data-toggle="tooltip" data-placement="right" title="ISBN">
                             <i class="fas fa-barcode text-green"></i>
                             <strong class="margin-10px-left text-green">:</strong>
                         </div>
@@ -193,7 +193,7 @@ $obj = json_decode($json, true);
                 <li>
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-2" data-toggle="tooltip" data-placement="right" title="Language">
                             <i class="fas fa-language text-purple"></i>
                             <strong class="margin-10px-left xs-margin-four-left text-purple">:</strong>
                         </div>

@@ -38,6 +38,9 @@ function onBookClicked(i) {
                     console.log(response);
                     $("#book-popover-content-current").html(response);
                     $(`#book-popover-${popoverIdx}`).popover('update');
+                    $(function() {
+                        $(".col-md-2").tooltip('enable');
+                    });
                 } else {
                     console.error(xhr.statusText);
                 }

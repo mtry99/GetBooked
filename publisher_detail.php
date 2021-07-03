@@ -87,4 +87,5 @@ console.log(publisher_id);
     </div>
 
 </body>
+<?php require "footer.php"; ?>
 </html>
