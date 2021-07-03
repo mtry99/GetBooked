@@ -338,4 +338,5 @@ $result = $conn->query($sql);
     <script src="js/book.js"></script>
 
 </body>
+<?php require "footer.php"; ?>
 </html>

@@ -167,4 +167,5 @@ console.log(obj);
     <script src="js/collection_detail.js"></script>
 
 </body>
+<?php require "footer.php"; ?>
 </html>

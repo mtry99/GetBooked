@@ -363,4 +363,5 @@ console.log(obj);
 
     <script src="js/book_detail.js"></script>
 </body>
+<?php require "footer.php"; ?>
 </html>

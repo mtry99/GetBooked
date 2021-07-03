@@ -90,4 +90,5 @@ console.log(genre_id);
     </div>
 
 </body>
+<?php require "footer.php"; ?>
 </html>

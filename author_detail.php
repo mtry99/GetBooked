@@ -99,4 +99,5 @@ console.log(author_obj);
     </div>
 
 </body>
+<?php require "footer.php"; ?>
 </html>

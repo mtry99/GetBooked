@@ -146,4 +146,5 @@ console.log(inventory);
     <script src="js/inventory.js"></script>
 
 </body>
+<?php require "footer.php"; ?>
 </html>
