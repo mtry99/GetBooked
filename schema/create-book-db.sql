@@ -110,7 +110,7 @@ CREATE TABLE `log` (
     `borrow_date` DATE NOT NULL,
     `return_date` DATE,
     `return_by_date` DATE NOT NULL,
-    PRIMARY KEY (`log_id`, `user_id`, `book_id`),
+    PRIMARY KEY (`log_id`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
     FOREIGN KEY (`book_id`) REFERENCES `book`(`book_id`)
 );
