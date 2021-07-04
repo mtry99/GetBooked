@@ -25,24 +25,25 @@ $genre_result = $conn->query($genre_sql);
 $genre_row = $genre_result->fetch_assoc();
 
 $sql = sprintf('
-SELECT *
-FROM
-    (SELECT  c.count, c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
-    FROM 
-        (SELECT  b.count, b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
-        FROM 
-            (SELECT * FROM book 
-            RIGHT JOIN (
-            SELECT genre.book_id as filtered_book_id FROM book_genre as genre
-            %s ) g ON g.filtered_book_id = book.book_id) as b
-        LEFT JOIN book_author ba ON b.book_id = ba.book_id
-        LEFT JOIN author a ON ba.author_id = a.author_id
-        GROUP BY b.book_id) as c
-    LEFT JOIN book_genre bg ON c.book_id = bg.book_id
-    LEFT JOIN genre g ON bg.genre_id = g.genre_id 
-    LEFT JOIN publisher p ON p.publisher_id = c.publisher_id 
-    GROUP BY c.book_id) as d
-LIMIT 25;',
+SELECT c.*,
+GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, 
+p.publisher_id, p.name as "publisher_name", bp.publish_year
+FROM (SELECT b.count, b.original_key, b.isbn, b.number_of_pages, 
+     b.language, b.book_id, b.title, 
+     GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
+     FROM (SELECT * FROM book 
+          RIGHT JOIN (
+          SELECT genre.book_id as filtered_book_id FROM book_genre as genre
+          %s ) g ON g.filtered_book_id = book.book_id
+          LIMIT 25) as b
+     LEFT JOIN book_author ba ON b.book_id = ba.book_id
+     LEFT JOIN author a ON ba.author_id = a.author_id
+     GROUP BY b.book_id) as c
+LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+LEFT JOIN genre g ON bg.genre_id = g.genre_id 
+LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
+LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
+GROUP BY c.book_id;',
 $genre_id_query);
 
 $result = $conn->query($sql);
