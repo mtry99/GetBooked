@@ -92,7 +92,8 @@ if($book_filter["publisher"] !== "") {
     NATURAL JOIN (SELECT bp.book_id as book_id FROM publisher as p
     RIGHT JOIN book_publisher bp ON p.publisher_id = bp.publisher_id
     WHERE UPPER(p.name) LIKE UPPER("%'.$book_filter["publisher"].'%") 
-    '.$query_year.')
+    '.$query_year.'
+    GROUP BY bp.book_id)
     ';
     $query_filter_books = $query_filter_books.$query_publisher.'d'.($first++);
 }
@@ -100,7 +101,8 @@ if($book_filter["author"] !== "") {
     $query_author = ' 
     NATURAL JOIN (SELECT ba.book_id as book_id FROM author as a
     RIGHT JOIN book_author ba ON a.author_id = ba.author_id
-    WHERE UPPER(a.name) LIKE UPPER("%'.$book_filter["author"].'%") )
+    WHERE UPPER(a.name) LIKE UPPER("%'.$book_filter["author"].'%") 
+    GROUP BY ba.book_id)
     '; 
     $query_filter_books = $query_filter_books.$query_author.'d'.($first++);
 }
@@ -114,7 +116,8 @@ if($book_filter["genre"] !== "") {
         $query_genre_cur = ' 
         NATURAL JOIN (SELECT bg.book_id as book_id FROM genre as g
         RIGHT JOIN book_genre bg ON g.genre_id = bg.genre_id
-        WHERE UPPER(g.name) LIKE UPPER("%'.$piece.'%") )
+        WHERE UPPER(g.name) LIKE UPPER("%'.$piece.'%") 
+        GROUP BY bg.book_id)
         ';
         $query_filter_books = $query_filter_books.$query_genre_cur.'d'.($first++);
     }
@@ -130,7 +133,7 @@ $core_book_filter = sprintf('
 $query_language, $query_count);
 
 $count_sql = sprintf('
-SELECT count(*) as num FROM book 
+SELECT count(book_id) as num FROM book 
             %s
 ', $core_book_filter);
 $results_count = $conn->query($count_sql);
@@ -347,7 +350,10 @@ $query_duration = $endtime - $starttime; //calculates total time taken
 
             </nav>
 
-            <nav class="" aria-label="Page navigation example">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="query-info">
+                <?php echo $results_count; ?> matches found.
+                </div>
                 <ul class="pagination justify-content-center mb-2">
                     <?php 
                     $get_query = $_GET;
@@ -378,7 +384,10 @@ $query_duration = $endtime - $starttime; //calculates total time taken
                     <li class="page-item"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>">&#187;</a></li>
                     <?php endif; ?>
                 </ul>
-            </nav>
+                <div class="query-info">
+                Query took <?php echo round($query_duration * 1000, 2); ?>ms.
+                </div>
+            </div>
             
             <?php require_once "book_table.php"; ?>
         
