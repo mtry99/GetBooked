@@ -354,8 +354,8 @@ $query_duration = $endtime - $starttime; //calculates total time taken
                     // replace parameter(s)
                     $get_query['page'] = '1';
                     $get_query_url = http_build_query($get_query);
-                    if($page > 2): ?>
-                    <li class="page-item"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>"><?php echo (1); ?></a></li>
+                    if($page != -1): ?>
+                    <li class="page-item"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>">&#171;</a></li>
                     <?php endif; 
                     $get_query['page'] = ($page - 1);
                     $get_query_url = http_build_query($get_query);
@@ -374,8 +374,8 @@ $query_duration = $endtime - $starttime; //calculates total time taken
                     <?php endif; 
                     $get_query['page'] = $final_page;
                     $get_query_url = http_build_query($get_query);
-                    if($page < $final_page - 1): ?>
-                    <li class="page-item"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>"><?php echo ($final_page); ?></a></li>
+                    if($page != -1): ?>
+                    <li class="page-item"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>">&#187;</a></li>
                     <?php endif; ?>
                 </ul>
             </nav>
