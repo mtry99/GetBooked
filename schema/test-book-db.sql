@@ -176,3 +176,41 @@ OR UPPER(d.genre) LIKE UPPER("%animal%")
 
 
 LIMIT 25;
+
+-- updated filter books
+SELECT *
+FROM
+    (SELECT c.score,  c.count, c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
+    FROM 
+        (SELECT b.score,  b.count, b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
+        FROM 
+            (SELECT * , MATCH(book.title) AGAINST('+media' IN BOOLEAN MODE) score  FROM book 
+            NATURAL JOIN (SELECT book_id FROM book 
+                         JOIN (SELECT publisher_id FROM publisher 
+                              WHERE UPPER(name) LIKE UPPER("%press%") ) AS pp
+            ON pp.publisher_id = book.publisher_id) d0 
+            NATURAL JOIN (SELECT ba.book_id as book_id FROM author as a
+                         RIGHT JOIN book_author ba ON a.author_id = ba.author_id
+                         WHERE UPPER(a.name) LIKE UPPER("%john%") ) d1 
+            NATURAL JOIN (SELECT bg.book_id as book_id FROM genre as g
+                         RIGHT JOIN book_genre bg ON g.genre_id = bg.genre_id
+                         WHERE UPPER(g.name) LIKE UPPER("%general%") ) d2
+            WHERE MATCH(book.title) AGAINST('+media' IN BOOLEAN MODE) 
+            AND book.number_of_pages BETWEEN 500 AND 1200 
+            AND book.publish_year BETWEEN 1900 AND 2021 
+            AND book.language = "eng" 
+            AND book.count > "0" 
+            ORDER BY score DESC
+            LIMIT 25) as b
+        LEFT JOIN book_author ba ON b.book_id = ba.book_id
+        LEFT JOIN author a ON ba.author_id  = a.author_id
+        GROUP BY b.book_id) as c
+    LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+    LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
+    LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
+    GROUP BY c.book_id) as d
+LIMIT 25;
+
+-- test add book --
+-- CALL ADD_BOOK(bookName, authorName, pages, language, publisher, publishedYear, isbn);
+CALL ADD_BOOK("bbbb", "aaaa", "1234", "eng", "pppp", "1234", "12341");

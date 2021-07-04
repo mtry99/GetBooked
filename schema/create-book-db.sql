@@ -144,6 +144,7 @@ END//
 
 
 -- add book
+-- DROP PROCEDURE IF EXISTS `ADD_BOOK`; DELIMITER //
 CREATE PROCEDURE ADD_BOOK(
     in bookname VARCHAR(255),
     in authorName VARCHAR(255),
@@ -157,7 +158,7 @@ BEGIN
     INSERT INTO Author (name) 
     SELECT aname
     FROM (SELECT (authorName) AS aname) AS t
-    WHERE NOT EXISTS (SELECT name FROM Author WHERE name=authorName) ;
+    WHERE NOT EXISTS (SELECT name FROM Author WHERE name=authorName);
     
     INSERT INTO Publisher (name) 
     SELECT pname
@@ -166,9 +167,12 @@ BEGIN
     
     
     
-    INSERT INTO book (title, isbn, publisher_id, number_of_pages, language, count, publish_year) 
-    SELECT bookname, ISBN, publisher_id, pages, lang, 1, publishedYear
-    FROM publisher WHERE name = publisherName;
+    INSERT INTO book (title, isbn, number_of_pages, language, count) 
+    SELECT bookname, ISBN, pages, lang, 1;
+
+    INSERT INTO book_publisher (book_id, publisher_id, publish_year)
+    SELECT book_id, publisher_id, publishedYear From book, publisher p
+    WHERE title = bookName and p.name = publisherName;
 
     INSERT INTO book_author (book_id, author_id)
     SELECT book_id, author_id From book, author
@@ -220,31 +224,31 @@ CREATE TABLE `collection_book` (
 );
 
 INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Aristotle and Plato');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '11', '5');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '4583', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '6733', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '7946', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '9662', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '9766', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '10429', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '12002', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '16403', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '19745', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '30298', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '34671', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '34875', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '35959', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '36293', '5');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '38673', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '43322', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '45346', '5');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '46983', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '49112', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '52259', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '59906', '3');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '60875', '4');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '63870', '5');
-INSERT INTO `collection_book` (`collection_id`, `book_id`, `rarity`) VALUES ('1', '64967', '3');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '11');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '4583');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '6733');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '7946');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '9662');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '9766');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '10429');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '12002');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '16403');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '19745');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '30298');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '34671');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '34875');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '35959');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '36293');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '38673');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '43322');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '45346');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '46983');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '49112');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '52259');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '59906');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '60875');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '63870');
+INSERT INTO `collection_book` (`collection_id`, `book_id`) VALUES ('1', '64967');
 
 INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 1');
 INSERT INTO `collection` (`collection_id`, `name`) VALUES (NULL, 'Test Collection 2');
@@ -294,6 +298,31 @@ UPDATE book SET rarity = '5' WHERE book_id = '36293';
 UPDATE book SET rarity = '5' WHERE book_id = '63870';
 
 ALTER TABLE collection_book DROP COLUMN rarity;
+
+-- 2021/7/3/ --------------------------------------------------
+
+-- set up book_publisher table --
+CREATE TABLE `book_publisher` ( 
+    `book_id` INT NOT NULL , 
+    `publisher_id` INT NOT NULL , 
+    `publish_year` INT NOT NULL , 
+    PRIMARY KEY (`book_id`, `publisher_id`),
+    FOREIGN KEY (`book_id`) REFERENCES `book`(`book_id`),
+    FOREIGN KEY (`publisher_id`) REFERENCES `publisher`(`publisher_id`)
+);
+
+-- convert from old table data to new table data
+-- INSERT INTO book_publisher(book_id, publisher_id, publish_year) 
+-- SELECT book_id, publisher_id, publish_year FROM book;
+
+ALTER TABLE `book` DROP INDEX `publisher_id`;
+ALTER TABLE `book` DROP `publisher_id`;
+ALTER TABLE `book` DROP `publish_year`;
+ALTER TABLE `book` DROP INDEX `book_unique_original_key_constraint`;
+ALTER TABLE `book` DROP INDEX `book_original_key_index`;
+ALTER TABLE `author` DROP INDEX `author_unique_original_key_constraint`;
+ALTER TABLE `author` DROP INDEX `author_original_key_index`;
+ALTER TABLE `book` DROP FOREIGN KEY `book_ibfk_1`;
 
 ------------------------------------------------------------------
 -- user setup ----------------------------------------------------
