@@ -1,18 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php require_once "config.php"; ?>
+<?php 
+
+require_once "config.php"; 
+
+$uid = $_SESSION["uid"];
+// $query = "SELECT * FROM log INNER JOIN (SELECT c.count, c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, p.publisher_id, p.name as 'publisher_name'
+//     FROM 
+//         (SELECT b.count, b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ':', a.name ORDER BY a.name separator ',' ) as author
+//         FROM 
+//             (SELECT * FROM book) as b
+//         LEFT JOIN book_author ba ON b.book_id = ba.book_id
+//         LEFT JOIN author a ON ba.author_id  = a.author_id
+//         GROUP BY b.book_id) as c
+//     LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+//     LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
+//     LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
+//     GROUP BY c.book_id) AS e ON log.book_id = e.book_id WHERE user_id = $uid";
+
+// rewrite to select log.book_id = book.book_id first
+$query = "SELECT c.*,
+GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, 
+p.publisher_id, p.name as 'publisher_name', bp.publish_year
+FROM (SELECT b.*, 
+     GROUP_CONCAT(a.author_id, ':', a.name ORDER BY a.name separator ',' ) as author
+     FROM (SELECT user_id, borrow_date, return_date, log_id, return_by_date, book.*
+          FROM book 
+          INNER JOIN log 
+          WHERE book.book_id = log.book_id
+          AND user_id = $uid
+          GROUP BY book.book_id) as b
+     LEFT JOIN book_author ba ON b.book_id = ba.book_id
+     LEFT JOIN author a ON ba.author_id = a.author_id
+     GROUP BY b.book_id) as c
+LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+LEFT JOIN genre g ON bg.genre_id = g.genre_id 
+LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
+LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
+GROUP BY c.book_id
+ORDER BY c.borrow_date;";
+
+// $query = "";
+
+$result = $conn -> query($query);
+
+?>
+
 <head>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<title>Book Detail</title>
+    <title>Book Detail</title>
 
-<?php require_once "frameworks.php"; ?>
+    <?php require_once "frameworks.php"; ?>
 
-<!-- Our Custom CSS -->
-<link rel="stylesheet" href="css/book_details.css">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/book_details.css">
+
+    <script>
+
+    let query = `<?php echo $query; ?>`;
+
+    console.log(query);
+
+    </script>
 
 </head>
 <body>
@@ -34,45 +87,6 @@
         <tbody>
 
     <?php
-    $uid = $_SESSION["uid"];
-    // $query = "SELECT * FROM log INNER JOIN (SELECT c.count, c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, p.publisher_id, p.name as 'publisher_name'
-    //     FROM 
-    //         (SELECT b.count, b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ':', a.name ORDER BY a.name separator ',' ) as author
-    //         FROM 
-    //             (SELECT * FROM book) as b
-    //         LEFT JOIN book_author ba ON b.book_id = ba.book_id
-    //         LEFT JOIN author a ON ba.author_id  = a.author_id
-    //         GROUP BY b.book_id) as c
-    //     LEFT JOIN book_genre bg ON c.book_id = bg.book_id
-    //     LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
-    //     LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
-    //     GROUP BY c.book_id) AS e ON log.book_id = e.book_id WHERE user_id = $uid";
-
-    // rewrite to select log.book_id = book.book_id first
-    $query = "SELECT c.*,
-    GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, 
-    p.publisher_id, p.name as 'publisher_name', bp.publish_year
-    FROM (SELECT b.*, 
-         GROUP_CONCAT(a.author_id, ':', a.name ORDER BY a.name separator ',' ) as author
-         FROM (SELECT user_id, borrow_date, return_date, log_id, return_by_date, book.*
-              FROM book 
-              INNER JOIN log 
-              WHERE book.book_id = log.book_id
-              AND user_id = $uid) as b
-         LEFT JOIN book_author ba ON b.book_id = ba.book_id
-         LEFT JOIN author a ON ba.author_id = a.author_id
-         GROUP BY b.book_id) as c
-    LEFT JOIN book_genre bg ON c.book_id = bg.book_id
-    LEFT JOIN genre g ON bg.genre_id = g.genre_id 
-    LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
-    LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
-    GROUP BY c.book_id
-    ORDER BY c.borrow_date;";
-
-    // $query = "";
-
-    $result = $conn -> query($query);
-    
     if ($result->num_rows > 0) {
         // output data of each row
         while($row = $result->fetch_assoc()) {
