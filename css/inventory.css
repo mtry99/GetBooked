@@ -72,3 +72,40 @@
 .book-container3d:hover {
     cursor: pointer;
 }
+
+.book-container3d {
+    transition: transform 1s;
+}
+
+.book-focused {
+    transform: scale(1.2);
+}
+
+.book-popover {
+    width: 100%;
+}
+
+.book-popover-content-current {
+    width: 100%;
+}
+
+.wrapper {
+    padding-bottom: 20rem;
+}
+
+#detail-values li div div {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+
+.col-md-2 {
+    padding-right: 0;
+}
+
+.col-md-10 {
+    text-align: right;
+}
+
+.availability {
+    margin: auto;
+}

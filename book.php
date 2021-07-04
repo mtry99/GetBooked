@@ -31,6 +31,8 @@ $book_filter["year_max"] = isset($_GET["year_max"]) ? $_GET["year_max"] : "2021"
 
 $book_filter["language"] = isset($_GET["language"]) ? $_GET["language"] : "any";
 
+$book_filter["page"] = isset($_GET["page"]) ? $_GET["page"] : 1;
+
 $language_map = array("afr"=>"Afrikaans","alb"=>"Albanian","amh"=>"Amharic","ang"=>"English, Old","ara"=>"Arabic","arm"=>"Armenian","asm"=>"Assamese","ava"=>"Avaric","aze"=>"Azerbaijani","baq"=>"Basque","bel"=>"Belarusian","ben"=>"Bengali","bnt"=>"Bantu","bos"=>"Bosnian","bre"=>"Breton","bul"=>"Bulgarian","cat"=>"Catalan","cau"=>"Caucasian","chi"=>"Chinese","chv"=>"Chuvash","cmn"=>"Mandarin","cze"=>"Czech","dan"=>"Danish","dut"=>"Dutch","dzo"=>"Dzongkha","egy"=>"Egyptian","eng"=>"English","enm"=>"English, Middle","esk"=>"Eskimo languages","esp"=>"Esperanto","est"=>"Estonian","fao"=>"Faroese","fin"=>"Finnish","fiu"=>"Finno-Ugrian","fre"=>"French","fri"=>"Frisian","frm"=>"French, Middle","fro"=>"French, Old","gae"=>"Scottish Gaelix","gag"=>"Galician","geo"=>"Georgian","ger"=>"German","gle"=>"Irish","glg"=>"Galician","gmh"=>"German, Middle High","grc"=>"Ancient Greek","gre"=>"Greek","gsw"=>"gsw","guj"=>"Gujarati","hat"=>"Haitian French Creole","hau"=>"Hausa","heb"=>"Hebrew","hin"=>"Hindi","hrv"=>"Croatian","hun"=>"Hungarian","ibo"=>"Igbo","ice"=>"Icelandic","ind"=>"Indonesian","iri"=>"Irish","ita"=>"Italian","jpn"=>"Japanese","kal"=>"Kalâtdlisut","kan"=>"Kannada","kaz"=>"Kazakh","khi"=>"Khoisan","kir"=>"Kyrgyz","kok"=>"Konkani","kor"=>"Korean","kur"=>"Kurdish","lad"=>"Ladino","lao"=>"Lao","lat"=>"Latin","lav"=>"Latvian","lit"=>"Lithuanian","mac"=>"Macedonian","mai"=>"Maithili","mal"=>"Malayalam","mao"=>"Maori","mar"=>"Marathi","may"=>"Malay","mni"=>"Manipuri","mol"=>"Moldavian","mon"=>"Mongolian","mul"=>"Multiple languages","nai"=>"North American Indian","nep"=>"Nepali","new"=>"Newari","nor"=>"Norwegian","oci"=>"Occitan","oji"=>"Ojibwa","ori"=>"Oriya","oss"=>"Ossetic","ota"=>"Turkish, Ottoman","paa"=>"Papuan","pan"=>"Panjabi","pap"=>"Papiamento","per"=>"Persian","pol"=>"Polish","por"=>"Portuguese","roa"=>"Romance","rom"=>"Romani","rum"=>"Romanian","run"=>"Rundi","rus"=>"Russian","sah"=>"Yakut","san"=>"Sanskrit","scc"=>"Serbian","scr"=>"Croatian","sin"=>"Sinhalese","slo"=>"Slovak","slv"=>"Slovenian","smo"=>"Samoan","snh"=>"Sinhalese","som"=>"Somali","spa"=>"Spanish","srp"=>"Serbian","swa"=>"Swahili","swe"=>"Swedish","tag"=>"Tagalog","tam"=>"Tamil","tat"=>"Tatar","tel"=>"Telugu","tgk"=>"Tajik","tgl"=>"Tagalog","tha"=>"Thai","tib"=>"Tibetan","tuk"=>"Turkmen","tur"=>"Turkish","tut"=>"Altaic","twi"=>"Twi","ukr"=>"Ukrainian","und"=>"Undetermined","urd"=>"Urdu","uzb"=>"Uzbek","vie"=>"Vietnamese","wel"=>"Welsh","wen"=>"Sorbian","xho"=>"Xhosa","yid"=>"Yiddish","yor"=>"Yoruba","zap"=>"Zapotec");
 
 $query_title = '';
@@ -71,10 +73,6 @@ if($book_filter["page_on"] !== "false") {
     $query_page = ($first?' WHERE ':' AND ').'book.number_of_pages BETWEEN '.$book_filter["page_min"].' AND '.$book_filter["page_max"].' ';
     $first = false;
 }
-if($book_filter["year_on"] !== "false") {
-    $query_year = ($first?' WHERE ':' AND ').'book.publish_year BETWEEN '.$book_filter["year_min"].' AND '.$book_filter["year_max"].' ';
-    $first = false;
-}
 if($book_filter["language"] !== "any") {
     $query_language = ($first?' WHERE ':' AND ').'book.language = "'.$book_filter["language"].'" ';
     $first = false;
@@ -84,14 +82,29 @@ if($book_filter["in_stock"] !== "false") {
     $first = false;
 }
 
-$first = true;
+$first = 0;
 if($book_filter["publisher"] !== "") {
-    $query_publisher = ($first?' WHERE ':' AND ').'UPPER(d.publisher_name) LIKE UPPER("%'.$book_filter["publisher"].'%") ';
-    $first = false;
+    
+    if($book_filter["year_on"] !== "false") {
+        $query_year = 'AND bp.publish_year BETWEEN '.$book_filter["year_min"].' AND '.$book_filter["year_max"].' ';
+    }
+    $query_publisher = ' 
+    NATURAL JOIN (SELECT bp.book_id as book_id FROM publisher as p
+    RIGHT JOIN book_publisher bp ON p.publisher_id = bp.publisher_id
+    WHERE UPPER(p.name) LIKE UPPER("%'.$book_filter["publisher"].'%") 
+    '.$query_year.'
+    GROUP BY bp.book_id)
+    ';
+    $query_filter_books = $query_filter_books.$query_publisher.'d'.($first++);
 }
 if($book_filter["author"] !== "") {
-    $query_author = ($first?' WHERE ':' AND ').'UPPER(d.author) LIKE UPPER("%'.$book_filter["author"].'%") ';
-    $first = false;
+    $query_author = ' 
+    NATURAL JOIN (SELECT ba.book_id as book_id FROM author as a
+    RIGHT JOIN book_author ba ON a.author_id = ba.author_id
+    WHERE UPPER(a.name) LIKE UPPER("%'.$book_filter["author"].'%") 
+    GROUP BY ba.book_id)
+    '; 
+    $query_filter_books = $query_filter_books.$query_author.'d'.($first++);
 }
 if($book_filter["genre"] !== "") {
 
@@ -100,67 +113,68 @@ if($book_filter["genre"] !== "") {
     
     foreach($pieces as $i => $piece) {
 
-        $query_genre = $query_genre.($first?' WHERE ':' AND ').'UPPER(d.genre) LIKE UPPER("%'.$piece.'%") ';
-        $first = false;
+        $query_genre_cur = ' 
+        NATURAL JOIN (SELECT bg.book_id as book_id FROM genre as g
+        RIGHT JOIN book_genre bg ON g.genre_id = bg.genre_id
+        WHERE UPPER(g.name) LIKE UPPER("%'.$piece.'%") 
+        GROUP BY bg.book_id)
+        ';
+        $query_filter_books = $query_filter_books.$query_genre_cur.'d'.($first++);
     }
 }
 
-$first = true;
-if($query_publisher == "" && $query_author == "" && $query_genre == "") {
-    $query_limit_books = "LIMIT 25";
-} else if ($query_author != "" || $query_genre != "") {
-    $query_filter_books = 'RIGHT JOIN (';
-    if($query_genre != "") {
-        $query_filter_books = $query_filter_books.($first?'':' UNION ').sprintf('
-            SELECT bg.book_id as filtered_book_id FROM genre as g
-            RIGHT JOIN book_genre bg ON g.genre_id = bg.genre_id
-            %s', str_replace("d.genre", "g.name", $query_genre));
-        $first = false;
-    }
-    if($query_author != "") {
-        $query_filter_books = $query_filter_books.($first?'':' UNION ').sprintf('
-            SELECT ba.book_id as filtered_book_id FROM author as a
-            RIGHT JOIN book_author ba ON a.author_id = ba.author_id
-            %s', str_replace("d.author", "a.name", $query_author));
-        $first = false;
-    }
-    $query_filter_books = $query_filter_books.') g ON g.filtered_book_id = book.book_id';
-}
+$core_book_filter = sprintf('
+            %s
+            %s
+            %s
+            %s
+            %s
+', $query_filter_books, $query_title, $query_page, 
+$query_language, $query_count);
+
+$count_sql = sprintf('
+SELECT count(book_id) as num FROM book 
+            %s
+', $core_book_filter);
+$results_count = $conn->query($count_sql);
+$row = $results_count->fetch_assoc();
+$results_count = $row["num"];
+
+$page_size = 10;
+$final_page = ceil($results_count / $page_size);
+
+$page = min(max(1, $book_filter["page"]), $final_page);
+
+$query_limit_books = 'LIMIT '.(($page - 1) * $page_size).', 10';
 
 $sql = sprintf('
-SELECT *
-FROM
-    (SELECT %s c.count, c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, p.publisher_id, p.name as "publisher_name"
-    FROM 
-        (SELECT %s b.count, b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
-        FROM 
-            (SELECT * %s FROM book 
-            %s
-            %s
-            %s
-            %s
-            %s
-            %s
-            %s) as b
-        LEFT JOIN book_author ba ON b.book_id = ba.book_id
-        LEFT JOIN author a ON ba.author_id  = a.author_id
-        GROUP BY b.book_id) as c
-    LEFT JOIN book_genre bg ON c.book_id = bg.book_id
-    LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
-    LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
-    GROUP BY c.book_id) as d
-%s
-%s
-%s
-%s
-LIMIT 25;',
-$search_str_1, $search_str_2, $search_str, $query_filter_books, $query_title, $query_page, $query_year, $query_language, 
-$query_count, $query_limit_books, $query_publisher, $query_author, $query_genre, $search_str_order);
+SELECT c.*,
+GROUP_CONCAT(g.genre_id, ":", g.name ORDER BY g.name separator "," ) as genre, 
+p.publisher_id, p.name as "publisher_name", bp.publish_year
+FROM (SELECT %s b.count, b.original_key, b.isbn, b.number_of_pages, 
+     b.language, b.book_id, b.title, 
+     GROUP_CONCAT(a.author_id, ":", a.name ORDER BY a.name separator "," ) as author
+     FROM (SELECT * %s FROM book 
+          %s
+          %s
+          %s) as b
+     LEFT JOIN book_author ba ON b.book_id = ba.book_id
+     LEFT JOIN author a ON ba.author_id = a.author_id
+     GROUP BY b.book_id) as c
+LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+LEFT JOIN genre g ON bg.genre_id = g.genre_id 
+LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
+LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
+GROUP BY c.book_id;',
+$search_str_2, $search_str, $core_book_filter, 
+$search_str_order, $query_limit_books);
 
 //var_dump($sql);
 
+$starttime = microtime(true);
 $result = $conn->query($sql);
-
+$endtime = microtime(true);
+$query_duration = $endtime - $starttime; //calculates total time taken
 //var_dump($book_filter);
 
 ?>
@@ -197,6 +211,12 @@ $result = $conn->query($sql);
     book_filter["language"] = "<?php echo $book_filter["language"]; ?>";
 
     console.log(book_filter);
+
+    let results_count = <?php echo $results_count; ?>;
+    let query_time = <?php echo $query_duration; ?>;
+
+    console.log(results_count);    
+    console.log(query_time);
 
     </script>
 
@@ -329,6 +349,45 @@ $result = $conn->query($sql);
                 </div>
 
             </nav>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="query-info">
+                <?php echo $results_count; ?> matches found.
+                </div>
+                <ul class="pagination justify-content-center mb-2">
+                    <?php 
+                    $get_query = $_GET;
+                    // replace parameter(s)
+                    $get_query['page'] = '1';
+                    $get_query_url = http_build_query($get_query);
+                    if($page != -1): ?>
+                    <li class="page-item"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>">&#171;</a></li>
+                    <?php endif; 
+                    $get_query['page'] = ($page - 1);
+                    $get_query_url = http_build_query($get_query);
+                    if($page > 1): ?>
+                    <li class="page-item"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>"><?php echo ($page - 1); ?></a></li>
+                    <?php endif; 
+                    $get_query['page'] = $page;
+                    $get_query_url = http_build_query($get_query);
+                    if($page != -1): ?>
+                    <li class="page-item active"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>"><?php echo ($page); ?></a></li>
+                    <?php endif; 
+                    $get_query['page'] = ($page + 1);
+                    $get_query_url = http_build_query($get_query);
+                    if($page < $final_page): ?>
+                    <li class="page-item"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>"><?php echo ($page + 1); ?></a></li>
+                    <?php endif; 
+                    $get_query['page'] = $final_page;
+                    $get_query_url = http_build_query($get_query);
+                    if($page != -1): ?>
+                    <li class="page-item"><a class="page-link" href="book.php?<?php echo $get_query_url; ?>">&#187;</a></li>
+                    <?php endif; ?>
+                </ul>
+                <div class="query-info">
+                Query took <?php echo round($query_duration * 1000, 2); ?>ms.
+                </div>
+            </div>
             
             <?php require_once "book_table.php"; ?>
         
@@ -338,4 +397,5 @@ $result = $conn->query($sql);
     <script src="js/book.js"></script>
 
 </body>
+<?php require "footer.php"; ?>
 </html>

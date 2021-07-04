@@ -1,6 +1,10 @@
-<script src="js/utils.js"></script>
+
 
 <?php
+
+if(!isset($dontIncludeJs)) {
+    echo '<script src="js/utils.js"></script>';
+}
 
 function ColorHSLToRGB($h, $s, $l){
     $r = $l;

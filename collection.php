@@ -48,7 +48,7 @@ console.log(sql);
 	<div class="wrapper">
 
         <!-- Page Content Holder -->
-        <div id="content">
+        <div class="container" id="content">
 
             <div class="d-flex justify-content-around flex-wrap">
                 <?php
@@ -83,4 +83,5 @@ console.log(sql);
     </div>
 
 </body>
+<?php require "footer.php"; ?>
 </html>

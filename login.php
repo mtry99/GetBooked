@@ -2,9 +2,6 @@
 // connect to DB
 require_once "config.php";
 
-// initialize session
-session_start();
-
 
 // initialize variables with empty values
 $uname = $upassword = "";

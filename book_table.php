@@ -76,6 +76,8 @@ console.log(sql);
             $genre_array = explode(',', $row["genre"]);
             foreach($genre_array as $i => $genre) {
 
+                if($genre == "") continue;
+
                 $genre_array_array = explode(':', $genre);
 
                 if($i !== 0) {

@@ -69,6 +69,7 @@ console.log(inventory);
     <?php require_once "frameworks.php"; ?>
 
     <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/book_details.css">
     <link rel="stylesheet" href="css/collection.css">
     <link rel="stylesheet" href="css/book3d_rarity_5.css">
     <link rel="stylesheet" href="css/book3d_rarity_4.css">
@@ -112,6 +113,13 @@ console.log(inventory);
                                 }
                                 ?>
                             </div>
+                            <div id="book-popover-<?php echo $j; ?>" class="book-popover"
+                                data-container="body" 
+                                data-html="true" 
+                                data-toggle="popover" 
+                                data-placement="bottom" 
+                                data-trigger="manual">
+                            </div>
                         </div>
                         <?php if($book["amount"] != 1) { ?>
                         <div class="amount-container">
@@ -129,8 +137,14 @@ console.log(inventory);
             </div>
         </div>
     </div>
+
+    <div id="book-popover-content" class="hidden">
+        <div>
+        </div>
+    </div>
     
     <script src="js/inventory.js"></script>
 
 </body>
+<?php require "footer.php"; ?>
 </html>

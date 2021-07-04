@@ -20,6 +20,8 @@ Currently Supported Features:
 
 4. Adding a new book: If an administrator logs into the library system, there is a tab for them to add a new book. This will lead them to another page/form where they can add a new book by specifying parameters like ‘Book name’, ‘ISBN number’, ‘Author Name’, ‘genres’. The header.php, new-book.php, create-book-db.sql files implement this feature.
 
-5. Opening Collections: Users are able to unbox random books from a selected collection, and the book that was unboxxed will be added to their inventory.
+Features Currently in Developement:
 
-6. Viewing Inventory: Users are able to view all the books that they unboxxed in a cool interactive format.
+1. Opening Collections: Users are able to unbox random books from a selected collection, and the book that was unboxxed will be added to their inventory.
+
+2. Viewing Inventory: Users are able to view all the books that they unboxxed in a cool interactive format.
