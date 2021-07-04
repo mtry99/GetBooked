@@ -18,7 +18,13 @@ Currently Supported Features:
 
 3. Borrowing books: Once users have found a book they like and it is available in the system, the user can borrow the book by clicking a ‘checkout’ button. This will create an entry in the book log for that particular user along with a  return date for the book. 
 
-4. Adding a new book: If an administrator logs into the library system, there is a tab for them to add a new book. This will lead them to another page/form where they can add a new book by specifying parameters like ‘Book name’, ‘ISBN number’, ‘Author Name’, ‘genres’. The header.php, new-book.php, create-book-db.sql files implement this feature.
+4. Log history and returning books: Users can check the complete history of books they have borrowed in the past with options to return or renew them. Administrators can check the book history for any user.  
+
+5. Adding a new book: If an administrator logs into the library system, there is a tab for them to add a new book. This will lead them to another page/form where they can add a new book by specifying parameters like ‘Book name’, ‘ISBN number’, ‘Author Name’, ‘genres’. The header.php, new-book.php, create-book-db.sql files implement this feature.
+
+6. Late returns and fines: When a user borrows a book, there should be a return by date given to them indicating when the book is due. If a user doesn’t return a book by its due date, a per day fine will incur on their account calculated by finding the difference between the actual return date and return by date. 
+
+The SQL queries for these functions can be found in schema/create-book-db.sql. They are implemented in fines.php and pay-fine.php. 
 
 Features Currently in Developement:
 
