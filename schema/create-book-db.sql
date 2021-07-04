@@ -324,6 +324,154 @@ ALTER TABLE `author` DROP INDEX `author_unique_original_key_constraint`;
 ALTER TABLE `author` DROP INDEX `author_original_key_index`;
 ALTER TABLE `book` DROP FOREIGN KEY `book_ibfk_1`;
 
+-- 2021/07/04 ------------------------------------------------------------------
+
+-- fine types: 0 - late; 1 - replacement
+CREATE TABLE fine(
+  fine_id INT NOT NULL AUTO_INCREMENT,
+  log_id INT NOT NULL,
+  total_amount DECIMAL(10, 2) NOT NULL,
+  outstanding_amount DECIMAL(10, 2) NOT NULL,
+  last_updated DATE NOT NULL,
+  fine_type INT NOT NULL,
+  PRIMARY KEY (fine_id),
+  FOREIGN KEY (log_id) REFERENCES log(log_id),
+  UNIQUE (log_id, fine_type)
+);
+
+DELIMITER //
+
+-- get all fines of specified user
+CREATE PROCEDURE GET_FINES_AMOUNT(
+    in u_uid INT
+)
+BEGIN
+    SELECT IFNULL(SUM(fine.outstanding_amount), 0)
+        FROM fine
+        LEFT JOIN log on fine.log_id = log.log_id
+        LEFT JOIN user on log.user_id = user.user_id
+        WHERE u_uid = user.user_id;
+END//
+
+
+-- get rows of outstanding fines
+CREATE PROCEDURE GET_OUTSTANDING_FINES(
+    in u_uid INT
+)
+BEGIN
+    SELECT 
+        l.return_by_date, 
+        l.return_date,
+        b.title,
+        f.fine_type,
+        f.total_amount,
+        f.outstanding_amount
+	FROM fine f
+	LEFT JOIN log l ON f.log_id = l.log_id
+	LEFT JOIN user u ON l.user_id = u.user_id
+	LEFT JOIN book b ON l.book_id = b.book_id
+	WHERE u_uid = u.user_id AND f.outstanding_amount > 0
+	ORDER BY l.return_by_date DESC;
+END//
+
+
+-- calculate fines for specified user
+CREATE PROCEDURE CALCULATE_FINES(
+    in u_uid INT
+)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS existing_fines;
+    CREATE TEMPORARY TABLE existing_fines 
+        (SELECT l.log_id, l.return_by_date FROM log l
+	    WHERE u_uid = l.user_id AND 
+		l.return_date IS NULL AND
+        l.return_by_date < CURDATE() AND 
+        l.log_id IN 
+            (SELECT fine.log_id FROM fine 
+            LEFT JOIN log l ON l.log_id = fine.log_id 
+            WHERE u_uid = l.user_id));
+    
+    -- update late fines    
+    SET SQL_SAFE_UPDATES = 0;
+    UPDATE fine
+    SET 
+        outstanding_amount = outstanding_amount + DATEDIFF(CURDATE(), last_updated) * 0.3,
+        total_amount = total_amount + DATEDIFF(CURDATE(), last_updated) * 0.3,
+        last_updated = CURDATE()
+        WHERE log_id IN (SELECT log_id FROM existing_fines) AND fine_type = 0;
+    SET SQL_SAFE_UPDATES = 1;
+
+    DROP TEMPORARY TABLE IF EXISTS new_fines;
+    CREATE TEMPORARY TABLE new_fines 
+        (SELECT l.log_id, l.return_by_date, 
+            DATEDIFF(CURDATE(), l.return_by_date) * 0.3 AS amount FROM log l
+	    WHERE u_uid = l.user_id AND 
+            l.return_date IS NULL AND
+            l.return_by_date < CURDATE() AND 
+            l.log_id NOT IN 
+                (SELECT fine.log_id FROM fine 
+                LEFT JOIN log l ON l.log_id = fine.log_id 
+                WHERE u_uid = l.user_id));
+
+    -- insert late fines
+    INSERT INTO fine
+        SELECT NULL, log_id, amount, amount, CURDATE(), 0 FROM new_fines;
+END//
+
+
+-- process payment for user with payment amount
+CREATE PROCEDURE PAY_FINES(
+    in u_uid INT,
+    in payment_amount DECIMAL(10,2)
+)
+BEGIN
+    CALL CALCULATE_FINES(u_uid);
+    
+    SELECT IFNULL(SUM(fine.outstanding_amount), 0) INTO @total_outstanding
+        FROM fine
+        LEFT JOIN log on fine.log_id = log.log_id
+        LEFT JOIN user on log.user_id = user.user_id
+        WHERE u_uid = user.user_id;
+    
+	SET @payment_left = payment_amount;
+    
+    deduct_payment: WHILE @payment_left > 0 AND @total_outstanding > 0 DO
+		SELECT fine_id, outstanding_amount 
+			INTO @fine_id, @outstanding_amount 
+			FROM fine f
+			LEFT JOIN log l ON f.log_id = l.log_id
+			LEFT JOIN user u ON l.user_id = u.user_id
+			WHERE u_uid = u.user_id AND f.outstanding_amount > 0
+			ORDER BY l.return_by_date DESC
+			LIMIT 1;
+		IF @outstanding_amount >= @payment_left THEN
+			UPDATE fine 
+				SET outstanding_amount = @outstanding_amount - @payment_left
+                WHERE fine_id = @fine_id;
+			SET @payment_left = 0;
+            SET @total_outstanding = @total_outstanding - @payment_left;
+		ELSE
+			UPDATE fine
+				SET outstanding_amount = 0
+                WHERE fine_id = @fine_id;
+			SET @payment_left = @payment_left - @outstanding_amount;
+            SET @total_outstanding = @total_outstanding - @outstanding_amount;
+        END IF;
+    END WHILE deduct_payment;
+
+    SELECT ROUND(payment_amount - @payment_left, 2);
+END//
+
+
+DELIMITER ;
+
+
+
+
+
+
+
+
 ------------------------------------------------------------------
 -- user setup ----------------------------------------------------
 ------------------------------------------------------------------
