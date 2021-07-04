@@ -28,16 +28,15 @@ FROM (SELECT b.*,
           FROM book 
           INNER JOIN log 
           WHERE book.book_id = log.book_id
-          AND user_id = $uid
-          GROUP BY book.book_id) as b
+          AND user_id = $uid) as b
      LEFT JOIN book_author ba ON b.book_id = ba.book_id
      LEFT JOIN author a ON ba.author_id = a.author_id
-     GROUP BY b.book_id) as c
+     GROUP BY b.log_id) as c
 LEFT JOIN book_genre bg ON c.book_id = bg.book_id
 LEFT JOIN genre g ON bg.genre_id = g.genre_id 
 LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
 LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
-GROUP BY c.book_id
+GROUP BY c.log_id
 ORDER BY c.borrow_date;";
 
 // $query = "";
