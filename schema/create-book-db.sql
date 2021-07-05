@@ -315,6 +315,7 @@ CREATE TABLE `book_publisher` (
 -- INSERT INTO book_publisher(book_id, publisher_id, publish_year) 
 -- SELECT book_id, publisher_id, publish_year FROM book;
 
+ALTER TABLE `book` DROP FOREIGN KEY `book_ibfk_1`;
 ALTER TABLE `book` DROP INDEX `publisher_id`;
 ALTER TABLE `book` DROP `publisher_id`;
 ALTER TABLE `book` DROP `publish_year`;
@@ -322,7 +323,6 @@ ALTER TABLE `book` DROP INDEX `book_unique_original_key_constraint`;
 ALTER TABLE `book` DROP INDEX `book_original_key_index`;
 ALTER TABLE `author` DROP INDEX `author_unique_original_key_constraint`;
 ALTER TABLE `author` DROP INDEX `author_original_key_index`;
-ALTER TABLE `book` DROP FOREIGN KEY `book_ibfk_1`;
 
 -- 2021/07/04 ------------------------------------------------------------------
 

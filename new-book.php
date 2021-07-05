@@ -81,7 +81,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             '" . addslashes($publishedYear) . "',
             '" . addslashes($isbn) . "');";
 
-
         $result = $conn->query($sql);
         
         if (!$result){

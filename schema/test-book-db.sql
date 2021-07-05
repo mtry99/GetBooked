@@ -42,17 +42,4 @@ GROUP BY c.book_id;
 
 -- test add book --
 -- CALL ADD_BOOK(bookName, authorName, pages, language, publisher, publishedYear, isbn);
-CALL ADD_BOOK("bbbb", "aaaa", "1234", "eng", "pppp", "1234", "12341");
-
-SELECT book_id 
-FROM (SELECT book_id 
-      FROM book 
-
-NATURAL JOIN (SELECT bp.book_id as book_id FROM publisher as p
-              RIGHT JOIN book_publisher bp ON p.publisher_id = bp.publisher_id
-              WHERE UPPER(p.name) LIKE UPPER("%press%") ) d0 
-				GROUP BY book_id)
-NATURAL JOIN (SELECT bg.book_id as book_id FROM genre as g
-              RIGHT JOIN book_genre bg ON g.genre_id = bg.genre_id
-              WHERE UPPER(g.name) LIKE UPPER("%general%") ) d1
-GROUP BY book_id;
+CALL ADD_BOOK("bbbb", "aaaa", "1234", "eng", "pppp", "1234", "1234");

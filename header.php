@@ -27,7 +27,7 @@
     </div>
     <div class="form-inline my-2 my-lg-0">
       <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]): ?>
-      <a class="nav-item nav-link btn btn-danger btn-logout ml-1 <?php  $_SESSION["loggedin"]= false ?>" href="/logout.php"> Logout </a>
+      <a class="nav-item nav-link btn btn-danger btn-logout ml-1" href="/logout.php"> Logout </a>
       <?php else: ?>
       <a class="nav-item nav-link btn btn-success btn-logout ml-1" href="/login.php"> Login </a>
       <a class="nav-item nav-link btn btn-outline-success btn-logout ml-1" href="/register.php"> Sign Up </a>
