@@ -121,3 +121,12 @@ CALL ADD_BOOK("bbbb", "aaaa", "1234", "eng", "pppp", "1234", "1234");
 -- get rows of outstanding fines
 CALL CALCULATE_FINES("5");
 CALL GET_OUTSTANDING_FINES("5");
+
+-- clear inventory of user
+DELETE FROM user_inventory WHERE user_id = (SELECT user_id FROM user WHERE username = 'alex3');
+
+-- add to inventory of user
+INSERT INTO user_inventory (user_id, book_id, amount) 
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '4583', '150');
+INSERT INTO user_inventory (user_id, book_id, amount) 
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '16403', '15');

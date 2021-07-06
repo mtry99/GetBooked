@@ -15,7 +15,7 @@ $trade_sql = "";
 function processTradeUp() {
     global $conn, $uid;
 
-    $trade_up_books = explode(',', $_POST["trade_up"]);
+    $trade_up_books = explode(',', $_SESSION['postdata']["trade_up"]);
 
     if(count($trade_up_books) != 5) return false;
     
@@ -61,7 +61,10 @@ function processTradeUp() {
 
     $remove_sql = "";
     for($i = 0; $i < 5; $i++) {
-        $remove_sql = "DELETE FROM user_inventory WHERE user_id = '$uid' AND book_id = '$trade_up_books[$i]';";
+        $remove_sql = "DELETE FROM user_inventory WHERE amount = 1 AND user_id = '$uid' AND book_id = '$trade_up_books[$i]';";
+        $result = $conn->query($remove_sql);
+        
+        $remove_sql = "UPDATE user_inventory SET amount=amount-1 WHERE user_id = '$uid' AND book_id = '$trade_up_books[$i]';";
         $result = $conn->query($remove_sql);
     }
 
@@ -86,8 +89,16 @@ $menu = "default";
 $showModal = false;
 $modalIdx = 0;
 
-if(isset($_POST["trade_up"])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $_SESSION['postdata'] = $_POST;
+    unset($_POST);
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit;
+}
+
+if(isset($_SESSION['postdata'])) {
     $tradeResults = processTradeUp();
+    $_SESSION['postdata'] = null;
     $menu = "trade-up";
     if($tradeResults != false) {
         $showModal = true;
