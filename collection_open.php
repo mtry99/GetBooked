@@ -54,7 +54,7 @@ while($row = $result->fetch_assoc()) {
     array_push($collection_books[$row['rarity']], $row);
 }
 
-$chance = [0,256,128,4,2,1];
+$chance = [0,256,128,9,3,1];
 $total = 0;
 for($r = 1; $r <= 5; $r++) {
     if(count($collection_books[$r]) != 0) {

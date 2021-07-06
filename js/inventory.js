@@ -3,7 +3,6 @@ empty_cover_img.src = "assets/empty_cover_small.png";
 
 let popoverIdx = -1;
 
-let menu = "default";
 let tradeUpInventory = {};
 
 let tradeUpIdx = 0;
@@ -81,6 +80,22 @@ function onBookClicked(i) {
             $(`#book-box-trade-up-${tradeUpIdx}`).click(function(e) {
                 onTradeUpBookClicked(j);
             });
+
+            if(Object.keys(tradeUpInventory).length == 5) {
+                let rarity = -1;
+                let valid = true;
+                for (const book in tradeUpInventory) {
+                    if(rarity == -1 || rarity == inventory[tradeUpInventory[book]].rarity) {
+                        rarity = inventory[tradeUpInventory[book]].rarity;
+                    } else {
+                        valid = false;
+                        break;
+                    }
+                }
+                if(valid && rarity != 5) {
+                    $(`#btn-trade-up-init`).prop('disabled', false);
+                }
+            }
         }
     }
 }
@@ -103,6 +118,7 @@ function onTradeUpBookClicked(i) {
     }
 
     delete tradeUpInventory[i]; 
+    $(`#btn-trade-up-init`).prop('disabled', true);
 }
 
 function onSortChanged() {
@@ -174,11 +190,19 @@ function tradeUpInitClicked() {
 }
 
 function tradeUpCancelClicked() {
+
+    for (const book in tradeUpInventory) {
+        onTradeUpBookClicked(book);
+    }
+
     menu = "default";
     $('#trade-up-collapse').collapse('hide');
     $('#trade-up-menu').slideUp(complete = () => {
         $('#default-menu').slideDown();
     });
+}
+
+function onDismissModal() {
 }
 
 $(document).ready(function() {
@@ -212,10 +236,67 @@ $(document).ready(function() {
                 inventory[j].img = this;
             }
         };
-        img.onerror = function() {};
+        img.onerror = function() {
+            let div0 = document.getElementById("cover-title-" + j);
+            let rbg = hslToRgb(book_og_key.hashCode() % 360 / 360, 1, 0.7);
+            div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            div0 = document.getElementById("cover-back-title-" + j);
+            div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            div0 = document.getElementById("cover-" + j);
+            div0.src = "assets/empty_cover.png";
+            div0 = document.getElementById("cover-back-" + j);
+            div0.src = "assets/empty_cover.png";
+            inventory[j].img = empty_cover_img;
+            inventory[j].color = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+        };
         img.src = "http://covers.openlibrary.org/b/olid/" + book_og_key + "-M.jpg";
     }
 
+
+    if(showModal) {
+        let j = modalIdx;
+        let book_og_key = inventory[j].original_key;
+        let img = new Image();
+        img.onload = function() {
+            if (this.naturalWidth + this.naturalHeight === 2) {
+                let div0 = document.getElementById("modal-cover-title-" + j);
+                let rbg = hslToRgb(book_og_key.hashCode() % 360 / 360, 1, 0.7);
+                div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+                div0 = document.getElementById("modal-cover-back-title-" + j);
+                div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+                div0 = document.getElementById("modal-cover-" + j);
+                div0.src = "assets/empty_cover.png";
+                div0 = document.getElementById("modal-cover-back-" + j);
+                div0.src = "assets/empty_cover.png";
+                inventory[j].img = empty_cover_img;
+                inventory[j].color = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            } else {
+                let div0 = document.getElementById("modal-cover-" + j);
+                div0.src = this.src;
+                div0 = document.getElementById("modal-cover-back-" + j);
+                div0.src = this.src;
+                div0 = document.getElementById("modal-cover-title-" + j);
+                div0.style.display = "none";
+                div0 = document.getElementById("modal-cover-back-title-" + j);
+                div0.style.display = "none";
+                inventory[j].img = this;
+            }
+        };
+        img.onerror = function() {
+            let div0 = document.getElementById("modal-cover-title-" + j);
+            let rbg = hslToRgb(book_og_key.hashCode() % 360 / 360, 1, 0.7);
+            div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            div0 = document.getElementById("modal-cover-back-title-" + j);
+            div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            div0 = document.getElementById("modal-cover-" + j);
+            div0.src = "assets/empty_cover.png";
+            div0 = document.getElementById("modal-cover-back-" + j);
+            div0.src = "assets/empty_cover.png";
+            inventory[j].img = empty_cover_img;
+            inventory[j].color = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+        };
+        img.src = "http://covers.openlibrary.org/b/olid/" + book_og_key + "-M.jpg";
+    }
 
     for (let j = 0; j < inventory.length; j++) {
         let s = inventory[j].title;

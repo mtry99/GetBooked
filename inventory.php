@@ -79,11 +79,20 @@ function processTradeUp() {
 
     $result = $conn->query($sql);
     
-    return true;
+    return $possible_books[$book_idx];
 }
 
+$menu = "default";
+$showModal = false;
+$modalIdx = 0;
+
 if(isset($_POST["trade_up"])) {
-    processTradeUp();
+    $tradeResults = processTradeUp();
+    $menu = "trade-up";
+    if($tradeResults != false) {
+        $showModal = true;
+        $modalIdx = $tradeResults;
+    }
 }
 
 $inventory_uid_query = 'WHERE i.user_id = "'.$uid.'"';
@@ -111,12 +120,25 @@ usort($inventory_books, function ($a, $b) {
     return $b["rarity"] - $a["rarity"];
 });
 
+if($showModal) {
+    foreach($inventory_books as $j => $book) {
+        if($book["book_id"] == $modalIdx) {
+            $modalIdx = $j;
+            break;
+        }
+    }
+}
+
 ?>
 
 <script>
 
 console.log(`<?php echo ($remove_sql); ?>`);
 console.log(`<?php echo ($trade_sql); ?>`);
+
+let menu = `<?php echo $menu; ?>`;
+let showModal = `<?php echo $showModal; ?>`;
+let modalIdx = `<?php echo $modalIdx; ?>`;
 
 let sql = `<?php echo ($sql); ?>`;
 let inventory = [<?php 
@@ -156,8 +178,65 @@ console.log(inventory);
     <link rel="stylesheet" href="css/book3d_rarity_3.css">
     <link rel="stylesheet" href="css/inventory.css">
 
+    <?php if($showModal) { ?>
+    <script>
+    $( document ).ready(function() {
+        $('#bookModal').modal('show');
+    });
+    </script>
+    <?php } ?>
+
 </head>
 <body>
+
+    <!-- Modal -->
+    <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">You Received:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body rarity_container" style="padding: 1rem 0;">
+                <?php 
+                if($showModal) { 
+                    $j = $modalIdx;
+                    $rarity = $inventory_books[$j]["rarity"];
+                    $book = $inventory_books[$j];
+                ?>
+                <div id="modal-book-box" class="book_box book_box_rarity_<?php echo $rarity; ?> modal-book-box-<?php echo $rarity; ?>">
+                    <div id="modal-book-box-<?php echo $j; ?>" class="book_box book_box_rarity_<?php echo $rarity; ?>" style="order: <?php echo $j; ?>;">
+                        <div id="modal-book-container3d-<?php echo $j; ?>" class="book-container3d">
+                            <div class="book3d">
+                                <div class="book3d-cover cover-title" id="modal-cover-title-<?php echo $j; ?>"><?php echo $book["title"]; ?></div>
+                                <img class="book3d-cover" id="modal-cover-<?php echo $j; ?>" src="assets/no_cover.jpg"/>
+                                <div class="book3d-cover-back cover-title" id="modal-cover-back-title-<?php echo $j; ?>"></div>
+                                <img class="book3d-cover-back" id="modal-cover-back-<?php echo $j; ?>" src="assets/no_cover.jpg"/>
+                            </div>
+                        </div>
+                        <div class="star-container-container">
+                            <div class="text-center star-container">
+                                <?php
+                                for ($k = $rarity; $k >= 1; $k--) {
+                                    ?>
+                                    <span class="fa fa-star"></span>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="onDismissModal()" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
     <?php require "header.php"; ?>
 
@@ -177,19 +256,19 @@ console.log(inventory);
                         <option value="amount">Amount</option>
                     </select>
                 </div>
-                <div id="default-menu" class="inventory-menu-item form-group row">
+                <div id="default-menu" class="inventory-menu-item form-group row" <?php if($menu == "trade-up") echo 'style="display: none;"'; ?>>
                     <button id="btn-trade-up" type="button" class="btn btn-success" onclick="tradeUpClicked()">Trade Up</button>
                     <button id="btn-edit-deck" type="button" class="btn btn-primary" onclick="editDeckClicked()">Edit Deck</button>
                 </div>
-                <div id="trade-up-menu" class="inventory-menu-item form-group row" style="display: none;">
+                <div id="trade-up-menu" class="inventory-menu-item form-group row" <?php if($menu == "default") echo 'style="display: none;"'; ?>>
                     <button id="btn-trade-up-fill-3" type="button" class="btn btn-primary" onclick="tradeUpFill3Clicked()">Autofill 3★</button>
                     <button id="btn-trade-up-fill-4" type="button" class="btn btn-primary" onclick="tradeUpFill4Clicked()">Autofill 4★</button>
-                    <button id="btn-trade-up-init" type="button" class="btn btn-success" onclick="tradeUpInitClicked()">Initiate Trade Up</button>
+                    <button id="btn-trade-up-init" type="button" class="btn btn-success" onclick="tradeUpInitClicked()" disabled>Initiate Trade Up</button>
                     <button id="btn-trade-up-cancel" type="button" class="btn btn-danger" onclick="tradeUpCancelClicked()">Cancel Trade Up</button>
                 </div>
             </div>
 
-            <div class="collapse" id="trade-up-collapse">
+            <div class="collapse <?php if($menu == "trade-up") echo 'show'; ?>" id="trade-up-collapse">
                 <div class="card card-body">
                     <div id="trade_up_container" class="inventory_container trade_up_container">
                     </div>
