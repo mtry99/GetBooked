@@ -140,6 +140,10 @@ if($showModal) {
     }
 }
 
+$fromPhp = true;
+require "get_bbuck.php";
+$bbuck = $response["bbuck"];
+
 ?>
 
 <script>
@@ -150,6 +154,8 @@ console.log(`<?php echo ($trade_sql); ?>`);
 let menu = `<?php echo $menu; ?>`;
 let showModal = `<?php echo $showModal; ?>`;
 let modalIdx = `<?php echo $modalIdx; ?>`;
+
+let bbuck = `<?php echo $bbuck; ?>`;
 
 let sql = `<?php echo ($sql); ?>`;
 let inventory = [<?php 
@@ -259,6 +265,13 @@ console.log(inventory);
 
         <!-- Page Content Holder -->
         <div id="content">
+            <div class="d-flex justify-content-center align-items-center inventory-menu mb-2">
+                <div class="inventory-menu-item form-group">
+                    <img class="bbuck" src="assets/bbuck.png"/>
+                    <span class="bbuck-text align-middle">×<span id="bbuck-text"><?php echo number_format($bbuck); ?></span></span>
+                </div>
+            </div>
+
             <div class="d-flex justify-content-between align-items-center inventory-menu mb-2">
                 <div class="inventory-menu-item form-group row">
                     <label for="sort-select" class="col-sm-5 col-form-label">Sort by:</label>

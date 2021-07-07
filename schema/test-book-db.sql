@@ -130,3 +130,18 @@ INSERT INTO user_inventory (user_id, book_id, amount)
 VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '4583', '150');
 INSERT INTO user_inventory (user_id, book_id, amount) 
 VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '16403', '15');
+
+-- get bbucks
+UPDATE user 
+SET bbuck = bbuck + 1 * (ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000) - bbuck_last_updated),
+bbuck_last_updated = ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)
+WHERE username = 'alex3';
+SELECT bbuck FROM user WHERE username = 'alex3';
+
+-- test time
+SELECT (ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000) - bbuck_last_updated)
+FROM user
+WHERE username = 'alex3';
+
+UPDATE user
+SET bbuck_last_updated = ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000);

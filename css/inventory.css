@@ -200,3 +200,16 @@
 .book_box_rarity_trade_up .star-container-container {
     font-size: 16px;
 }
+
+.bbuck {
+    filter: drop-shadow(0 0 0.75rem rgb(0, 238, 255));
+    height: 5rem;
+    padding-bottom: 8px;
+}
+
+.bbuck-text {
+    color: rgb(249, 255, 255);
+    font-family: Fortnite;
+    font-size: 64px;
+    text-shadow: 2px 2px 2px rgb(109, 238, 255), 2px 2px 6px rgb(0, 0, 0);
+}

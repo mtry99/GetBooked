@@ -205,6 +205,32 @@ function tradeUpCancelClicked() {
 function onDismissModal() {
 }
 
+let onGetBBuckCnt = 0;
+let onGetBBuckLast = 0;
+let bbuckTarget = parseInt(bbuck);
+let bbuckLast = parseInt(bbuck);
+function onGetBBuck() {
+    if(onGetBBuckCnt % 57 == 0) {
+        let curCnt = onGetBBuckCnt;
+        let req = new XMLHttpRequest();
+        req.responseType = 'json';
+        req.open('GET', `get_bbuck.php`, true);
+        req.onload = function() {
+            let jsonResponse = req.response;
+
+            onGetBBuckLast = curCnt;
+    
+            bbuckLast = bbuckTarget;
+            bbuckTarget = parseInt(jsonResponse.bbuck);
+        };
+        req.send(null);
+    }
+    bbuck = Math.min(onGetBBuckCnt - onGetBBuckLast, 57) / 57 * (bbuckTarget - bbuckLast) + bbuckLast;
+    $("#bbuck-text").html(Math.round(bbuck).toLocaleString());
+
+    onGetBBuckCnt++;
+}
+
 $(document).ready(function() {
     console.log("ready!");
 
@@ -322,4 +348,6 @@ $(document).ready(function() {
             onBookClicked(j);
         });
     }
+    
+    setInterval(onGetBBuck, 107);
 });

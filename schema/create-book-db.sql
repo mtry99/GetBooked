@@ -466,7 +466,11 @@ END//
 DELIMITER ;
 
 
+-- 2021/07/06 ------------------------------------------------------------------
+ALTER TABLE `user` ADD `bbuck` BIGINT NOT NULL DEFAULT '0' AFTER `is_admin`;
+ALTER TABLE `user` ADD `bbuck_last_updated` BIGINT NOT NULL DEFAULT '0' AFTER `bbuck`;
 
+CREATE TRIGGER user_bbuck_last_updated BEFORE INSERT ON user FOR EACH ROW SET new.bbuck_last_updated = UNIX_TIMESTAMP();
 
 ------------------------------------------------------------------
 -- user setup ----------------------------------------------------
