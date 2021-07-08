@@ -154,8 +154,12 @@ function tradeUpClicked() {
     });
 }
 
-function editDeckClicked() {
-
+function editLoadoutClicked() {
+    menu = "loadout";
+    $('#loadout-collapse').collapse('show');
+    $('#default-menu').slideUp(complete = () => {
+        $('#loadout-menu').slideDown();
+    });
 }
 
 function tradeUpFill3Clicked() {
@@ -202,6 +206,19 @@ function tradeUpCancelClicked() {
     });
 }
 
+function loadoutSaveClicked() {
+
+}
+
+function loadoutCancelClicked() {
+
+    menu = "default";
+    $('#loadout-collapse').collapse('hide');
+    $('#loadout-menu').slideUp(complete = () => {
+        $('#default-menu').slideDown();
+    });
+}
+
 function onDismissModal() {
 }
 
@@ -218,6 +235,7 @@ function onGetBBuck() {
         req.onload = function() {
             let jsonResponse = req.response;
 
+            console.log(jsonResponse);
             onGetBBuckLast = curCnt;
     
             bbuckLast = bbuckTarget;

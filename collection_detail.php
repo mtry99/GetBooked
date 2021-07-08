@@ -83,6 +83,8 @@ console.log(obj);
     <link rel="stylesheet" href="css/book3d_rarity_5.css">
     <link rel="stylesheet" href="css/book3d_rarity_4.css">
     <link rel="stylesheet" href="css/book3d_rarity_3.css">
+    <link rel="stylesheet" href="css/book3d_rarity_2.css">
+    <link rel="stylesheet" href="css/book3d_rarity_1.css">
 
 </head>
 <body>

@@ -193,6 +193,8 @@ console.log(inventory);
     <link rel="stylesheet" href="css/book3d_rarity_5.css">
     <link rel="stylesheet" href="css/book3d_rarity_4.css">
     <link rel="stylesheet" href="css/book3d_rarity_3.css">
+    <link rel="stylesheet" href="css/book3d_rarity_2.css">
+    <link rel="stylesheet" href="css/book3d_rarity_1.css">
     <link rel="stylesheet" href="css/inventory.css">
 
     <?php if($showModal) { ?>
@@ -280,15 +282,19 @@ console.log(inventory);
                         <option value="amount">Amount</option>
                     </select>
                 </div>
-                <div id="default-menu" class="inventory-menu-item form-group row" <?php if($menu == "trade-up") echo 'style="display: none;"'; ?>>
+                <div id="default-menu" class="inventory-menu-item form-group row" <?php if($menu != "default") echo 'style="display: none;"'; ?>>
                     <button id="btn-trade-up" type="button" class="btn btn-success" onclick="tradeUpClicked()">Trade Up</button>
-                    <button id="btn-edit-deck" type="button" class="btn btn-primary" onclick="editDeckClicked()">Edit Deck</button>
+                    <button id="btn-edit-deck" type="button" class="btn btn-primary" onclick="editLoadoutClicked()">Edit Loadout</button>
                 </div>
-                <div id="trade-up-menu" class="inventory-menu-item form-group row" <?php if($menu == "default") echo 'style="display: none;"'; ?>>
+                <div id="trade-up-menu" class="inventory-menu-item form-group row" <?php if($menu != "trade-up") echo 'style="display: none;"'; ?>>
                     <button id="btn-trade-up-fill-3" type="button" class="btn btn-primary" onclick="tradeUpFill3Clicked()">Autofill 3★</button>
                     <button id="btn-trade-up-fill-4" type="button" class="btn btn-primary" onclick="tradeUpFill4Clicked()">Autofill 4★</button>
                     <button id="btn-trade-up-init" type="button" class="btn btn-success" onclick="tradeUpInitClicked()" disabled>Initiate Trade Up</button>
                     <button id="btn-trade-up-cancel" type="button" class="btn btn-danger" onclick="tradeUpCancelClicked()">Cancel Trade Up</button>
+                </div>
+                <div id="loadout-menu" class="inventory-menu-item form-group row" <?php if($menu != "loadout") echo 'style="display: none;"'; ?>>
+                    <button id="btn-loadout-init" type="button" class="btn btn-success" onclick="loadoutSaveClicked()">Save</button>
+                    <button id="btn-loadout-cancel" type="button" class="btn btn-danger" onclick="loadoutCancelClicked()">Cancel</button>
                 </div>
             </div>
 
@@ -296,6 +302,11 @@ console.log(inventory);
                 <div class="card card-body">
                     <div id="trade_up_container" class="inventory_container trade_up_container">
                     </div>
+                </div>
+            </div>
+
+            <div class="collapse <?php if($menu == "loadout") echo 'show'; ?>" id="loadout-collapse">
+                <div class="card card-body">
                 </div>
             </div>
 
