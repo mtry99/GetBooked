@@ -14,7 +14,7 @@
         <a class="nav-item nav-link <?php echo ($uri_parts[0] === "/collection.php" || $uri_parts[0] === "/collection_detail.php")?"active":"" ?>" href="/collection.php">Collections </a>
         <a class="nav-item nav-link <?php echo $uri_parts[0] === "/inventory.php"?"active":"" ?>" href="/inventory.php">My Inventory </a>
         <?php if (!((isset($_SESSION["isadmin"])) && ($_SESSION["isadmin"] === true))): ?>
-        <a class="nav-item nav-link <?php echo $uri_parts[0] === "/account.php"?"active":"" ?>" href="/account.php">My Borrow History </a>
+        <a class="nav-item nav-link <?php echo $uri_parts[0] === "/account.php"?"active":"" ?>" href="/account.php">Borrow History </a>
         <a class="nav-item nav-link <?php echo $uri_parts[0] === "/fines.php"?"active":"" ?>" href="/fines.php">Fines </a>
         <?php endif; ?>
         <?php if ((isset($_SESSION["isadmin"])) && ($_SESSION["isadmin"] === true)): ?>

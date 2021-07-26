@@ -29,7 +29,7 @@ LEFT JOIN book_genre bg ON c.book_id = bg.book_id
 LEFT JOIN genre g ON bg.genre_id = g.genre_id 
 LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
 LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
-GROUP BY c.book_id;',
+GROUP BY c.book_id, p.publisher_id, bp.publish_year;',
 $book_id_query);
 
 $result = $conn->query($sql);
@@ -40,7 +40,21 @@ $json = file_get_contents('https://openlibrary.org/books/'.$row['original_key'].
 $obj = json_decode($json, true);
 
 $copiesError = false;
-$alreadyOwn = false;
+
+// $params = array_merge( $_GET, array( 'test' => 'testvalue' ) );
+// $new_query_string = http_build_query( $params );
+
+// ( empty( $_SERVER['HTTPS'] ) ? 'http://' : 'https://' ) .
+// ( empty( $_SERVER['HTTP_HOST'] ) ? $defaultHost : $_SERVER['HTTP_HOST'] ) .
+// $_SERVER['REQUEST_URI'] = $new_query_string;
+
+// $get_query = $_GET;
+// $get_query['page'] = '1';
+// $params = array_merge( $get_query, array( 'test' => 'testvalue' ) );
+// $get_query_url = http_build_query($params);
+
+// var_dump($_GET);
+
 // var_dump($row);
 if(isset($_POST["checkout"])) {
     // $quantity = $_POST["quantity"];
@@ -59,10 +73,8 @@ if(isset($_POST["checkout"])) {
         $log = "INSERT INTO log VALUES (NULL, '$uid', '$book_id', '$cur_date', NULL, '$week')";
         $results = $conn -> query($log);
         echo "<meta http-equiv='refresh' content='0'>";
-        // echo mysqli_error($conn);
     } else {
         $copiesError = true;
-        // echo "Not enough copies available!";
     }
 }
 
@@ -341,13 +353,34 @@ console.log(obj);
                                     <!-- <label for="quantity">Quantity:</label> -->
                                     <!-- <input type="number" name="quantity" style="width: 100px;" min="1"> -->
                                     <!-- <button name="checkout" type="button" class="btn btn-secondary p-2 m-4">Checkout</button> -->
+                                        <?php
+                                        if(empty($_GET)) {
+                                            ?>
+                                            <script>
+                                            var href = window.location.href;
+                                            var regex = new RegExp("[&\\?]" + 'id' + "=");
+                                            if(regex.test(href))
+                                            {
+                                                regex = new RegExp("([&\\?])" + 'id' + "=\\d+");
+                                                window.location.href = href.replace(regex, "$1" + 'id' + "=" + <?php echo $row["book_id"] ?>);
+                                            }
+                                            else
+                                            {
+                                                if(href.indexOf("?") > -1)
+                                                window.location.href = href + "&" + 'id' + "=" + <?php echo $row["book_id"] ?>;
+                                                else
+                                                window.location.href = href + "?" + 'id' + "=" + <?php echo $row["book_id"] ?>;
+                                            }
+                                            </script>
+                                        <?php }
+                                        // var_dump($_GET)
+                                        ?>
                                         <input type="submit" name="checkout" value="Checkout" class="btn btn-secondary p-2 m-4">
                                     </form>
                                 </div>
                                 <div class="d-flex justify-content-center">
                                     <?php
                                     if($copiesError) echo '<h6 style="color:red">Not Enough Copies Available!</p>';
-                                    else if($alreadyOwn) echo '<h6 style="color:red">You already own a copy!</p>';
                                     ?>
                                 </div>
 

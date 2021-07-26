@@ -165,7 +165,7 @@ LEFT JOIN book_genre bg ON c.book_id = bg.book_id
 LEFT JOIN genre g ON bg.genre_id = g.genre_id 
 LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
 LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
-GROUP BY c.book_id;',
+GROUP BY c.book_id, p.publisher_id, bp.publish_year;',
 $search_str_2, $search_str, $core_book_filter, 
 $search_str_order, $query_limit_books);
 

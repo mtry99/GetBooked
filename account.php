@@ -5,39 +5,82 @@
 require_once "config.php"; 
 
 $uid = $_SESSION["uid"];
-// $query = "SELECT * FROM log INNER JOIN (SELECT c.count, c.original_key, c.isbn, c.number_of_pages, c.language, c.publish_year, c.book_id, c.title, c.author, GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, p.publisher_id, p.name as 'publisher_name'
-//     FROM 
-//         (SELECT b.count, b.original_key, b.isbn, b.number_of_pages, b.language, b.publish_year, b.book_id, b.title, b.publisher_id, GROUP_CONCAT(a.author_id, ':', a.name ORDER BY a.name separator ',' ) as author
-//         FROM 
-//             (SELECT * FROM book) as b
-//         LEFT JOIN book_author ba ON b.book_id = ba.book_id
-//         LEFT JOIN author a ON ba.author_id  = a.author_id
-//         GROUP BY b.book_id) as c
-//     LEFT JOIN book_genre bg ON c.book_id = bg.book_id
-//     LEFT JOIN genre g ON bg.genre_id  = g.genre_id 
-//     LEFT JOIN publisher p ON p.publisher_id  = c.publisher_id 
-//     GROUP BY c.book_id) AS e ON log.book_id = e.book_id WHERE user_id = $uid";
 
-// rewrite to select log.book_id = book.book_id first
-$query = "SELECT c.*,
-GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, 
-p.publisher_id, p.name as 'publisher_name', bp.publish_year
-FROM (SELECT b.*, 
-     GROUP_CONCAT(a.author_id, ':', a.name ORDER BY a.name separator ',' ) as author
-     FROM (SELECT user_id, borrow_date, return_date, log_id, return_by_date, book.*
-          FROM book 
-          INNER JOIN log 
-          WHERE book.book_id = log.book_id
-          AND user_id = $uid) as b
-     LEFT JOIN book_author ba ON b.book_id = ba.book_id
-     LEFT JOIN author a ON ba.author_id = a.author_id
-     GROUP BY b.log_id) as c
-LEFT JOIN book_genre bg ON c.book_id = bg.book_id
-LEFT JOIN genre g ON bg.genre_id = g.genre_id 
-LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
-LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
-GROUP BY c.log_id
-ORDER BY c.borrow_date;";
+$is_dec = False;
+$temp = $_GET['sort_by'];
+if(isset($_GET['sort_by']) && substr($_GET['sort_by'], -3) == "dec"){
+    $is_dec = True;
+    $temp = substr($_GET['sort_by'], 0, -3);
+}
+
+$sort_by = "book_id";
+if(isset($_GET["sort_by"])){
+    $sort_by = $temp;
+}
+
+
+// $query = "SELECT c.*,
+//     GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, 
+//     p.publisher_id, p.name as 'publisher_name', bp.publish_year
+//     FROM (SELECT b.*, 
+//         GROUP_CONCAT(a.author_id, ':', a.name ORDER BY a.name separator ',' ) as author
+//         FROM (SELECT user_id, borrow_date, return_date, log_id, return_by_date, book.*
+//             FROM book 
+//             INNER JOIN log 
+//             WHERE book.book_id = log.book_id
+//             AND user_id = $uid) as b
+//         LEFT JOIN book_author ba ON b.book_id = ba.book_id
+//         LEFT JOIN author a ON ba.author_id = a.author_id
+//         GROUP BY b.log_id) as c
+//     LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+//     LEFT JOIN genre g ON bg.genre_id = g.genre_id 
+//     LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
+//     LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
+//     GROUP BY c.log_id, p.publisher_id, bp.publish_year
+//     ORDER BY c.borrow_date;";
+
+
+if(!$is_dec) {
+    $query = "SELECT c.*,
+    GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, 
+    p.publisher_id, p.name as 'publisher_name', bp.publish_year
+    FROM (SELECT b.*, 
+        GROUP_CONCAT(a.author_id, ':', a.name ORDER BY a.name separator ',' ) as author
+        FROM (SELECT user_id, borrow_date, return_date, log_id, return_by_date, book.*
+            FROM book 
+            INNER JOIN log 
+            WHERE book.book_id = log.book_id
+            AND user_id = $uid) as b
+        LEFT JOIN book_author ba ON b.book_id = ba.book_id
+        LEFT JOIN author a ON ba.author_id = a.author_id
+        GROUP BY b.log_id) as c
+    LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+    LEFT JOIN genre g ON bg.genre_id = g.genre_id 
+    LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
+    LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
+    GROUP BY c.log_id, p.publisher_id, bp.publish_year
+    ORDER BY c.$sort_by;";
+} else {
+    $query = "SELECT c.*,
+    GROUP_CONCAT(g.genre_id, ':', g.name ORDER BY g.name separator ',' ) as genre, 
+    p.publisher_id, p.name as 'publisher_name', bp.publish_year
+    FROM (SELECT b.*, 
+        GROUP_CONCAT(a.author_id, ':', a.name ORDER BY a.name separator ',' ) as author
+        FROM (SELECT user_id, borrow_date, return_date, log_id, return_by_date, book.*
+            FROM book 
+            INNER JOIN log 
+            WHERE book.book_id = log.book_id
+            AND user_id = $uid) as b
+        LEFT JOIN book_author ba ON b.book_id = ba.book_id
+        LEFT JOIN author a ON ba.author_id = a.author_id
+        GROUP BY b.log_id) as c
+    LEFT JOIN book_genre bg ON c.book_id = bg.book_id
+    LEFT JOIN genre g ON bg.genre_id = g.genre_id 
+    LEFT JOIN book_publisher bp ON c.book_id = bp.book_id
+    LEFT JOIN publisher p ON p.publisher_id = bp.publisher_id 
+    GROUP BY c.log_id, p.publisher_id, bp.publish_year
+    ORDER BY c.$sort_by DESC;";
+}
 
 // $query = "";
 
@@ -70,17 +113,44 @@ $result = $conn -> query($query);
 <body>
 
     <?php require "header.php"; ?>
+    <!-- <div class="d-flex flex-row-reverse">
+        <?php //echo "Sort By: "; ?>
+        <select class="form-select form-select-sm" aria-label=".form-select-sm example" style="width=400px">
+            <option selected>Borrow Date</option>
+            <option value="1">Book ID</option>
+            <option value="2">Date Returned</option>
+            <option value="3">Return By Date</option>
+            <option value="4">Book Title</option>
+        </select>
+    </div> -->
+
     <!-- <h1>Loan History</h1> -->
     <div class="wrapper container">
         <table class="table table-striped table-hover book-table">
         <thead>
             <tr>
-            <th scope="col" style="width: 1.5%">#</th>
+            <?php if($_GET['sort_by'] == 'book_id'){ ?>
+                <th scope="col" style="width: 1.5%"><form action="account.php" method="get"><button name="sort_by" value="book_iddec" style="border:none; background-color:Transparent; font-weight:bold">#</button></form></th>
+            <?php } else { ?>
+                <th scope="col" style="width: 1.5%"><form action="account.php" method="get"><button name="sort_by" value="book_id" style="border:none; background-color:Transparent; font-weight:bold">#</button></form></th>
+            <?php } ?>
             <th scope="col" style="width: 12%">Cover</th>
             <th scope="col" style="width: 40%">Book</th>
-            <th scope="col" style="width: 15.5%; text-align:center">Borrow Date</th>
-            <th scope="col" style="width: 15.5%; text-align:center">Date Returned</th>
-            <th scope="col" style="width: 15.5%; text-align:center">Return By Date</th>
+            <?php if($_GET['sort_by'] == 'borrow_date'){ ?>
+                <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="borrow_datedec" style="border:none; background-color:Transparent; font-weight:bold">Borrow Date</button></form></th>
+            <?php } else { ?>
+                <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="borrow_date" style="border:none; background-color:Transparent; font-weight:bold">Borrow Date</button></form></th>
+            <?php } ?>
+            <?php if($_GET['sort_by'] == 'return_date'){ ?>
+                <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="return_datedec" style="border:none; background-color:Transparent; font-weight:bold">Date Returned</button></form></th>
+            <?php } else { ?> 
+                <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="return_date" style="border:none; background-color:Transparent; font-weight:bold">Date Returned</button></form></th>
+            <?php } ?>
+            <?php if($_GET['sort_by'] == 'return_by_date'){ ?>
+                <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="return_by_datedec" style="border:none; background-color:Transparent; font-weight:bold">Return By Date</button></form></th>
+            <?php } else { ?> 
+                <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="return_by_date" style="border:none; background-color:Transparent; font-weight:bold">Return By Date</button></form></th>
+            <?php } ?>
             </tr>
         </thead>
         <tbody>
