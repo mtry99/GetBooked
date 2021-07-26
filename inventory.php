@@ -14,6 +14,7 @@ $trade_sql = "";
 
 function processTradeUp() {
     global $conn, $uid;
+    global $remove_sql, $trade_sql;
 
     $trade_up_books = explode(',', $_SESSION['postdata']["trade_up"]);
 
@@ -143,6 +144,7 @@ if($showModal) {
 $fromPhp = true;
 require "get_bbuck.php";
 $bbuck = $response["bbuck"];
+$rate = $response["rate"];
 
 ?>
 
@@ -156,6 +158,7 @@ let showModal = `<?php echo $showModal; ?>`;
 let modalIdx = `<?php echo $modalIdx; ?>`;
 
 let bbuck = `<?php echo $bbuck; ?>`;
+let rate = `<?php echo $rate; ?>`;
 
 let sql = `<?php echo ($sql); ?>`;
 let inventory = [<?php 
@@ -274,6 +277,12 @@ console.log(inventory);
                 </div>
             </div>
 
+            <div class="d-flex justify-content-center align-items-center inventory-menu mb-2">
+                <div class="inventory-menu-item form-group">
+                    <span class="bbuck-text bbuck-text-rate align-middle">+<span id="bbuck-text-rate"><?php echo number_format($rate); ?></span> per second</span>
+                </div>
+            </div>
+
             <div class="d-flex justify-content-between align-items-center inventory-menu mb-2">
                 <div class="inventory-menu-item form-group row">
                     <label for="sort-select" class="col-sm-5 col-form-label">Sort by:</label>
@@ -284,9 +293,11 @@ console.log(inventory);
                 </div>
                 <div id="default-menu" class="inventory-menu-item form-group row" <?php if($menu != "default") echo 'style="display: none;"'; ?>>
                     <button id="btn-trade-up" type="button" class="btn btn-success" onclick="tradeUpClicked()">Trade Up</button>
-                    <button id="btn-edit-deck" type="button" class="btn btn-primary" onclick="editLoadoutClicked()">Edit Loadout</button>
+                    <!-- <button id="btn-edit-deck" type="button" class="btn btn-primary" onclick="editLoadoutClicked()">Edit Loadout</button> -->
                 </div>
                 <div id="trade-up-menu" class="inventory-menu-item form-group row" <?php if($menu != "trade-up") echo 'style="display: none;"'; ?>>
+                    <button id="btn-trade-up-fill-1" type="button" class="btn btn-primary" onclick="tradeUpFill1Clicked()">Autofill 1★</button>
+                    <button id="btn-trade-up-fill-2" type="button" class="btn btn-primary" onclick="tradeUpFill2Clicked()">Autofill 2★</button>
                     <button id="btn-trade-up-fill-3" type="button" class="btn btn-primary" onclick="tradeUpFill3Clicked()">Autofill 3★</button>
                     <button id="btn-trade-up-fill-4" type="button" class="btn btn-primary" onclick="tradeUpFill4Clicked()">Autofill 4★</button>
                     <button id="btn-trade-up-init" type="button" class="btn btn-success" onclick="tradeUpInitClicked()" disabled>Initiate Trade Up</button>

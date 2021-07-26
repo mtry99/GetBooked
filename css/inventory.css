@@ -141,6 +141,34 @@
     box-shadow: 0 0 0 .2rem rgba(237, 38, 255, 0.5);
 }
 
+#btn-trade-up-fill-2 {
+    background-color: #71d159;
+    border-color: #71d159;
+}
+
+#btn-trade-up-fill-2:hover {
+    background-color: #6bb858;
+    border-color: #6bb858;
+}
+
+#btn-trade-up-fill-2:focus {
+    box-shadow: 0 0 0 .2rem #4db13480;
+}
+
+#btn-trade-up-fill-1 {
+    background-color: #a5a5a5;
+    border-color: #a5a5a5;
+}
+
+#btn-trade-up-fill-1:hover {
+    background-color: #8f8f8f;
+    border-color: #8f8f8f;
+}
+
+#btn-trade-up-fill-1:focus {
+    box-shadow: 0 0 0 .2rem #8f8f8f80;
+}
+
 #btn-trade-up {
     background-color: #fda0cc;
     border-color: #e091b6;
@@ -212,4 +240,8 @@
     font-family: Fortnite;
     font-size: 64px;
     text-shadow: 2px 2px 2px rgb(109, 238, 255), 2px 2px 6px rgb(0, 0, 0);
+}
+
+.bbuck-text-rate {
+    font-size: 32px;
 }

@@ -127,9 +127,13 @@ DELETE FROM user_inventory WHERE user_id = (SELECT user_id FROM user WHERE usern
 
 -- add to inventory of user
 INSERT INTO user_inventory (user_id, book_id, amount) 
-VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '4583', '150');
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '74820', '50');
 INSERT INTO user_inventory (user_id, book_id, amount) 
-VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '16403', '15');
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '6182', '50');
+INSERT INTO user_inventory (user_id, book_id, amount) 
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '101418', '50');
+INSERT INTO user_inventory (user_id, book_id, amount) 
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '44217', '50');
 
 -- get bbucks
 UPDATE user 
@@ -145,3 +149,12 @@ WHERE username = 'alex3';
 
 UPDATE user
 SET bbuck_last_updated = ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000);
+
+-- get inventory rarity summary
+SELECT b.rarity, sum(i.amount) as amount
+FROM user_inventory as i
+LEFT JOIN book as b 
+ON i.book_id = b.book_id 
+WHERE user_id = (SELECT user_id FROM user WHERE username = 'alex3')
+GROUP BY b.rarity
+ORDER BY b.rarity;

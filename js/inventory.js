@@ -162,6 +162,26 @@ function editLoadoutClicked() {
     });
 }
 
+function tradeUpFill1Clicked() {
+    for (let j = 0; j < inventory.length && Object.keys(tradeUpInventory).length < 5; j++) {
+        if(inventory[j].rarity == 1) {
+            while(inventory[j].amount > 0 && Object.keys(tradeUpInventory).length < 5) {
+                onBookClicked(j);
+            }
+        }
+    }
+}
+
+function tradeUpFill2Clicked() {
+    for (let j = 0; j < inventory.length && Object.keys(tradeUpInventory).length < 5; j++) {
+        if(inventory[j].rarity == 2) {
+            while(inventory[j].amount > 0 && Object.keys(tradeUpInventory).length < 5) {
+                onBookClicked(j);
+            }
+        }
+    }
+}
+
 function tradeUpFill3Clicked() {
     for (let j = 0; j < inventory.length && Object.keys(tradeUpInventory).length < 5; j++) {
         if(inventory[j].rarity == 3) {
@@ -240,6 +260,7 @@ function onGetBBuck() {
     
             bbuckLast = bbuckTarget;
             bbuckTarget = parseInt(jsonResponse.bbuck);
+            $("#bbuck-text-rate").html(Math.round(parseInt(jsonResponse.rate)).toLocaleString());
         };
         req.send(null);
     }
