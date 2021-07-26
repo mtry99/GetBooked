@@ -94,8 +94,6 @@ console.log(sql);
             }
             echo '</td></tr>';
         }
-    } else {
-        echo "0 results";
     }
 
     ?>

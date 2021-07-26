@@ -7,13 +7,18 @@ require_once "config.php";
 $uid = $_SESSION["uid"];
 
 $is_dec = False;
-$temp = $_GET['sort_by'];
+if(isset($_GET['sort_by'])) {
+    // get temporary value to obtain sort_by if it has been set
+    $temp = $_GET['sort_by'];
+}
+
 if(isset($_GET['sort_by']) && substr($_GET['sort_by'], -3) == "dec"){
     $is_dec = True;
     $temp = substr($_GET['sort_by'], 0, -3);
 }
 
-$sort_by = "book_id";
+// default sort by return date
+$sort_by = "return_date";
 if(isset($_GET["sort_by"])){
     $sort_by = $temp;
 }
@@ -129,24 +134,24 @@ $result = $conn -> query($query);
         <table class="table table-striped table-hover book-table">
         <thead>
             <tr>
-            <?php if($_GET['sort_by'] == 'book_id'){ ?>
+            <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'book_id'){ ?>
                 <th scope="col" style="width: 1.5%"><form action="account.php" method="get"><button name="sort_by" value="book_iddec" style="border:none; background-color:Transparent; font-weight:bold">#</button></form></th>
             <?php } else { ?>
                 <th scope="col" style="width: 1.5%"><form action="account.php" method="get"><button name="sort_by" value="book_id" style="border:none; background-color:Transparent; font-weight:bold">#</button></form></th>
             <?php } ?>
             <th scope="col" style="width: 12%">Cover</th>
             <th scope="col" style="width: 40%">Book</th>
-            <?php if($_GET['sort_by'] == 'borrow_date'){ ?>
+            <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'borrow_date'){ ?>
                 <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="borrow_datedec" style="border:none; background-color:Transparent; font-weight:bold">Borrow Date</button></form></th>
             <?php } else { ?>
                 <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="borrow_date" style="border:none; background-color:Transparent; font-weight:bold">Borrow Date</button></form></th>
             <?php } ?>
-            <?php if($_GET['sort_by'] == 'return_date'){ ?>
+            <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'return_date'){ ?>
                 <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="return_datedec" style="border:none; background-color:Transparent; font-weight:bold">Date Returned</button></form></th>
             <?php } else { ?> 
                 <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="return_date" style="border:none; background-color:Transparent; font-weight:bold">Date Returned</button></form></th>
             <?php } ?>
-            <?php if($_GET['sort_by'] == 'return_by_date'){ ?>
+            <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'return_by_date'){ ?>
                 <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="return_by_datedec" style="border:none; background-color:Transparent; font-weight:bold">Return By Date</button></form></th>
             <?php } else { ?> 
                 <th scope="col" style="width: 15.5%; text-align:center"><form action="account.php" method="get"><button name="sort_by" value="return_by_date" style="border:none; background-color:Transparent; font-weight:bold">Return By Date</button></form></th>

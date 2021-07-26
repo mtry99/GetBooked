@@ -33,6 +33,7 @@ GROUP BY c.book_id, p.publisher_id, bp.publish_year;',
 $book_id_query);
 
 $result = $conn->query($sql);
+echo $conn->error;
 
 $row = $result->fetch_assoc();
 
@@ -40,6 +41,7 @@ $json = file_get_contents('https://openlibrary.org/books/'.$row['original_key'].
 $obj = json_decode($json, true);
 
 $copiesError = false;
+$fineError = false;
 
 // $params = array_merge( $_GET, array( 'test' => 'testvalue' ) );
 // $new_query_string = http_build_query( $params );
@@ -57,25 +59,45 @@ $copiesError = false;
 
 // var_dump($row);
 if(isset($_POST["checkout"])) {
-    // $quantity = $_POST["quantity"];
     $count = $row["count"];
     $book_id = $row["book_id"];
-    if($count > 0) {
-        //update book table
-        // $count -= $quantity;
-        $count--;
-        $checkout = "UPDATE book SET count = $count WHERE book_id = $book_id";
-        $results = $conn -> query($checkout);
-        //add into log table
-        $uid = $_SESSION['uid'];
-        $cur_date = date("Y-m-d");
-        $week = date("Y-m-d", strtotime($cur_date. ' + 7 days'));
-        $log = "INSERT INTO log VALUES (NULL, '$uid', '$book_id', '$cur_date', NULL, '$week')";
-        $results = $conn -> query($log);
-        echo "<meta http-equiv='refresh' content='0'>";
+    $uid = $_SESSION['uid'];
+
+    // update fine amounts
+    $query = "CALL CALCULATE_FINES($uid);";
+    $result = $conn->query($query);
+
+    // get total fines of user
+    $fine_query = "CALL GET_FINES_AMOUNT($uid);";
+    $tot_out_fines = $conn -> query($fine_query);
+    echo $conn->error; 
+
+    $tot = $tot_out_fines->fetch_row()[0];
+    $tot_out_fines->free(); $conn->next_result();
+
+    if($tot <= 20) {
+        // if fines are less than $20, can borrow books if they are available
+        if($count > 0) {
+            //update book table
+            $count--;
+            $checkout = "UPDATE book SET count = $count WHERE book_id = $book_id";
+            $results = $conn -> query($checkout);
+            //add into log table
+            $cur_date = date("Y-m-d");
+            $week = date("Y-m-d", strtotime($cur_date. ' + 7 days'));
+            $log = "INSERT INTO log VALUES (NULL, '$uid', '$book_id', '$cur_date', NULL, '$week')";
+            $results = $conn -> query($log);
+            echo $conn->error;
+            echo "<meta http-equiv='refresh' content='0'>";
+        } else {
+            $copiesError = true;
+        }
     } else {
-        $copiesError = true;
+        // fines are greater than $20, cannot borrow books
+        $fineError = true;
     }
+
+        
 }
 
 ?>
@@ -381,6 +403,7 @@ console.log(obj);
                                 <div class="d-flex justify-content-center">
                                     <?php
                                     if($copiesError) echo '<h6 style="color:red">Not Enough Copies Available!</p>';
+                                    if($fineError) echo '<h6 style="color:red">Your fines exceed $20. Please pay your fines before borrowing more books.</p>';
                                     ?>
                                 </div>
 
