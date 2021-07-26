@@ -145,6 +145,11 @@ $final_page = ceil($results_count / $page_size);
 
 $page = min(max(1, $book_filter["page"]), $final_page);
 
+// if no results returned, set page to be 1 instead of 0 for SQL limit query
+if($page == 0) {
+    $page = 1;
+}
+
 $query_limit_books = 'LIMIT '.(($page - 1) * $page_size).', 10';
 
 $sql = sprintf('
