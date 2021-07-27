@@ -371,6 +371,7 @@ console.log(obj);
                                 </div>
 
                                 <div class="d-flex justify-content-center">
+                                    <?php if ((isset($_SESSION["loggedin"])) && ($_SESSION["loggedin"] === true) && !((isset($_SESSION["isadmin"])) && ($_SESSION["isadmin"] === true))): ?>
                                     <form method="post">
                                     <!-- <label for="quantity">Quantity:</label> -->
                                     <!-- <input type="number" name="quantity" style="width: 100px;" min="1"> -->
@@ -399,6 +400,7 @@ console.log(obj);
                                         ?>
                                         <input type="submit" name="checkout" value="Checkout" class="btn btn-secondary p-2 m-4">
                                     </form>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="d-flex justify-content-center">
                                     <?php
