@@ -197,8 +197,8 @@ BEGIN
     
     
     
-    INSERT INTO book (title, isbn, number_of_pages, language, count) 
-    SELECT bookname, ISBN, pages, lang, 1;
+    INSERT INTO book (title, isbn, number_of_pages, language, count, rarity) 
+    SELECT bookname, ISBN, pages, lang, 1, 3;
 
     INSERT INTO book_publisher (book_id, publisher_id, publish_year)
     SELECT book_id, publisher_id, publishedYear From book, publisher p
