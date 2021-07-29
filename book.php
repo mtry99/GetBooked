@@ -96,6 +96,18 @@ if($book_filter["publisher"] !== "") {
     GROUP BY bp.book_id)
     ';
     $query_filter_books = $query_filter_books.$query_publisher.'d'.($first++);
+} else {
+    
+    if($book_filter["year_on"] !== "false") {
+        $query_year = 'WHERE bp.publish_year BETWEEN '.$book_filter["year_min"].' AND '.$book_filter["year_max"].' ';
+        $query_publisher = ' 
+        NATURAL JOIN (SELECT bp.book_id as book_id FROM publisher as p
+        RIGHT JOIN book_publisher bp ON p.publisher_id = bp.publisher_id
+        '.$query_year.'
+        GROUP BY bp.book_id)
+        ';
+        $query_filter_books = $query_filter_books.$query_publisher.'d'.($first++);
+    } 
 }
 if($book_filter["author"] !== "") {
     $query_author = ' 
