@@ -121,3 +121,40 @@ CALL ADD_BOOK("bbbb", "aaaa", "1234", "eng", "pppp", "1234", "1234");
 -- get rows of outstanding fines
 CALL CALCULATE_FINES("5");
 CALL GET_OUTSTANDING_FINES("5");
+
+-- clear inventory of user
+DELETE FROM user_inventory WHERE user_id = (SELECT user_id FROM user WHERE username = 'alex3');
+
+-- add to inventory of user
+INSERT INTO user_inventory (user_id, book_id, amount) 
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '74820', '50');
+INSERT INTO user_inventory (user_id, book_id, amount) 
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '6182', '50');
+INSERT INTO user_inventory (user_id, book_id, amount) 
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '101418', '50');
+INSERT INTO user_inventory (user_id, book_id, amount) 
+VALUES ((SELECT user_id FROM user WHERE username = 'alex3'), '44217', '50');
+
+-- get bbucks
+UPDATE user 
+SET bbuck = bbuck + 1 * (ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000) - bbuck_last_updated),
+bbuck_last_updated = ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000)
+WHERE username = 'alex3';
+SELECT bbuck FROM user WHERE username = 'alex3';
+
+-- test time
+SELECT (ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000) - bbuck_last_updated)
+FROM user
+WHERE username = 'alex3';
+
+UPDATE user
+SET bbuck_last_updated = ROUND(UNIX_TIMESTAMP(CURTIME(4)) * 1000);
+
+-- get inventory rarity summary
+SELECT b.rarity, sum(i.amount) as amount
+FROM user_inventory as i
+LEFT JOIN book as b 
+ON i.book_id = b.book_id 
+WHERE user_id = (SELECT user_id FROM user WHERE username = 'alex3')
+GROUP BY b.rarity
+ORDER BY b.rarity;

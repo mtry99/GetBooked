@@ -3,54 +3,271 @@ empty_cover_img.src = "assets/empty_cover_small.png";
 
 let popoverIdx = -1;
 
+let tradeUpInventory = {};
+
+let tradeUpIdx = 0;
+
 function onBookClicked(i) {
     console.log(i + " clicked!");
 
-    if (popoverIdx != -1) {
-        console.log(popoverIdx + " hid!");
-        $(`#book-container3d-${popoverIdx}`).removeClass("book-focused");
-        $(`#book-popover-${popoverIdx}`).popover('hide');
-    }
+    if (menu == "default") {
+        if (popoverIdx != -1) {
+            console.log(popoverIdx + " hid!");
+            $(`#book-container3d-${popoverIdx}`).removeClass("book-focused");
+            $(`#book-popover-${popoverIdx}`).popover('hide');
+        }
 
-    if (popoverIdx == i) {
-        popoverIdx = -1;
-    } else {
-        popoverIdx = i;
-        console.log(popoverIdx + " shown!");
-        $(`#book-container3d-${popoverIdx}`).addClass("book-focused");
+        if (popoverIdx == i) {
+            popoverIdx = -1;
+        } else {
+            popoverIdx = i;
+            console.log(popoverIdx + " shown!");
+            $(`#book-container3d-${popoverIdx}`).addClass("book-focused");
 
-        $(`#book-popover-${popoverIdx}`).popover({
-            html: true,
-            fallbackPlacement: ['bottom'],
-            boundary: "scrollParent",
-            content: function() {
-                return '<div id="book-popover-content-current">Loading...</div>';
+            $(`#book-popover-${popoverIdx}`).popover({
+                html: true,
+                fallbackPlacement: ['bottom'],
+                boundary: "scrollParent",
+                content: function() {
+                    return '<div id="book-popover-content-current">Loading...</div>';
+                }
+            });
+            $(`#book-popover-${popoverIdx}`).popover('show');
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", `book_detail_popover.php?id=${inventory[popoverIdx].book_id}`, true);
+            xhr.onload = function(e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        let response = xhr.responseText;
+                        console.log(response);
+                        $("#book-popover-content-current").html(response);
+                        $(`#book-popover-${popoverIdx}`).popover('update');
+                        $(function() {
+                            $(".col-md-2").tooltip('enable');
+                        });
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.onerror = function(e) {
+                console.error(xhr.statusText);
+            };
+            xhr.send(null);
+        }
+    } else if (menu == "trade-up") {
+        if (inventory[i].amount > 0 && Object.keys(tradeUpInventory).length < 5) {
+            inventory[i].amount--;
+            if (inventory[i].amount == 1) {
+                $(`#book-amount-${i}`).parent().parent().css("display", "none");
+            } else if (inventory[i].amount == 0) {
+                $(`#book-amount-${i}`).parent().parent().parent().css("display", "none");
+            } else {
+                $(`#book-amount-${i}`).html(inventory[i].amount);
             }
-        });
-        $(`#book-popover-${popoverIdx}`).popover('show');
+            tradeUpIdx++;
+            tradeUpInventory[tradeUpIdx] = i;
+            $(`#trade_up_container`).append(`
+            <div id="book-box-trade-up-${tradeUpIdx}" class="book_box book_box_rarity_${inventory[i].rarity} book_box_rarity_trade_up">
+            ${$(`#book-box-${i}`).html()
+            .replace("book-amount", "book-amount-trade-up")}
+            </div>`);
 
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", `book_detail_popover.php?id=${inventory[popoverIdx].book_id}`, true);
-        xhr.onload = function(e) {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    let response = xhr.responseText;
-                    console.log(response);
-                    $("#book-popover-content-current").html(response);
-                    $(`#book-popover-${popoverIdx}`).popover('update');
-                    $(function() {
-                        $(".col-md-2").tooltip('enable');
-                    });
-                } else {
-                    console.error(xhr.statusText);
+            $(`#book-box-trade-up-${tradeUpIdx} .amount-container`).remove();
+
+            let j = tradeUpIdx;
+            $(`#book-box-trade-up-${tradeUpIdx}`).click(function(e) {
+                onTradeUpBookClicked(j);
+            });
+
+            if(Object.keys(tradeUpInventory).length == 5) {
+                let rarity = -1;
+                let valid = true;
+                for (const book in tradeUpInventory) {
+                    if(rarity == -1 || rarity == inventory[tradeUpInventory[book]].rarity) {
+                        rarity = inventory[tradeUpInventory[book]].rarity;
+                    } else {
+                        valid = false;
+                        break;
+                    }
+                }
+                if(valid && rarity != 5) {
+                    $(`#btn-trade-up-init`).prop('disabled', false);
                 }
             }
-        };
-        xhr.onerror = function(e) {
-            console.error(xhr.statusText);
-        };
-        xhr.send(null);
+        }
     }
+}
+
+function onTradeUpBookClicked(i) {
+    console.log("Trade Up " + i + " clicked!");
+
+    $(`#book-box-trade-up-${i}`).remove();
+
+    inventory[tradeUpInventory[i]].amount++;
+    
+    j = tradeUpInventory[i];
+    if (inventory[j].amount == 1) {
+        $(`#book-amount-${j}`).parent().parent().parent().show();
+    } else if (inventory[j].amount == 2) {
+        $(`#book-amount-${j}`).parent().parent().show();
+        $(`#book-amount-${j}`).html(inventory[j].amount);
+    } else {
+        $(`#book-amount-${j}`).html(inventory[j].amount);
+    }
+
+    delete tradeUpInventory[i]; 
+    $(`#btn-trade-up-init`).prop('disabled', true);
+}
+
+function onSortChanged() {
+    let selectedVal = $("#sort-select option:selected").val()
+    console.log(selectedVal);
+
+    let maxOrder = 0;
+
+    for (let j = 0; j < inventory.length; j++) {
+        if (selectedVal == "amount") {
+            maxOrder = Math.max(maxOrder, inventory[j].amount);
+        } else if (selectedVal == "rarity") {
+            order = Math.max(maxOrder, j);
+        }
+    }
+
+    for (let j = 0; j < inventory.length; j++) {
+        let order = -1;
+        if (selectedVal == "amount") {
+            order = maxOrder - inventory[j].amount;
+        } else if (selectedVal == "rarity") {
+            order = j;
+        }
+        $(`#book-box-${j}`).css("order", order);
+    }
+}
+
+function tradeUpClicked() {
+    menu = "trade-up";
+    $('#trade-up-collapse').collapse('show');
+    $('#default-menu').slideUp(complete = () => {
+        $('#trade-up-menu').slideDown();
+    });
+}
+
+function editLoadoutClicked() {
+    menu = "loadout";
+    $('#loadout-collapse').collapse('show');
+    $('#default-menu').slideUp(complete = () => {
+        $('#loadout-menu').slideDown();
+    });
+}
+
+function tradeUpFill1Clicked() {
+    for (let j = 0; j < inventory.length && Object.keys(tradeUpInventory).length < 5; j++) {
+        if(inventory[j].rarity == 1) {
+            while(inventory[j].amount > 0 && Object.keys(tradeUpInventory).length < 5) {
+                onBookClicked(j);
+            }
+        }
+    }
+}
+
+function tradeUpFill2Clicked() {
+    for (let j = 0; j < inventory.length && Object.keys(tradeUpInventory).length < 5; j++) {
+        if(inventory[j].rarity == 2) {
+            while(inventory[j].amount > 0 && Object.keys(tradeUpInventory).length < 5) {
+                onBookClicked(j);
+            }
+        }
+    }
+}
+
+function tradeUpFill3Clicked() {
+    for (let j = 0; j < inventory.length && Object.keys(tradeUpInventory).length < 5; j++) {
+        if(inventory[j].rarity == 3) {
+            while(inventory[j].amount > 0 && Object.keys(tradeUpInventory).length < 5) {
+                onBookClicked(j);
+            }
+        }
+    }
+}
+
+function tradeUpFill4Clicked() {
+    for (let j = 0; j < inventory.length && Object.keys(tradeUpInventory).length < 5; j++) {
+        if(inventory[j].rarity == 4) {
+            while(inventory[j].amount > 0 && Object.keys(tradeUpInventory).length < 5) {
+                onBookClicked(j);
+            }
+        }
+    }
+}
+
+function tradeUpInitClicked() {
+
+    let requestBody = {trade_up: []};
+    
+    for (const book in tradeUpInventory) {
+        requestBody.trade_up.push(inventory[tradeUpInventory[book]].book_id);
+    }
+
+    redirectPost("#", requestBody);
+}
+
+function tradeUpCancelClicked() {
+
+    for (const book in tradeUpInventory) {
+        onTradeUpBookClicked(book);
+    }
+
+    menu = "default";
+    $('#trade-up-collapse').collapse('hide');
+    $('#trade-up-menu').slideUp(complete = () => {
+        $('#default-menu').slideDown();
+    });
+}
+
+function loadoutSaveClicked() {
+
+}
+
+function loadoutCancelClicked() {
+
+    menu = "default";
+    $('#loadout-collapse').collapse('hide');
+    $('#loadout-menu').slideUp(complete = () => {
+        $('#default-menu').slideDown();
+    });
+}
+
+function onDismissModal() {
+}
+
+let onGetBBuckCnt = 0;
+let onGetBBuckLast = 0;
+let bbuckTarget = parseInt(bbuck);
+let bbuckLast = parseInt(bbuck);
+function onGetBBuck() {
+    if(onGetBBuckCnt % 57 == 0) {
+        let curCnt = onGetBBuckCnt;
+        let req = new XMLHttpRequest();
+        req.responseType = 'json';
+        req.open('GET', `get_bbuck.php`, true);
+        req.onload = function() {
+            let jsonResponse = req.response;
+
+            console.log(jsonResponse);
+            onGetBBuckLast = curCnt;
+    
+            bbuckLast = bbuckTarget;
+            bbuckTarget = parseInt(jsonResponse.bbuck);
+            $("#bbuck-text-rate").html(Math.round(parseInt(jsonResponse.rate)).toLocaleString());
+        };
+        req.send(null);
+    }
+    bbuck = Math.min(onGetBBuckCnt - onGetBBuckLast, 57) / 57 * (bbuckTarget - bbuckLast) + bbuckLast;
+    $("#bbuck-text").html(Math.round(bbuck).toLocaleString());
+
+    onGetBBuckCnt++;
 }
 
 $(document).ready(function() {
@@ -84,10 +301,67 @@ $(document).ready(function() {
                 inventory[j].img = this;
             }
         };
-        img.onerror = function() {};
+        img.onerror = function() {
+            let div0 = document.getElementById("cover-title-" + j);
+            let rbg = hslToRgb(book_og_key.hashCode() % 360 / 360, 1, 0.7);
+            div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            div0 = document.getElementById("cover-back-title-" + j);
+            div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            div0 = document.getElementById("cover-" + j);
+            div0.src = "assets/empty_cover.png";
+            div0 = document.getElementById("cover-back-" + j);
+            div0.src = "assets/empty_cover.png";
+            inventory[j].img = empty_cover_img;
+            inventory[j].color = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+        };
         img.src = "http://covers.openlibrary.org/b/olid/" + book_og_key + "-M.jpg";
     }
 
+
+    if(showModal) {
+        let j = modalIdx;
+        let book_og_key = inventory[j].original_key;
+        let img = new Image();
+        img.onload = function() {
+            if (this.naturalWidth + this.naturalHeight === 2) {
+                let div0 = document.getElementById("modal-cover-title-" + j);
+                let rbg = hslToRgb(book_og_key.hashCode() % 360 / 360, 1, 0.7);
+                div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+                div0 = document.getElementById("modal-cover-back-title-" + j);
+                div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+                div0 = document.getElementById("modal-cover-" + j);
+                div0.src = "assets/empty_cover.png";
+                div0 = document.getElementById("modal-cover-back-" + j);
+                div0.src = "assets/empty_cover.png";
+                inventory[j].img = empty_cover_img;
+                inventory[j].color = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            } else {
+                let div0 = document.getElementById("modal-cover-" + j);
+                div0.src = this.src;
+                div0 = document.getElementById("modal-cover-back-" + j);
+                div0.src = this.src;
+                div0 = document.getElementById("modal-cover-title-" + j);
+                div0.style.display = "none";
+                div0 = document.getElementById("modal-cover-back-title-" + j);
+                div0.style.display = "none";
+                inventory[j].img = this;
+            }
+        };
+        img.onerror = function() {
+            let div0 = document.getElementById("modal-cover-title-" + j);
+            let rbg = hslToRgb(book_og_key.hashCode() % 360 / 360, 1, 0.7);
+            div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            div0 = document.getElementById("modal-cover-back-title-" + j);
+            div0.style.backgroundColor = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+            div0 = document.getElementById("modal-cover-" + j);
+            div0.src = "assets/empty_cover.png";
+            div0 = document.getElementById("modal-cover-back-" + j);
+            div0.src = "assets/empty_cover.png";
+            inventory[j].img = empty_cover_img;
+            inventory[j].color = `rgba(${rbg[0]},${rbg[1]},${rbg[2]},0.5)`;
+        };
+        img.src = "http://covers.openlibrary.org/b/olid/" + book_og_key + "-M.jpg";
+    }
 
     for (let j = 0; j < inventory.length; j++) {
         let s = inventory[j].title;
@@ -113,4 +387,6 @@ $(document).ready(function() {
             onBookClicked(j);
         });
     }
+    
+    setInterval(onGetBBuck, 107);
 });

@@ -61,8 +61,8 @@ console.log(sql);
                             <div class="card-body p-0">
                                 <?php
 
-                                echo '<div class="pt-3">';
-                                echo '<h1 class="h5">'.$row['name'].'</h1>';
+                                echo '<div class="p-3 pt-5" style="height: 100%">';
+                                echo '<h1 class="h1 align-middle">'.$row['name'].'</h1>';
                                 echo '</div>';
 
                                 ?>

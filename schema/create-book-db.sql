@@ -297,6 +297,13 @@ UPDATE book SET rarity = '5' WHERE book_id = '45346';
 UPDATE book SET rarity = '5' WHERE book_id = '36293';
 UPDATE book SET rarity = '5' WHERE book_id = '63870';
 
+-- random rarities
+-- UPDATE book SET rarity = '1';
+-- UPDATE book SET rarity = '2' WHERE rarity = '1' AND RAND() < 0.583491041423;
+-- UPDATE book SET rarity = '3' WHERE rarity = '2' AND RAND() < 0.555726708047;
+-- UPDATE book SET rarity = '4' WHERE rarity = '3' AND RAND() < 0.502430051216;
+-- UPDATE book SET rarity = '5' WHERE rarity = '4' AND RAND() < 0.383626807841;
+
 ALTER TABLE collection_book DROP COLUMN rarity;
 
 -- 2021/7/3/ --------------------------------------------------
@@ -466,11 +473,11 @@ END//
 DELIMITER ;
 
 
+-- 2021/07/06 ------------------------------------------------------------------
+ALTER TABLE `user` ADD `bbuck` BIGINT NOT NULL DEFAULT '0' AFTER `is_admin`;
+ALTER TABLE `user` ADD `bbuck_last_updated` BIGINT NOT NULL DEFAULT '0' AFTER `bbuck`;
 
-
-
-
-
+CREATE TRIGGER user_bbuck_last_updated BEFORE INSERT ON user FOR EACH ROW SET new.bbuck_last_updated = UNIX_TIMESTAMP();
 
 ------------------------------------------------------------------
 -- user setup ----------------------------------------------------

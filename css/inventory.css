@@ -2,8 +2,6 @@
     display: flex;
     overflow: hidden;
     flex-wrap: wrap;
-    width: 80%;
-    margin: auto;
     border: 1px solid rgba(0, 0, 0, .125);
     border-radius: 10px;
     background-color: rgb(66, 66, 66);
@@ -108,4 +106,142 @@
 
 .availability {
     margin: auto;
+}
+
+.inventory-menu {
+    /* height: 0.5rem; */
+    white-space: nowrap;
+}
+
+.inventory-menu-item {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    margin-bottom: 0;
+}
+
+.inventory-menu-item button {
+    margin-left: 0.5rem;
+}
+
+.col-form-label {
+    padding-left: 0;
+}
+
+#btn-trade-up-fill-4 {
+    background-color: #cc32cc;
+    border-color: #cc32cc;
+}
+
+#btn-trade-up-fill-4:hover {
+    background-color: #a728a7;
+    border-color: #a728a7;
+}
+
+#btn-trade-up-fill-4:focus {
+    box-shadow: 0 0 0 .2rem rgba(237, 38, 255, 0.5);
+}
+
+#btn-trade-up-fill-2 {
+    background-color: #71d159;
+    border-color: #71d159;
+}
+
+#btn-trade-up-fill-2:hover {
+    background-color: #6bb858;
+    border-color: #6bb858;
+}
+
+#btn-trade-up-fill-2:focus {
+    box-shadow: 0 0 0 .2rem #4db13480;
+}
+
+#btn-trade-up-fill-1 {
+    background-color: #a5a5a5;
+    border-color: #a5a5a5;
+}
+
+#btn-trade-up-fill-1:hover {
+    background-color: #8f8f8f;
+    border-color: #8f8f8f;
+}
+
+#btn-trade-up-fill-1:focus {
+    box-shadow: 0 0 0 .2rem #8f8f8f80;
+}
+
+#btn-trade-up {
+    background-color: #fda0cc;
+    border-color: #e091b6;
+}
+
+#btn-trade-up:hover {
+    background-color: #d185a9;
+    border-color: #b47593;
+}
+
+#btn-trade-up:focus {
+    box-shadow: 0 0 0 .2rem #fda0cb80;
+}
+
+#btn-edit-deck {
+    background-color: #ee8e11;
+    border-color: #ce891c;
+}
+
+#btn-edit-deck:hover {
+    background-color: #c77913;
+    border-color: #9e6a15;
+}
+
+#btn-edit-deck:focus {
+    box-shadow: 0 0 0 .2rem #ee8e1180;
+}
+
+.trade_up_container {
+    height: 20rem;
+}
+
+.book_box_rarity_trade_up {
+    font-size: 27px;
+    line-height: 1.0;
+    padding-top: 0.75rem;
+    margin: 0.0rem 0.6rem;
+    width: 10rem;
+    height: 8rem;
+    flex: 0 0 10rem;
+    padding: 0.5rem 0;
+}
+
+.book_box_rarity_trade_up .book-container3d {
+    width: var(--size1);
+    height: var(--size2);
+    margin: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: var(--size3);
+    --size1: 8rem;
+    --size2: 12rem;
+    --size3: 16rem;
+}
+
+.book_box_rarity_trade_up .star-container-container {
+    font-size: 16px;
+}
+
+.bbuck {
+    filter: drop-shadow(0 0 0.75rem rgb(0, 238, 255));
+    height: 5rem;
+    padding-bottom: 8px;
+}
+
+.bbuck-text {
+    color: rgb(249, 255, 255);
+    font-family: Fortnite;
+    font-size: 64px;
+    text-shadow: 2px 2px 2px rgb(109, 238, 255), 2px 2px 6px rgb(0, 0, 0);
+}
+
+.bbuck-text-rate {
+    font-size: 32px;
 }

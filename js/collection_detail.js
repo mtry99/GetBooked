@@ -49,6 +49,8 @@ let fireFrameImgsOg = [];
 let fireFrameImgsBw = [];
 
 let rarityGlows = {
+    1: { gs: 17, c1: -1 },
+    2: { gs: 25, c1: 100 },
     3: { gs: 30, c1: 220 },
     4: { gs: 40, c1: 280 },
     5: { gs: 60, c1: 40 }
@@ -167,6 +169,9 @@ function onFrame() {
                 let glowHue = rarityGlows[rarity].c1 + 30 * Math.cos(t * 3 + 3 * Math.PI * p.r + 3 * Math.PI * wheel[idx].r);
                 glowHue = glowHue % 360;
                 let glowClr = hslToRgb(glowHue / 360, 1, 0.5);
+                if (rarityGlows[rarity].c1 == -1) {
+                    glowClr = hslToRgb(0, 0, 0.75 + 0.1 * Math.cos(t * 3 + 3 * Math.PI * p.r + 3 * Math.PI * wheel[idx].r));
+                }
                 ctx.fillStyle = gradientRadial([p.x, p.y, glowSize], `${glowClr[0]},${glowClr[1]},${glowClr[2]}`);
                 ctx.fillRect(p.x - glowSize, p.y - glowSize, 2 * glowSize, 2 * glowSize);
             }
@@ -221,21 +226,23 @@ function onFrame() {
 
         ctx.restore();
 
-        ctx.save();
+        if (rarity >= 3) {
+            ctx.save();
 
-        ctx.translate(bookPos.x, bookPos.y);
+            ctx.translate(bookPos.x, bookPos.y);
 
-        let curFireFrameIdx = Math.round(t * 30 + wheel[idx].r * fireFrameImgs[rarity].length) % fireFrameImgs[rarity].length;
+            let curFireFrameIdx = Math.round(t * 30 + wheel[idx].r * fireFrameImgs[rarity].length) % fireFrameImgs[rarity].length;
 
-        let curFireFrame = fireFrameImgs[rarity][curFireFrameIdx];
+            let curFireFrame = fireFrameImgs[rarity][curFireFrameIdx];
 
-        if (curFireFrame) {
-            let xOff = 22;
-            let yOff = 33;
-            ctx.drawImage(curFireFrame, -xOff, -yOff, bookPos.w + 2 * xOff, bookPos.h + 2 * yOff);
+            if (curFireFrame) {
+                let xOff = 22;
+                let yOff = 33;
+                ctx.drawImage(curFireFrame, -xOff, -yOff, bookPos.w + 2 * xOff, bookPos.h + 2 * yOff);
+            }
+
+            ctx.restore();
         }
-
-        ctx.restore();
 
         ctx.save();
 
@@ -289,12 +296,13 @@ function resetWheel(r, i) {
     wheel.push({ rarity: r, idx: i, r: Math.random() });
     generateWheel(5);
 
+    d = 30 * (coverWidth + coverGap) - width / 2 + coverWidth / 2 + 0.9 * coverWidth * (Math.random() - 0.5);
     x = 0;
     startSpin = false;
 }
 
 function generateWheel(num) {
-    let chance = [0, 256, 128, 64, 8, 1];
+    let chance = [0, 1, 2, 16, 12, 8];
     let total = 0;
     for (let r = 1; r <= 5; r++) {
         if (obj[r].length != 0) {
@@ -306,8 +314,10 @@ function generateWheel(num) {
     function dice() {
         let rng = Math.random() * total;
         for (let r = 5; r >= 1; r--) {
-            if (rng >= chance[r]) {
-                return r;
+            if (obj[r].length != 0) {
+                if (rng >= chance[r]) {
+                    return r;
+                }
             }
         }
         return 1;
