@@ -37,9 +37,14 @@ echo $conn->error;
 
 $row = $result->fetch_assoc();
 
-$json = file_get_contents('https://openlibrary.org/books/'.$row['original_key'].'.json');
-$obj = json_decode($json, true);
-
+$hasKey = false;
+if($row['original_key'] != '') {
+    $hasKey = true;
+    $json = file_get_contents('https://openlibrary.org/books/'.$row['original_key'].'.json');
+    $obj = json_decode($json, true);
+} else {
+    $obj = null;
+}
 $copiesError = false;
 $fineError = false;
 
@@ -109,6 +114,7 @@ let obj = `<?php print_r ($obj); ?>`;
 
 console.log(sql);
 console.log(obj);
+console.log("logged sql and obj");
 
 </script>
 
@@ -148,22 +154,25 @@ console.log(obj);
                             <h4 class="margin-10px-bottom font-size24 md-font-size22 sm-font-size20 font-weight-600">Genre(s)</h4>
                             <p class="sm-width-95 sm-margin-auto">
                             <?php
-                            $genre_array = explode(',', $row["genre"]);
-                            foreach($genre_array as $i => $genre) {
+                            if($row["genre"] && $row["genre"] != '') {
+                                $genre_array = explode(',', $row["genre"]);
 
-                                $genre_array_array = explode(':', $genre);
+                                foreach($genre_array as $i => $genre) {
 
-                                if($i !== 0) {
-                                    echo ' ';
+                                    $genre_array_array = explode(':', $genre);
+    
+                                    if($i !== 0) {
+                                        echo ' ';
+                                    }
+    
+                                    echo '<a href="#" class="badge" onclick="return genre_clicked(';
+                                    echo $genre_array_array[0];
+                                    echo ')" style="background-color: ';
+                                    echo ColorHSLToRGB(($genre_array_array[0]*1049)%360/360,0.8,0.6);
+                                    echo ';">';
+                                    echo $genre_array_array[1];
+                                    echo '</a>';
                                 }
-
-                                echo '<a href="#" class="badge" onclick="return genre_clicked(';
-                                echo $genre_array_array[0];
-                                echo ')" style="background-color: ';
-                                echo ColorHSLToRGB(($genre_array_array[0]*1049)%360/360,0.8,0.6);
-                                echo ';">';
-                                echo $genre_array_array[1];
-                                echo '</a>';
                             }
                             ?>
                             </p>
@@ -190,7 +199,7 @@ console.log(obj);
                                 <?php 
 
                                 $first = true;
-                                if(array_key_exists("subtitle", $obj)) {
+                                if($obj && array_key_exists("subtitle", $obj)) {
                                     if($first) {
                                         $first = false;
                                     } else {
@@ -198,7 +207,7 @@ console.log(obj);
                                     }
                                     echo 'Subtitle: '.$obj["subtitle"]; 
                                 } 
-                                if(array_key_exists("description", $obj)) {
+                                if($obj && array_key_exists("description", $obj)) {
                                     if($first) {
                                         $first = false;
                                     } else {
@@ -206,7 +215,7 @@ console.log(obj);
                                     }
                                     echo $obj["description"]["value"]; 
                                 } 
-                                if(array_key_exists("first_sentence", $obj)) { 
+                                if($obj && array_key_exists("first_sentence", $obj)) { 
                                     if($first) {
                                         $first = false;
                                     } else {
@@ -214,7 +223,7 @@ console.log(obj);
                                     }
                                     echo 'First sentence: '.$obj["first_sentence"]["value"];
                                 }  
-                                if(array_key_exists("other_titles", $obj)) {
+                                if($obj && array_key_exists("other_titles", $obj)) {
                                     if($first) {
                                         $first = false;
                                     } else {
@@ -222,7 +231,7 @@ console.log(obj);
                                     }
                                     echo 'Alternate title: '.$obj["other_titles"][0]; 
                                 }  
-                                if(array_key_exists("series", $obj)) {
+                                if($obj && array_key_exists("series", $obj)) {
                                     if($first) {
                                         $first = false;
                                     } else {
