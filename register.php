@@ -72,9 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <?php require "header.php"; ?>
-    <div>
-        <p>&nbsp Please fill in your information to sign up.</p>
-    </div>
+
 	<div id="content">
     <?php 
     if(!empty($register_err)){
@@ -83,6 +81,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     ?>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <h2>Sign Up</h2>
+        <p>Please fill in your information to sign up.</p>
 
         <div class="form-group">
             <label>Name: </label><br/>
@@ -110,11 +110,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <br></br>
         <div class="form-group">
-            <input type="submit" name="submit" class="btn btn-success" value="Register">
+            <input type="submit" name="submit" class="btn btn-success" value="Sign Up">
         </div>
         <p>Already have an account? <a style="color:green" href="login.php">Login here</a>.</p>
     </form>
     </div>
 
 </body>
+<?php require "footer.php"; ?>
 </html>

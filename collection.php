@@ -5,6 +5,8 @@
 
 require_once "config.php";
 require_once "utils.php";
+require_once "access.php";
+checkUserAccess();
 
 $sql = sprintf('
 SELECT *

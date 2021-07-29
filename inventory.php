@@ -2,6 +2,8 @@
 
 require_once "config.php";
 require_once "utils.php";
+require_once "access.php";
+checkUserAccess();
 
 if(!isset($_SESSION["uid"])) {
     header('Location: login.php');

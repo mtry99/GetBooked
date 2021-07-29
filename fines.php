@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php require_once "config.php"; ?>
+<?php 
+require_once "config.php"; 
+require_once "access.php";
+checkUserAccess();
+?>
 <head>
 
 <meta charset="utf-8">
@@ -21,23 +25,23 @@
 
     <?php
     $uid = $_SESSION["uid"];
-    $query = "CALL CALCULATE_FINES($uid);";
-    $result = $conn->query($query);
-    echo $conn->error; 
 
     $fine_query = "CALL GET_FINES_AMOUNT($uid);";
     $tot_out_fines = $conn -> query($fine_query);
+    $tot = $tot_out_fines->fetch_row()[0];
+    $tot_out_fines->free(); $conn->next_result();
     ?>
-
-    &nbsp<b> Total Outstanding Fines: $<?php echo $tot_out_fines->fetch_row()[0];
-    $tot_out_fines->free(); $conn->next_result(); ?></b>
+    <div class="container">
+    &nbsp<b> Total Outstanding Fines: $<?php echo $tot; ?></b>
+    </div>
+    <div class="container">
     <table class="table table-striped table-hover book-table">
     <thead>
         <tr>
-        <th scope="col" style="width: 10%">Return By Date</th>
-        <th scope="col" style="width: 10%">Date Returned</th>
+        <th scope="col" style="width: 15%">Return By Date</th>
+        <th scope="col" style="width: 15%">Date Returned</th>
         <th scope="col" style="width: 25%">Book</th>
-        <th scope="col" style="width: 25%">Fine Type</th>
+        <th scope="col" style="width: 10%">Fine Type</th>
         <!-- 0 is late charge; 1 is replacement fee (not implemented) -->
         <th scope="col" style="width: 15%; text-align:center">Amount</th>
         <th scope="col" style="width: 15%; text-align:center">Amount Outstanding</th>
@@ -78,9 +82,17 @@
             echo '</td>';
             echo '</tr>';
         }
+        echo '</tbody></table></div>';
+
+    } else {
+        echo '</tbody></table></div>';
+        echo '<div class="container">';
+        echo "<center><b>Congratulations, You have no outstanding fines!</b></center>";
+        echo '<br></br>';
+        echo '</div>';
     }
     $out_fines_result->free(); $conn->next_result();
     ?>
-
 </body>
+<?php require "footer.php"; ?>
 </html>

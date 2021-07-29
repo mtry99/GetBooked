@@ -1,6 +1,8 @@
 <?php 
 // connect to DB
 require_once "config.php";
+require_once "access.php";
+checkNoAccess();
 
 
 // initialize variables with empty values
@@ -81,9 +83,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <?php require "header.php"; ?>
-    <div>
-        <p>&nbsp Please fill in your credentials to login.</p>
-    </div>
+
     <div id="content">
 
     <?php 
@@ -93,6 +93,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     ?>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <h2>Login</h2>
+        <p>Please fill in your credentials to login.</p>
+
         <div class="form-group">
             <label>Username:</label><br>
             <input type="text" id="username" name="username" class="<?php echo (!empty($uname_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $uname; ?>"><br>
@@ -115,4 +118,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
 </body>
+<?php require "footer.php"; ?>
 </html>

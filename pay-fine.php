@@ -1,6 +1,7 @@
 <?php
 require_once "config.php";
-
+require_once "access.php";
+checkAdminAccess();
 
 $username = $payment = "";
 $paymentAmount = 0;
@@ -84,12 +85,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     ?>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <label>Username:</label><br>
-        <input type="text" id="username" name="username" class="<?php echo (!empty($usernameErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>"><br>
-        <span class="invalid-feedback"><?php echo $usernameErr; ?></span>
-        <label>Payment Amount ($):</label><br>
-        <input type="text" id="payment" name="payment" class="<?php echo (!empty($paymentErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $payment; ?>"><br>
-        <span class="invalid-feedback"><?php echo $paymentErr; ?></span>
+        <div class="form-group">
+            <label>Username:</label><br>
+            <input type="text" id="username" name="username" class="<?php echo (!empty($usernameErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>"><br>
+            <span class="invalid-feedback"><?php echo $usernameErr; ?></span>
+        </div> 
+    
+        <div class="form-group">
+            <label>Payment Amount ($):</label><br>
+            <input type="text" id="payment" name="payment" class="<?php echo (!empty($paymentErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $payment; ?>"><br>
+            <span class="invalid-feedback"><?php echo $paymentErr; ?></span>
+        </div> 
         
         <br></br>
         <div class="form-group">

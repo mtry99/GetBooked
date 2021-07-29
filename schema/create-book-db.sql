@@ -14,14 +14,14 @@ CREATE TABLE `author` (
 -- set up genre table --------------------------------------------------
 CREATE TABLE `genre` ( 
     `genre_id` INT NOT NULL AUTO_INCREMENT , 
-    `name` VARCHAR(30) NOT NULL , 
+    `name` NVARCHAR(30) NOT NULL , 
     PRIMARY KEY (`genre_id`)
 );
 
 -- set up publisher table --------------------------------------------------
 CREATE TABLE `publisher` ( 
     `publisher_id` INT NOT NULL AUTO_INCREMENT , 
-    `name` VARCHAR(50) NOT NULL , 
+    `name` NVARCHAR(50) NOT NULL , 
     PRIMARY KEY (`publisher_id`)
 );
 
@@ -209,25 +209,8 @@ BEGIN
     WHERE title = bookName and name = authorName;
 END//
 
--- delete book
-CREATE PROCEDURE DELETE_BOOK()
 
 
-BEGIN
-
-END//
-
--- get all fines of specified user
-CREATE PROCEDURE GET_FINES_AMOUNT(
-    in u_uid INT
-)
-BEGIN
-    SELECT IFNULL(SUM(fine.outstanding_amount), 0)
-        FROM fine
-        LEFT JOIN log on fine.log_id = log.log_id
-        LEFT JOIN user on log.user_id = user.user_id
-        WHERE u_uid = user.user_id;
-END//
 
 
 -- get rows of outstanding fines
@@ -294,6 +277,18 @@ BEGIN
         SELECT NULL, log_id, amount, amount, CURDATE(), 0 FROM new_fines;
 END//
 
+-- get all fines of specified user
+CREATE PROCEDURE GET_FINES_AMOUNT(
+    in u_uid INT
+)
+BEGIN
+    CALL CALCULATE_FINES(u_uid);
+    SELECT IFNULL(SUM(fine.outstanding_amount), 0)
+        FROM fine
+        LEFT JOIN log on fine.log_id = log.log_id
+        LEFT JOIN user on log.user_id = user.user_id
+        WHERE u_uid = user.user_id;
+END//
 
 -- process payment for user with payment amount
 CREATE PROCEDURE PAY_FINES(
@@ -340,15 +335,15 @@ END//
 
 DELIMITER ;
 
-------------------------------------------------------------------
+-- ----------------------------------------------------------------
 -- trigger ----------------------------------------------------
-------------------------------------------------------------------
+-- ----------------------------------------------------------------
 
 CREATE TRIGGER user_bbuck_last_updated BEFORE INSERT ON user FOR EACH ROW SET new.bbuck_last_updated = UNIX_TIMESTAMP();
 
-------------------------------------------------------------------
+-- ----------------------------------------------------------------
 -- user setup ----------------------------------------------------
-------------------------------------------------------------------
+-- ----------------------------------------------------------------
 
 CREATE USER 'bookperson'@'localhost' IDENTIFIED BY 'genericpassword';
 GRANT ALL ON bookDB.* TO 'bookperson'@'localhost';

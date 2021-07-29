@@ -2,6 +2,8 @@
 <?php
 // connect to DB 
 require_once "config.php";
+require_once "access.php";
+checkAdminAccess();
 
 // initialize variables with empty values
 $bookName = $authorName = $pages = $language = $publisher = $publishedYear= $isbn = $genre = "";
@@ -116,30 +118,46 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         }        
     ?>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <label>Book Name:</label><br>
-        <input type="text" id="book-name" name="book-name" class="<?php echo (!empty($bookName_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $bookName; ?>"><br>
-        <span class="invalid-feedback"><?php echo $bookName_err; ?></span>
-        <label>Author Name:</label><br>
-        <input type="text" id="author-name" name="author-name" class="<?php echo (!empty($authorName_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $authorName; ?>"><br>
-        <span class="invalid-feedback"><?php echo $authorName_err; ?></span>
-        <label>ISBN:</label><br>
-        <input type="text" id="isbn" name="isbn" class="<?php echo (!empty($isbn_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $isbn; ?>"><br>
-        <span class="invalid-feedback"><?php echo $isbn_err; ?></span>
-        <label>Number of pages:</label><br>
-        <input type="text" id="book-number-of-pages" name="book-number-of-pages" class="<?php echo (!empty($pages_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $pages; ?>"><br>
-        <span class="invalid-feedback"><?php echo $pages_err; ?></span>
-        <label>Language: </label><br>
-        <input type="text" id="language" name="language" class="<?php echo (!empty($language_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $language; ?>"><br>
-        <span class="invalid-feedback"><?php echo $language_err; ?></span>
-        <label>Publisher:</label><br>
-        <input type="text" id="publisher" name="publisher" class="<?php echo (!empty($publisher_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $publisher; ?>"><br>
-        <span class="invalid-feedback"><?php echo $publisher_err; ?></span>
-        <label>Published Year:</label><br>
-        <input type="text" id="published-year" name="published-year" class="<?php echo (!empty($publishedYear_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $publishedYear; ?>"><br>
-        <span class="invalid-feedback"><?php echo $publishedYear_err; ?></span>
-        <label>Genre: (enter comma seperated values without spaces)</label><br>
-        <input type="text" id="genre" name="genre" class="<?php echo (!empty($genre_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $genre; ?>"><br>
-        <span class="invalid-feedback"><?php echo $genre_err; ?></span>
+        <div class="form-group">
+            <label>Book Name:</label><br>
+            <input type="text" id="book-name" name="book-name" class="<?php echo (!empty($bookName_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $bookName; ?>"><br>
+            <span class="invalid-feedback"><?php echo $bookName_err; ?></span>
+        </div> 
+        <div class="form-group">
+            <label>Author Name:</label><br>
+            <input type="text" id="author-name" name="author-name" class="<?php echo (!empty($authorName_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $authorName; ?>"><br>
+            <span class="invalid-feedback"><?php echo $authorName_err; ?></span>
+        </div> 
+        <div class="form-group">
+            <label>ISBN:</label><br>
+            <input type="text" id="isbn" name="isbn" class="<?php echo (!empty($isbn_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $isbn; ?>"><br>
+            <span class="invalid-feedback"><?php echo $isbn_err; ?></span>
+        </div> 
+        <div class="form-group">
+            <label>Number of pages:</label><br>
+            <input type="text" id="book-number-of-pages" name="book-number-of-pages" class="<?php echo (!empty($pages_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $pages; ?>"><br>
+            <span class="invalid-feedback"><?php echo $pages_err; ?></span>
+        </div> 
+        <div class="form-group">
+            <label>Language: </label><br>
+            <input type="text" id="language" name="language" class="<?php echo (!empty($language_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $language; ?>"><br>
+            <span class="invalid-feedback"><?php echo $language_err; ?></span>
+        </div> 
+        <div class="form-group">
+            <label>Publisher:</label><br>
+            <input type="text" id="publisher" name="publisher" class="<?php echo (!empty($publisher_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $publisher; ?>"><br>
+            <span class="invalid-feedback"><?php echo $publisher_err; ?></span>
+        </div> 
+        <div class="form-group">
+            <label>Published Year:</label><br>
+            <input type="text" id="published-year" name="published-year" class="<?php echo (!empty($publishedYear_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $publishedYear; ?>"><br>
+            <span class="invalid-feedback"><?php echo $publishedYear_err; ?></span>
+        </div> 
+        <div class="form-group">
+            <label>Genre: (enter comma seperated values without spaces)</label><br>
+            <input type="text" id="genre" name="genre" class="<?php echo (!empty($genre_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $genre; ?>"><br>
+            <span class="invalid-feedback"><?php echo $genre_err; ?></span>
+        </div> 
         <br></br>
         <div class="form-group">
                 <input type="submit" name="submit" class="btn btn-success" value="Add New Book">

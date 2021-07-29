@@ -3,6 +3,8 @@
 <?php 
 
 require_once "config.php"; 
+require_once "access.php";
+checkUserAccess();
 
 $uid = $_SESSION["uid"];
 
