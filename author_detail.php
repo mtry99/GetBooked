@@ -24,8 +24,8 @@ $author_id_query);
 $author_result = $conn->query($author_sql);
 $author_row = $author_result->fetch_assoc();
 
-$json = file_get_contents('https://openlibrary.org'.$author_row['original_key'].'.json');
-$author_obj = json_decode($json, true);
+// $json = file_get_contents('https://openlibrary.org'.$author_row['original_key'].'.json');
+// $author_obj = json_decode($json, true);
 
 $author_id_query = 'WHERE author.author_id = "'.$author_id.'"';
 
@@ -59,11 +59,11 @@ $result = $conn->query($sql);
 
 let author_id = `<?php echo ($author_id); ?>`;
 let author_sql = `<?php echo ($author_sql); ?>`;
-let author_obj = `<?php print_r ($author_obj); ?>`;
+// let author_obj = `<?php #print_r ($author_obj); ?>`;
 
 console.log(author_id);
 console.log(author_sql);
-console.log(author_obj);
+// console.log(author_obj);
 
 </script>
 
@@ -86,7 +86,7 @@ console.log(author_obj);
     <?php require "header.php"; ?>
 
     <h4 class="font-size38 sm-font-size32 xs-font-size30 text-center mt-3 mb-1">
-        <?php echo strtoupper($author_obj["name"]); ?>
+        <?php echo strtoupper($author_row["name"]); ?>
     </h4>
 
 	<div class="wrapper">
