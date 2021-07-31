@@ -195,7 +195,7 @@ BEGIN
     FROM (SELECT (publisherName) AS pname) AS t
     WHERE NOT EXISTS (SELECT name FROM Publisher WHERE name=publisherName); 
     
-    
+
     
     INSERT INTO book (title, isbn, number_of_pages, language, count, rarity) 
     SELECT bookname, ISBN, pages, lang, 1, 3;

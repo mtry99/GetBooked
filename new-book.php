@@ -7,7 +7,7 @@ checkAdminAccess();
 
 // initialize variables with empty values
 $bookName = $authorName = $pages = $language = $publisher = $publishedYear= $isbn = $genre = "";
-$book_err = $bookName_err = $authorName_err = $pages_err = $language_err = $publisher_err = $publishedYear_err = $isbn_err = $genre_err = "";
+$book_err = $bookName_err = $authorName_err = $pages_err = $language_err = $publisher_err = $publishedYear_err = $isbn_err = "";
 $output = 0;
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -56,22 +56,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $isbn = trim($_POST["isbn"]);
     }
 
-    if (empty(trim($_POST["genre"]))){
-        $genre_err = "Please enter genre";
-    }else {
-        $genre= trim($_POST["genre"]);
-    }
-
-
     
-    if (empty($bookName_err) && empty($authorName_err) && empty($pages_err) && empty($language_err) && empty($publisher_err) && empty($publishedYear_err) && empty($isbn_err) && empty($genre_err)){
-        $genreArray = explode(',', $genre);
-
-        #adding genres
-        foreach ($genreArray as &$value){   
-            $sql ="insert ignore into genre (name) values ('$value');";
-            $result = $conn->query($sql);
-        }
+    if (empty($bookName_err) && empty($authorName_err) && empty($pages_err) && empty($language_err) && empty($publisher_err) && empty($publishedYear_err) && empty($isbn_err)){
 
         #call ADD BOOK sql procedure
         $sql = "CALL ADD_BOOK(
@@ -84,14 +70,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             '" . addslashes($isbn) . "');";
 
         $result = $conn->query($sql);
-        
+
         if (!$result){
             $book_err = "ERROR ADDING NEW BOOK";
-            
         }
-        $output = 1;
-    
-    
+
+        $output = 1;    
     }
 }
 ?>
@@ -152,11 +136,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             <label>Published Year:</label><br>
             <input type="text" id="published-year" name="published-year" class="<?php echo (!empty($publishedYear_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $publishedYear; ?>"><br>
             <span class="invalid-feedback"><?php echo $publishedYear_err; ?></span>
-        </div> 
-        <div class="form-group">
-            <label>Genre: (enter comma seperated values without spaces)</label><br>
-            <input type="text" id="genre" name="genre" class="<?php echo (!empty($genre_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $genre; ?>"><br>
-            <span class="invalid-feedback"><?php echo $genre_err; ?></span>
         </div> 
         <br></br>
         <div class="form-group">
