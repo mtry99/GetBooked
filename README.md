@@ -1,5 +1,5 @@
-To create and load the test database to MySQL, 
-create the bookDB database based on "schema/create-book-db.sql"
+To create and load the test database to MySQL, create the bookDB database based on "schema/create-book-db.sql" to create the database and "schema/import-data.sql" to import the data.
+To run the application, use `php -S localhost:3000` and open `localhost:3000/login` in the browser.
 
 Use phpmyadmin to directly import the file "schema/bookdb.sql.zip".
 
@@ -22,13 +22,12 @@ Currently Supported Features:
 
 5. Adding a new book: If an administrator logs into the library system, there is a tab for them to add a new book. This will lead them to another page/form where they can add a new book by specifying parameters like ‘Book name’, ‘ISBN number’, ‘Author Name’, ‘genres’. The header.php, new-book.php, create-book-db.sql files implement this feature.
 
-6. Late returns and fines: When a user borrows a book, there should be a return by date given to them indicating when the book is due. If a user doesn’t return a book by its due date, a per day fine will incur on their account calculated by finding the difference between the actual return date and return by date. 
+6. Late returns and fines: When a user borrows a book, there should be a return by date given to them indicating when the book is due. If a user doesn’t return a book by its due date, a per day fine will incur on their account calculated by finding the difference between the actual return date and return by date. If the fines are greater than $20, the user will be unable to borrow any books. The SQL queries for these functions can be found in schema/create-book-db.sql. They are implemented in fines.php and pay-fine.php. 
 
-7. Opening Collections: Users are able to unbox random books from a selected collection, and the book that was unboxxed will be added to their inventory.
+7. Opening Collections: Users are able to unbox random books from a selected collection, and the book that was unboxed will be added to their inventory.
 
-8. Viewing Inventory: Users are able to view all the books that they unboxxed in a cool interactive format.
+8. Viewing Inventory: Users are able to view all the books that they unboxed in a cool interactive format. Users can also choose to trade-up five equal rarity books into one book of one higher rarity. Users can also view their BBuck on this page. BBuck is a point system used to keep track of how good an user’s inventory is. Each book in an user’s inventory increased the rate at which their BBuck count goes up, with a higher rarity increasing the rate more.
 
-The SQL queries for these functions can be found in schema/create-book-db.sql. They are implemented in fines.php and pay-fine.php. 
 
 
 
