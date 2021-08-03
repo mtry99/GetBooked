@@ -24,10 +24,11 @@ Currently Supported Features:
 
 6. Late returns and fines: When a user borrows a book, there should be a return by date given to them indicating when the book is due. If a user doesn’t return a book by its due date, a per day fine will incur on their account calculated by finding the difference between the actual return date and return by date. 
 
+7. Opening Collections: Users are able to unbox random books from a selected collection, and the book that was unboxxed will be added to their inventory.
+
+8. Viewing Inventory: Users are able to view all the books that they unboxxed in a cool interactive format.
+
 The SQL queries for these functions can be found in schema/create-book-db.sql. They are implemented in fines.php and pay-fine.php. 
 
-Features Currently in Developement:
 
-1. Opening Collections: Users are able to unbox random books from a selected collection, and the book that was unboxxed will be added to their inventory.
 
-2. Viewing Inventory: Users are able to view all the books that they unboxxed in a cool interactive format.
