@@ -1,5 +1,5 @@
 To create and load the test database to MySQL, create the bookDB database based on "schema/create-book-db.sql" to create the database and "schema/import-data.sql" to import the data.
-To run the application, use `php -S localhost:3000` and open `localhost:3000/login` in the browser.
+To run the application, use `php -S localhost:3000` and open `localhost:3000/login.php` in the browser.
 
 Use phpmyadmin to directly import the file "schema/bookdb.sql.zip".
 
