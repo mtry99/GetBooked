@@ -29,5 +29,6 @@ Currently Supported Features:
 8. Viewing Inventory: Users are able to view all the books that they unboxed in a cool interactive format. Users can also choose to trade-up five equal rarity books into one book of one higher rarity. Users can also view their BBuck on this page. BBuck is a point system used to keep track of how good an user’s inventory is. Each book in an user’s inventory increased the rate at which their BBuck count goes up, with a higher rarity increasing the rate more.
 
 
-
+Demo of the project:
+https://drive.google.com/file/d/1OQk70zmkWzQlz7p54TaatKIqkjIXNg0n/view 
 
