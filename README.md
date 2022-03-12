@@ -1,3 +1,6 @@
+**Demo of the project:**
+https://drive.google.com/file/d/1OQk70zmkWzQlz7p54TaatKIqkjIXNg0n/view 
+
 To create and load the test database to MySQL, create the bookDB database based on "schema/create-book-db.sql" to create the database and "schema/import-data.sql" to import the data.
 To run the application, use `php -S localhost:3000` and open `localhost:3000/login.php` in the browser.
 
@@ -29,6 +32,5 @@ Currently Supported Features:
 8. Viewing Inventory: Users are able to view all the books that they unboxed in a cool interactive format. Users can also choose to trade-up five equal rarity books into one book of one higher rarity. Users can also view their BBuck on this page. BBuck is a point system used to keep track of how good an user’s inventory is. Each book in an user’s inventory increased the rate at which their BBuck count goes up, with a higher rarity increasing the rate more.
 
 
-Demo of the project:
-https://drive.google.com/file/d/1OQk70zmkWzQlz7p54TaatKIqkjIXNg0n/view 
+
 
